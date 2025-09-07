@@ -9,9 +9,13 @@ import SwiftUI
 
 struct OnboardingView: View {
     var body: some View {
-        Text("ONBOARDING")
-            .foregroundStyle(.accentRed)
-            .font(.Airbnb.light(size: 20))
+        VStack {
+            Text("ONBOARDING")
+                .foregroundStyle(.accentRed)
+                .font(.Airbnb.light(size: 20))
+            ImageLoaderView()
+                .frame(width: 100, height: 100)
+        }
     }
 }
 

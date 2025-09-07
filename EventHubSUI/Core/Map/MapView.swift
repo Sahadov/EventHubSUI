@@ -9,9 +9,13 @@ import SwiftUI
 
 struct MapView: View {
     var body: some View {
-        Text("MAP")
-            .foregroundStyle(.accentRed)
-            .font(.Airbnb.light(size: 20))
+        VStack {
+            Text("MAP")
+                .foregroundStyle(.accentRed)
+                .font(.Airbnb.light(size: 20))
+            ImageLoaderView()
+                .frame(width: 100, height: 100)
+        }
     }
 }
 

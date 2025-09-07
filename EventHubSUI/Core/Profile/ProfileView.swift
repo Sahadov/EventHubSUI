@@ -9,9 +9,13 @@ import SwiftUI
 
 struct ProfileView: View {
     var body: some View {
-        Text("PROFILE")
-            .foregroundStyle(.accentRed)
-            .font(.Airbnb.light(size: 20))
+        VStack {
+            Text("PROFILE")
+                .foregroundStyle(.accentRed)
+                .font(.Airbnb.light(size: 20))
+            ImageLoaderView()
+                .frame(width: 100, height: 100)
+        }
     }
 }
 

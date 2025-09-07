@@ -10,9 +10,13 @@ import SwiftUI
 struct ExploreView: View {
     
     var body: some View {
-        Text("EXPLORE")
-            .foregroundStyle(.accentRed)
-            .font(.Airbnb.light(size: 20))
+        VStack {
+            Text("EXPLORE")
+                .foregroundStyle(.accentRed)
+                .font(.Airbnb.light(size: 20))
+            ImageLoaderView()
+                .frame(width: 100, height: 100)
+        }
         
     }
 }

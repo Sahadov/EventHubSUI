@@ -9,9 +9,13 @@ import SwiftUI
 
 struct WelcomeView: View {
     var body: some View {
-        Text("WELCOME")
-            .foregroundStyle(.accentRed)
-            .font(.Airbnb.light(size: 20))
+        VStack {
+            Text("WELCOME")
+                .foregroundStyle(.accentRed)
+                .font(.Airbnb.light(size: 20))
+            ImageLoaderView()
+                .frame(width: 100, height: 100)
+        }
     }
 }
 
