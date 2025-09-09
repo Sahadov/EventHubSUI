@@ -8,6 +8,7 @@
 import Foundation
 
 struct Event: Codable {
+    let id: Int?
     let title: String
     let slug: String
     let place: Place
@@ -26,7 +27,7 @@ struct Event: Codable {
     let shortTitle: String
 
     enum CodingKeys: String, CodingKey {
-        case title, slug, place, description
+        case title, slug, place, description, id
         case bodyText = "body_text"
         case location, categories, tagline
         case ageRestriction = "age_restriction"
@@ -61,6 +62,7 @@ struct ImageSource: Codable {
 
 extension Event {
     static let mockConcert = Event(
+        id: 1,
         title: "Rock Festival 2025",
         slug: "rock-festival-2025",
         place: Place(id: 101),
@@ -85,6 +87,7 @@ extension Event {
     )
 
     static let mockExhibition = Event(
+        id: 1,
         title: "Impressionist Art Exhibition",
         slug: "impressionist-art-exhibition",
         place: Place(id: 202),
@@ -109,6 +112,7 @@ extension Event {
     )
 
     static let mockMarathon = Event(
+        id: 1,
         title: "City Marathon",
         slug: "city-marathon-2025",
         place: Place(id: 303),
