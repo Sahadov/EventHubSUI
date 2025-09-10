@@ -7,129 +7,149 @@
 
 import Foundation
 
-struct Event: Codable {
-    let title: String
-    let slug: String
-    let place: Place
-    let description: String
-    let bodyText: String
-    let location: Location
-    let categories: [String]
-    let tagline: String?
-    let ageRestriction: String
-    let price: String
-    let isFree: Bool
-    let images: [EventImage]
-    let favoritesCount: Int
-    let commentsCount: Int
-    let siteURL: URL
-    let shortTitle: String
+// MARK: - API Models
+struct EventResponse: Codable {
+    let results: [Event]
+}
 
+struct Event: Codable {
+    let dates: [DateInfo]?
+    let title: String?
+    let place: Place?
+    let description: String?
+    let bodyText: String?
+    let images: [EventImage]?
+    let favoritesCount: Int?
+    
     enum CodingKeys: String, CodingKey {
-        case title, slug, place, description
-        case bodyText = "body_text"
-        case location, categories, tagline
-        case ageRestriction = "age_restriction"
-        case price, isFree = "is_free", images
+        case dates, title, place, description, images
+        case bodyText       = "body_text"
         case favoritesCount = "favorites_count"
-        case commentsCount = "comments_count"
-        case siteURL = "site_url"
-        case shortTitle = "short_title"
+    }
+}
+
+struct DateInfo: Codable {
+    let startDate: String?
+    let endDate: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case startDate = "start_date"
+        case endDate   = "end_date"
     }
 }
 
 struct Place: Codable {
-    let id: Int
-}
-
-struct Location: Codable {
-    let slug: String
+    let id: Int?
+    let title: String?
+    let address: String?
+    let coords: Coordinates?
+    let subway: String?
 }
 
 struct EventImage: Codable {
-    let image: URL
-    let source: ImageSource
+    let image: String?
+    let thumbnails: Thumbnails?
+    
+    struct Thumbnails: Codable {
+        let size640x384: String?
+        let size144x96: String?
+        
+        enum CodingKeys: String, CodingKey {
+            case size640x384 = "640x384"
+            case size144x96  = "144x96"
+        }
+    }
 }
 
-struct ImageSource: Codable {
-    let name: String?
-    let link: String?
+struct Coordinates: Codable {
+    let lat: Double?
+    let lon: Double?
 }
 
+//
+// MARK: - MOCK DATA
+//
 
-// MOCK DATA
+extension EventResponse {
+    static let mock = EventResponse(
+        results: [
+            .mockExhibition,
+            .mockConcert,
+            .mockMarathon
+        ]
+    )
+}
 
 extension Event {
-    static let mockConcert = Event(
-        title: "Rock Festival 2025",
-        slug: "rock-festival-2025",
-        place: Place(id: 101),
-        description: "Annual open-air rock music festival.",
-        bodyText: "Join thousands of fans for an unforgettable weekend of live performances by the biggest names in rock music.",
-        location: Location(slug: "moscow"),
-        categories: ["music", "festival"],
-        tagline: "Feel the music!",
-        ageRestriction: "18+",
-        price: "2500 RUB",
-        isFree: false,
-        images: [
-            EventImage(
-                image: URL(string: "https://picsum.photos/600/400?1")!,
-                source: ImageSource(name: "Festival Photographer", link: "https://example.com")
-            )
-        ],
-        favoritesCount: 340,
-        commentsCount: 72,
-        siteURL: URL(string: "https://rockfest.example.com")!,
-        shortTitle: "Rock Fest"
-    )
-
     static let mockExhibition = Event(
+        dates: [DateInfo(startDate: "2025-09-15", endDate: "2025-09-20")],
         title: "Impressionist Art Exhibition",
-        slug: "impressionist-art-exhibition",
-        place: Place(id: 202),
+        place: Place(
+            id: 101,
+            title: "State Hermitage",
+            address: "Palace Square, 2",
+            coords: Coordinates(lat: 59.9398, lon: 30.3146),
+            subway: "Admiralteyskaya"
+        ),
         description: "A collection of impressionist paintings from the late 19th century.",
-        bodyText: "The exhibition brings together masterpieces from Monet, Renoir, and Degas, providing a unique opportunity to see them in one place.",
-        location: Location(slug: "saint-petersburg"),
-        categories: ["art", "exhibition"],
-        tagline: "Masterpieces in one hall",
-        ageRestriction: "0+",
-        price: "500 RUB",
-        isFree: false,
+        bodyText: "The exhibition brings together masterpieces from Monet, Renoir, and Degas...",
         images: [
             EventImage(
-                image: URL(string: "https://picsum.photos/600/400?2")!,
-                source: ImageSource(name: "Art Gallery", link: nil)
+                image: "https://picsum.photos/600/400?1",
+                thumbnails: EventImage.Thumbnails(
+                    size640x384: "https://picsum.photos/640/384?1",
+                    size144x96: "https://picsum.photos/144/96?1"
+                )
             )
         ],
-        favoritesCount: 120,
-        commentsCount: 15,
-        siteURL: URL(string: "https://artmuseum.example.com/exhibition")!,
-        shortTitle: "Impressionists"
+        favoritesCount: 120
     )
-
-    static let mockMarathon = Event(
-        title: "City Marathon",
-        slug: "city-marathon-2025",
-        place: Place(id: 303),
-        description: "Annual city marathon open to runners of all levels.",
-        bodyText: "Run through the heart of the city, enjoy the cheering crowds and beautiful views. Includes 5k, 10k, half, and full marathon.",
-        location: Location(slug: "kazan"),
-        categories: ["sport", "running"],
-        tagline: "Run together!",
-        ageRestriction: "12+",
-        price: "Free",
-        isFree: true,
+    
+    static let mockConcert = Event(
+        dates: [DateInfo(startDate: "2025-10-01", endDate: "2025-10-02")],
+        title: "Rock Festival 2025",
+        place: Place(
+            id: 202,
+            title: "Luzhniki Stadium",
+            address: "Luzhniki, 24",
+            coords: Coordinates(lat: 55.7158, lon: 37.5537),
+            subway: "Sportivnaya"
+        ),
+        description: "Annual open-air rock music festival.",
+        bodyText: "Join thousands of fans for an unforgettable weekend of live performances...",
         images: [
             EventImage(
-                image: URL(string: "https://picsum.photos/600/400?3")!,
-                source: ImageSource(name: nil, link: nil)
+                image: "https://picsum.photos/600/400?2",
+                thumbnails: EventImage.Thumbnails(
+                    size640x384: "https://picsum.photos/640/384?2",
+                    size144x96: "https://picsum.photos/144/96?2"
+                )
             )
         ],
-        favoritesCount: 540,
-        commentsCount: 98,
-        siteURL: URL(string: "https://citymarathon.example.com")!,
-        shortTitle: "Marathon"
+        favoritesCount: 340
+    )
+    
+    static let mockMarathon = Event(
+        dates: [DateInfo(startDate: "2025-11-05", endDate: "2025-11-05")],
+        title: "City Marathon",
+        place: Place(
+            id: 303,
+            title: "Red Square",
+            address: "Kremlin, Moscow",
+            coords: Coordinates(lat: 55.7539, lon: 37.6208),
+            subway: "Okhotny Ryad"
+        ),
+        description: "Annual city marathon open to runners of all levels.",
+        bodyText: "Run through the heart of the city, enjoy the cheering crowds and beautiful views...",
+        images: [
+            EventImage(
+                image: "https://picsum.photos/600/400?3",
+                thumbnails: EventImage.Thumbnails(
+                    size640x384: "https://picsum.photos/640/384?3",
+                    size144x96: "https://picsum.photos/144/96?3"
+                )
+            )
+        ],
+        favoritesCount: 540
     )
 }
-

@@ -34,7 +34,7 @@ struct EventCard: View {
                     }
                 }
                 Spacer()
-                Text(event.title)
+                Text(event.title ?? "moc title")
                     .font(.Airbnb.medium(size: 18))
                     .lineLimit(2)
                     .truncationMode(.tail)
