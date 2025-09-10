@@ -8,7 +8,7 @@
 import Foundation
 
 final class NetworkService {
-    func fetch(from endpoint: Endpoint) async throws -> Event {
+    func fetch(from endpoint: Endpoint) async throws -> EventResponse {
         guard let urlRequest = NetworkRouter.createURLRequest(endpoint) else {
             throw NetworkError.invalidRequest
         }
@@ -24,7 +24,7 @@ final class NetworkService {
         }
         
         do {
-            let result = try JSONDecoder().decode(Event.self, from: data)
+            let result = try JSONDecoder().decode(EventResponse.self, from: data)
             return result
         } catch {
             throw NetworkError.decodingFailed(error)
