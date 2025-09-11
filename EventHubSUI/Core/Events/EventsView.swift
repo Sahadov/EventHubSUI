@@ -66,12 +66,17 @@ struct EventsView: View {
     }
     
     var pastEventsView: some View {
-        Text("Контент второй вкладки")
-            .font(.largeTitle)
-            .transition(.asymmetric(
-                insertion: .move(edge: .leading).combined(with: .opacity),
-                removal: .move(edge: .trailing).combined(with: .opacity)
-            ))
+        VStack {
+            ForEach(Array(viewModel.pastEvents.enumerated()), id: \.element.title) { _, event in
+                EventCard(event: event)
+            }
+        }
+        .padding(.horizontal, 25)
+        .padding(.vertical, 10)
+        .transition(.asymmetric(
+            insertion: .move(edge: .leading).combined(with: .opacity),
+            removal: .move(edge: .trailing).combined(with: .opacity)
+        ))
     }
 }
 

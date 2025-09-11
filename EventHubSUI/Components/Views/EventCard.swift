@@ -24,7 +24,7 @@ struct EventCard: View {
                 .clipShape(RoundedRectangle(cornerRadius: 10))
             VStack(alignment: .leading) {
                 HStack {
-                    Text(event.dates?.first?.startDate?.formattedAsEventDate() ?? "Скоро")
+                    Text("\(event.dates?.first?.startDate?.formattedAsEventDate() ?? "Скоро") \(event.dates?.first?.startTime ?? "")")
                         .font(.Airbnb.book(size: 17))
                         .foregroundStyle(.accentBlue)
                     Spacer()

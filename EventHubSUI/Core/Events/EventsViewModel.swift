@@ -12,11 +12,12 @@ class EventsViewModel: ObservableObject {
     private var networkService = NetworkService()
     
     @Published var upcomingEvents: [Event] = []
-    @Published var lastEvents: [Event] = []
+    @Published var pastEvents: [Event] = []
     
     init() {
         Task {
             await fetchUpcomingEvents()
+            await fetchPastEvents()
         }
     }
     
@@ -30,10 +31,10 @@ class EventsViewModel: ObservableObject {
         
     }
     
-    func fetchLastevents() async {
+    func fetchPastEvents() async {
         do {
-            let result = try await networkService.fetch(from: .getUpcomingEvents(lon: 55.7569, lat: 37.6151))
-            self.lastEvents = result.results
+            let result = try await networkService.fetch(from: .getPastEvents())
+            self.pastEvents = result.results
         } catch {
             print("Ошибка при загрузке прошлых событий: \(error)")
         }
