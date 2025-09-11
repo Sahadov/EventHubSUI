@@ -20,14 +20,27 @@ struct EventCard: View {
     
     var body: some View {
         HStack(alignment: .top, spacing: 15) {
-            ImageLoaderView()
-                .aspectRatio(0.8, contentMode: .fit)
+            ImageLoaderView(urlString: event.images?.first?.thumbnails?.size144x96 ?? "fff")
+                .aspectRatio(0.9, contentMode: .fit)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
             VStack(alignment: .leading) {
                 HStack {
-                    Text("Wed, Apr 8 5:30 PM")
-                        .font(.Airbnb.book(size: 17))
-                        .foregroundStyle(.accentBlue)
+                    if let date = event.dates?.first?.startDate {
+                        if let time = event.dates?.first?.startTime {
+                            Text("\(date.formattedAsEventDate()) • \(String(time.prefix(5)))")
+                                .font(.Airbnb.book(size: 17))
+                                .foregroundStyle(.accentBlue)
+                        } else {
+                            Text("\(date.formattedAsEventDate())")
+                                .font(.Airbnb.book(size: 17))
+                                .foregroundStyle(.accentBlue)
+                        }
+                    } else {
+                        Text("Soon")
+                            .font(.Airbnb.book(size: 17))
+                            .foregroundStyle(.accentBlue)
+                    }
+                    
                     Spacer()
                     
                     if type == .favourites {
@@ -41,7 +54,7 @@ struct EventCard: View {
                 }
                 
                 Spacer()
-                Text(event.title)
+                Text(event.title?.capitalized ?? "Мероприятие")
                     .font(.Airbnb.medium(size: 18))
                     .lineLimit(2)
                     .truncationMode(.tail)
@@ -52,7 +65,7 @@ struct EventCard: View {
                         Image("map-pin")
                             .resizable()
                             .frame(width: 15, height: 15)
-                        Text("Lot 13 Oakland, CA")
+                        Text(event.place?.address ?? "Уточните адрес")
                             .font(.Airbnb.book(size: 17))
                             .foregroundStyle(.secondary)
                     }

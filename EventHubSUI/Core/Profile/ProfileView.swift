@@ -38,7 +38,6 @@ Enjoy your favorite dish and a lovely your friends and family and have a great t
                     onEdit: {
                         // TODO: open editor for About
                     }
-
                 )
                 Spacer()
 
