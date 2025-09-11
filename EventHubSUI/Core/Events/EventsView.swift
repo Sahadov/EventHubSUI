@@ -19,6 +19,12 @@ struct EventsView: View {
             Spacer()
                 
             ZStack {
+                if viewModel.isLoading {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: .accentBlue))
+                    .scaleEffect(1.5)
+                }
+                
                 ScrollView {
                     if selectedTab == 0 {
                         upcomingView
