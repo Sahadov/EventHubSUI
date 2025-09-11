@@ -14,7 +14,7 @@ struct EventResponse: Codable {
 }
 
 struct Event: Codable, Identifiable {
-    let id = UUID()
+    var id = UUID()
     
     let dates: [DateInfo]?
     let title: String?
