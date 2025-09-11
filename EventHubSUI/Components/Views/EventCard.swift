@@ -24,9 +24,22 @@ struct EventCard: View {
                 .clipShape(RoundedRectangle(cornerRadius: 10))
             VStack(alignment: .leading) {
                 HStack {
-                    Text(event.dates?.first?.startDate?.formattedAsEventDate() ?? "Скоро")
-                        .font(.Airbnb.book(size: 17))
-                        .foregroundStyle(.accentBlue)
+                    if let date = event.dates?.first?.startDate {
+                        if let time = event.dates?.first?.startTime {
+                            Text("\(date.formattedAsEventDate()) • \(String(time.prefix(5)))")
+                                .font(.Airbnb.book(size: 17))
+                                .foregroundStyle(.accentBlue)
+                        } else {
+                            Text("\(date.formattedAsEventDate())")
+                                .font(.Airbnb.book(size: 17))
+                                .foregroundStyle(.accentBlue)
+                        }
+                    } else {
+                        Text("Soon")
+                            .font(.Airbnb.book(size: 17))
+                            .foregroundStyle(.accentBlue)
+                    }
+                    
                     Spacer()
                     if type == .favourites {
                         Image(systemName: "bookmark.fill")

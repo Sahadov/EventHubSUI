@@ -17,7 +17,7 @@ extension String {
         guard let date = inputFormatter.date(from: self) else { return self }
         
         let outputFormatter = DateFormatter()
-        outputFormatter.dateFormat = "EEE, MMM d •"
+        outputFormatter.dateFormat = "EEE, MMM d"
         outputFormatter.locale = Locale(identifier: "en_US_POSIX")
         
         return outputFormatter.string(from: date)
