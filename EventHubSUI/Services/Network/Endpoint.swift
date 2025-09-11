@@ -55,10 +55,11 @@ enum Endpoint {
             items.append(URLQueryItem(name: "lon", value: String(lon)))
             
         case .getPastEvents(let lat, let lon, let number):
-            items.append(URLQueryItem(name: "actual_until", value: String(Int(Date().timeIntervalSince1970)))) 
+            items.append(URLQueryItem(name: "actual_until", value: String(Int(Date().timeIntervalSince1970))))
             items.append(URLQueryItem(name: "ordering", value: "-dates"))
             items.append(URLQueryItem(name: "lat", value: String(lat)))
             items.append(URLQueryItem(name: "lon", value: String(lon)))
+            items.append(URLQueryItem(name: "radius", value: "5000"))
             items.append(URLQueryItem(name: "number", value: String(number)))
             
         case .getEventsBy(let category):
