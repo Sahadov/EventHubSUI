@@ -11,7 +11,7 @@ struct EventDetailsView: View {
     var event: Event
     var body: some View {
         VStack(spacing: 50) {
-            AsyncImage(url: event.images.first?.image) { phase in
+            AsyncImage(url: URL(string: event.images?.first?.image ?? "")) { phase in
                 switch phase {
                 case .empty:
                     ProgressView()
@@ -42,16 +42,20 @@ struct EventDetailsView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 21) {
                     VStack(alignment: .leading, spacing: 18) {
-                        Text(event.title)
+                        Text(event.title ?? "")
                             .font(.system(size: 35))
                         VStack(alignment: .leading, spacing: 24) {
                             VStack(alignment: .leading, spacing: 16) {
                                 ConcertDatePlaceView(
-                                    firstText: "Event date",
-                                    secondText: "Event time", iconName: "blueCalendar")
+                                    firstText: event.dates?.first?.startDate ?? "No date",
+                                    secondText: event.dates?.first?.startTime ?? "No time",
+                                    iconName: "blueCalendar"
+                                )
                                 ConcertDatePlaceView(
-                                    firstText: "Event place",
-                                    secondText: "Event city", iconName: "bluePin")
+                                    firstText: event.place?.title ?? "No place",
+                                    secondText: event.place?.address ?? "No adress",
+                                    iconName: "bluePin"
+                                )
                             }
                             ConcertDatePlaceView(
                                 firstText: "Organizer name",
@@ -72,7 +76,7 @@ struct EventDetailsView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text("About Event")
                 .font(.system(size: 18))
-            Text(event.bodyText)
+            Text(event.bodyText ?? "No description")
                 .font(.system(size: 16))
         }
     }
