@@ -43,13 +43,14 @@ enum Endpoint {
         switch self {
         case .getUpcomingEvents(let lat, let lon):
             items.append(URLQueryItem(name: "actual_since", value: String(Int(Date().timeIntervalSince1970))))
-          items.append(URLQueryItem(name: "lat", value: String(lat)))
-          items.append(URLQueryItem(name: "lon", value: String(lon)))
+            items.append(URLQueryItem(name: "lat", value: String(lat)))
+            items.append(URLQueryItem(name: "lon", value: String(lon)))
+            items.append(URLQueryItem(name: "radius", value: "10000"))
             
         case .getNearbyEvents(let lat, let lon):
             items.append(URLQueryItem(name: "radius", value: "5000"))
-             items.append(URLQueryItem(name: "lat", value: String(lat)))
-             items.append(URLQueryItem(name: "lon", value: String(lon)))
+            items.append(URLQueryItem(name: "lat", value: String(lat)))
+            items.append(URLQueryItem(name: "lon", value: String(lon)))
             
         case .getEventsBy(let category):
             items.append(URLQueryItem(name: "categories", value: category.rawValue))
