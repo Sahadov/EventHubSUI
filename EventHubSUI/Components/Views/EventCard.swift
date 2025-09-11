@@ -16,6 +16,7 @@ enum ScreenType {
 struct EventCard: View {
     var type: ScreenType = .events
     var event: Event
+    var onBookmarkTapped: (() -> Void)? = nil
     
     var body: some View {
         HStack(alignment: .top, spacing: 15) {
@@ -41,11 +42,17 @@ struct EventCard: View {
                     }
                     
                     Spacer()
+                    
                     if type == .favourites {
-                        Image(systemName: "bookmark.fill")
-                            .foregroundStyle(Color.accentRed)
+                        Button {
+                            onBookmarkTapped?()
+                        } label: {
+                            Image(systemName: "bookmark.fill")
+                                .foregroundStyle(Color.accentRed)
+                        }
                     }
                 }
+                
                 Spacer()
                 Text(event.title?.capitalized ?? "Мероприятие")
                     .font(.Airbnb.medium(size: 18))

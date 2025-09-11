@@ -70,6 +70,19 @@ struct Coordinates: Codable {
     let lon: Double?
 }
 
+//MARK: - Extension Event with id
+
+extension Event: Identifiable {
+    var id: String {
+        let t   = title ?? ""
+        let pid = place?.id.map(String.init) ?? ""
+        let d   = dates?.first?.startDate ?? ""
+        
+        let key = [t, pid, d].joined(separator: "|")
+        return key.isEmpty ? UUID().uuidString : key
+    }
+}
+
 // MARK: - MOCK DATA
 extension EventResponse {
     static let mock = EventResponse(
