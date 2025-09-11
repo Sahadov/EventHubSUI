@@ -42,24 +42,27 @@ struct EventDetailsView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 21) {
                     VStack(alignment: .leading, spacing: 18) {
-                        Text(event.title ?? "")
-                            .font(.system(size: 35))
+                        Text(event.title ?? "No title")
+                            .font(.Airbnb.book(size: 35))
                         VStack(alignment: .leading, spacing: 24) {
                             VStack(alignment: .leading, spacing: 16) {
-                                ConcertDatePlaceView(
-                                    firstText: event.dates?.first?.startDate ?? "No date",
-                                    secondText: event.dates?.first?.startTime ?? "No time",
+                                EventInfoView(
+                                    firstText: event.dates?.first?.startDate?.formattedAsEventDate() ?? "No date",
+                                    secondText:
+                                        "\(String(event.dates?.first?.startTime?.prefix(5) ?? "No time")) - \(String(event.dates?.first?.endTime?.prefix(5) ?? "No time"))",
                                     iconName: "blueCalendar"
                                 )
-                                ConcertDatePlaceView(
+                                EventInfoView(
                                     firstText: event.place?.title ?? "No place",
                                     secondText: event.place?.address ?? "No adress",
                                     iconName: "bluePin"
                                 )
                             }
-                            ConcertDatePlaceView(
+                            EventInfoView(
                                 firstText: "Organizer name",
-                                secondText: "Organizer", iconName: "bluePin")
+                                secondText: "Organizer",
+                                iconName: "map-pin"
+                            )
                         }
                     }
                     aboutEvent
@@ -77,39 +80,7 @@ struct EventDetailsView: View {
             Text("About Event")
                 .font(.system(size: 18))
             Text(event.bodyText ?? "No description")
-                .font(.system(size: 16))
-        }
-    }
-}
-
-struct ConcertDatePlaceView: View {
-    let firstText: String
-    let secondText: String
-    let iconName: String
-    
-    init(firstText: String, secondText: String, iconName: String) {
-        self.firstText = firstText
-        self.secondText = secondText
-        self.iconName = iconName
-    }
-
-    var body: some View {
-        HStack(spacing: 14) {
-            ZStack {
-                Image(iconName)
-                Rectangle()
-                    .frame(width: 48, height: 48)
-                    .foregroundStyle(.accentBlue.opacity(0.1))
-                    .cornerRadius(12)
-            }
-            VStack(alignment: .leading, spacing: 1) {
-                Text(firstText)
-                    .font(.system(size: 16))
-                    .frame(height: 34)
-                Text(secondText)
-                    .foregroundStyle(.gray)
-                    .font(.system(size: 12))
-            }
+                .font(.Airbnb.book(size: 16))
         }
     }
 }
