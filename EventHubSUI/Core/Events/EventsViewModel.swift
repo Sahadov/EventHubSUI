@@ -7,6 +7,7 @@
 
 import Foundation
 
+@MainActor
 class EventsViewModel: ObservableObject {
     private var networkService = NetworkService()
     
@@ -21,10 +22,8 @@ class EventsViewModel: ObservableObject {
     
     func fetchUpcomingEvents() async {
         do {
-            //let result = try await networkService.fetch(from: .getUpcomingEvents())
-            //self.upcomingEvents = result.results
-            self.upcomingEvents = [Event.mockConcert, Event.mockConcert, Event.mockConcert]
-            print(self.upcomingEvents)
+            let result = try await networkService.fetch(from: .getUpcomingEvents())
+            self.upcomingEvents = result.results
         } catch {
             print("Ошибка при загрузке предстоящих событий: \(error)")
         }

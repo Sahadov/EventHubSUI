@@ -19,12 +19,12 @@ struct EventCard: View {
     
     var body: some View {
         HStack(alignment: .top, spacing: 15) {
-            ImageLoaderView()
-                .aspectRatio(0.8, contentMode: .fit)
+            ImageLoaderView(urlString: event.images?.first?.thumbnails?.size144x96 ?? "fff")
+                .aspectRatio(0.9, contentMode: .fit)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
             VStack(alignment: .leading) {
                 HStack {
-                    Text("Wed, Apr 8 5:30 PM")
+                    Text(event.dates?.first?.startDate?.formattedAsEventDate() ?? "Скоро")
                         .font(.Airbnb.book(size: 17))
                         .foregroundStyle(.accentBlue)
                     Spacer()
@@ -34,7 +34,7 @@ struct EventCard: View {
                     }
                 }
                 Spacer()
-                Text(event.title ?? "moc title")
+                Text(event.title?.capitalized ?? "Мероприятие")
                     .font(.Airbnb.medium(size: 18))
                     .lineLimit(2)
                     .truncationMode(.tail)
@@ -45,7 +45,7 @@ struct EventCard: View {
                         Image("map-pin")
                             .resizable()
                             .frame(width: 15, height: 15)
-                        Text("Lot 13 Oakland, CA")
+                        Text(event.place?.address ?? "Уточните адрес")
                             .font(.Airbnb.book(size: 17))
                             .foregroundStyle(.secondary)
                     }

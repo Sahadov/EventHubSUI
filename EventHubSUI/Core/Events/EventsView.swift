@@ -19,16 +19,19 @@ struct EventsView: View {
             Spacer()
                 
             ZStack {
-                if selectedTab == 0 {
-                    upcomingView
-                } else {
-                    pastEventsView
+                ScrollView {
+                    if selectedTab == 0 {
+                        upcomingView
+                    } else {
+                        pastEventsView
+                    }
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .animation(.easeInOut(duration: 0.35), value: selectedTab)
                 
         }
+        .background(Color.gray.opacity(0.1))
     }
     
     var controls: some View {
@@ -49,11 +52,17 @@ struct EventsView: View {
     }
     
     var upcomingView: some View {
-        Text("Контент первой вкладки")
+        VStack {
+            ForEach(Array(viewModel.upcomingEvents.enumerated()), id: \.element.title) { _, event in
+                EventCard(event: event)
+            }
+        }
+        .padding(.horizontal, 25)
+        .padding(.vertical, 10)
         .transition(.asymmetric(
-                insertion: .move(edge: .trailing).combined(with: .opacity),
-                removal: .move(edge: .leading).combined(with: .opacity)
-            ))
+            insertion: .move(edge: .trailing).combined(with: .opacity),
+            removal: .move(edge: .leading).combined(with: .opacity)
+        ))
     }
     
     var pastEventsView: some View {
