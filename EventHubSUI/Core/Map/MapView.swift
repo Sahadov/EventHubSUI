@@ -6,15 +6,16 @@
 //
 
 import SwiftUI
+import MapKit
 
 struct MapView: View {
+    @State private var mapRegion: MKCoordinateRegion = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 55.7569, longitude: 37.6151), span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
+    
+    
     var body: some View {
-        VStack {
-            Text("MAP")
-                .foregroundStyle(.accentRed)
-                .font(.Airbnb.light(size: 20))
-            ImageLoaderView()
-                .frame(width: 100, height: 100)
+        ZStack {
+            Map(coordinateRegion: $mapRegion)
+                .ignoresSafeArea()
         }
     }
 }
