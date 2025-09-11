@@ -21,7 +21,7 @@ struct FavoritesView: View {
                 } else {
                     ScrollView {
                         LazyVStack(spacing: 12) {
-                            ForEach(vm.filteredFavorites, id: \.slug) { event in
+                            ForEach(vm.filteredFavorites) { event in
                                 EventCard(type: .favourites, event: event) {
                                     withAnimation(.snappy) {
                                         vm.toggleFavorite(event)
