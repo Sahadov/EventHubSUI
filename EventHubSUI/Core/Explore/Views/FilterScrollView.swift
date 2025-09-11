@@ -26,7 +26,7 @@ struct FilterScrollView: View {
                     .shadow(radius: 2, y: 1)
             }
         }
-        .padding(.horizontal) 
+        .padding(.horizontal)
     }
 }
 
