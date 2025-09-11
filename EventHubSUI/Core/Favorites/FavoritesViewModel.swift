@@ -32,6 +32,6 @@ final class FavoritesViewModel: ObservableObject {
     }
 
     func loadMocks() {
-        favorites = [Event.mockConcert, Event.mockExhibition, Event.mockMarathon,Event.mockMarathon]
+        favorites = [Event.mockConcert, Event.mockExhibition, Event.mockMarathon]
     }
 }

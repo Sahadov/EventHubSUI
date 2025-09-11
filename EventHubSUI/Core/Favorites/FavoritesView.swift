@@ -22,7 +22,11 @@ struct FavoritesView: View {
                     ScrollView {
                         LazyVStack(spacing: 12) {
                             ForEach(vm.filteredFavorites, id: \.slug) { event in
-                                EventCard(type: .favourites, event: event)
+                                EventCard(type: .favourites, event: event) {
+                                    withAnimation(.snappy) {
+                                        vm.toggleFavorite(event)
+                                    }
+                                }
                                     .padding(.horizontal, 16)
                             }
                         }
