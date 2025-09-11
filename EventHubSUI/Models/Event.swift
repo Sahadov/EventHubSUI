@@ -31,10 +31,14 @@ struct Event: Codable {
 struct DateInfo: Codable {
     let startDate: String?
     let endDate: String?
+    let startTime: String?
+    let endTime: String?
     
     enum CodingKeys: String, CodingKey {
-        case startDate = "start_date"
-        case endDate   = "end_date"
+        case startDate   = "start_date"
+        case endDate     = "end_date"
+        case startTime   = "start_time"
+        case endTime     = "end_time"
     }
 }
 
@@ -66,10 +70,7 @@ struct Coordinates: Codable {
     let lon: Double?
 }
 
-//
 // MARK: - MOCK DATA
-//
-
 extension EventResponse {
     static let mock = EventResponse(
         results: [
@@ -82,7 +83,12 @@ extension EventResponse {
 
 extension Event {
     static let mockExhibition = Event(
-        dates: [DateInfo(startDate: "2025-09-15", endDate: "2025-09-20")],
+        dates: [DateInfo(
+            startDate: "2025-09-15",
+            endDate: "2025-09-20",
+            startTime: "10:00:00",
+            endTime: "18:00:00"
+        )],
         title: "Impressionist Art Exhibition",
         place: Place(
             id: 101,
@@ -106,7 +112,12 @@ extension Event {
     )
     
     static let mockConcert = Event(
-        dates: [DateInfo(startDate: "2025-10-01", endDate: "2025-10-02")],
+        dates: [DateInfo(
+            startDate: "2025-10-01",
+            endDate: "2025-10-02",
+            startTime: "18:00:00",
+            endTime: "23:00:00"
+        )],
         title: "Rock Festival 2025",
         place: Place(
             id: 202,
@@ -130,7 +141,12 @@ extension Event {
     )
     
     static let mockMarathon = Event(
-        dates: [DateInfo(startDate: "2025-11-05", endDate: "2025-11-05")],
+        dates: [DateInfo(
+            startDate: "2025-11-05",
+            endDate: "2025-11-05",
+            startTime: "08:00:00",
+            endTime: "14:00:00"
+        )],
         title: "City Marathon",
         place: Place(
             id: 303,
