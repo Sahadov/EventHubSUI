@@ -21,7 +21,7 @@ struct ExploreDetailView: View {
             HStack(spacing: screenWidth * 0.02) {
                 iconView
                 Text("+20 Going")
-//                    .foregroundColor(Color(hex: "#3F38DD"))
+                    .foregroundColor(Color(hex: "#3F38DD"))
                 
                     .font(.system(size: screenWidth * 0.035))
             }
@@ -44,7 +44,7 @@ struct ExploreDetailView: View {
         HStack(spacing: screenWidth * 0.02) {
             Image(.mapPin)
             Text("36 Guild Street London, UK")
-//                .foregroundColor(Color(hex: "#2B2849"))
+                .foregroundColor(Color(hex: "#2B2849"))
                 .font(.system(size: screenWidth * 0.035))
         }
     }
