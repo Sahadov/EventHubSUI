@@ -89,7 +89,7 @@ extension DateInfo {
         guard let startDate = startDate else { return "" }
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
-        formatter.locale = Locale(identifier: "ru_RU")
+        formatter.locale = Locale(identifier: "en_US")
         if let date = formatter.date(from: startDate) {
             formatter.dateFormat = "dd"
             return formatter.string(from: date)
@@ -101,7 +101,7 @@ extension DateInfo {
         guard let startDate = startDate else { return "" }
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
-        formatter.locale = Locale(identifier: "ru_RU")
+        formatter.locale = Locale(identifier: "en_US")
         if let date = formatter.date(from: startDate) {
             formatter.dateFormat = "LLLL" // полное название месяца
             return formatter.string(from: date).capitalized // с большой буквы
@@ -123,6 +123,8 @@ extension EventResponse {
 }
 
 extension Event {
+    static let events = [mockConcert, mockExhibition, mockMarathon]
+    
     static let mockExhibition = Event(
         dates: [DateInfo(
             startDate: "2025-09-15",
