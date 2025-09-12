@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ExploreView: View {
     @State private var searchText = ""
+    var events = Event.events
 
     var body: some View {
         NavigationStack {
@@ -38,8 +39,8 @@ struct ExploreView: View {
 
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 16) {
-                                ForEach(0...5, id: \.self) { _ in
-                                    ExploreCell()
+                                ForEach(events, id: \.id) { event in
+                                    ExploreCell(event: event)
                                 }
                             }
                             .padding(.horizontal)
@@ -55,8 +56,8 @@ struct ExploreView: View {
 
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 16) {
-                                ForEach(0...5, id: \.self) { _ in
-                                    ExploreCell()
+                                ForEach(events, id: \.id) { event in
+                                    ExploreCell(event: event)
                                 }
                             }
                             .padding(.horizontal)
@@ -84,5 +85,5 @@ struct ExploreView: View {
 }
 
 #Preview {
-    ExploreView()
+    ExploreView(events: Event.events)
 }
