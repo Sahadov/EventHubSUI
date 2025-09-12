@@ -16,7 +16,7 @@ struct ExploreSearchBar: View {
         HStack {
             HStack {
                 Image(systemName: "magnifyingglass")
-                    .foregroundColor(.gray)
+                    .foregroundColor(.white)
                 
                 TextField(placeholder, text: $text)
                     .autocapitalization(.none)
