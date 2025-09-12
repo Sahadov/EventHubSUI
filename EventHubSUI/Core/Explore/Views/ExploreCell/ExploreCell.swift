@@ -8,17 +8,19 @@
 import SwiftUI
 
 struct ExploreCell: View {
+    let event: Event
     let screenWidth = UIScreen.main.bounds.width
+    
     var body: some View {
         let cardWidth = screenWidth * 0.7
         let imageHeight = cardWidth * 0.72
         
         VStack(spacing: 0) {
-            ExploreImageView()
+            ExploreImageView(event: event)
                 .frame(width: cardWidth, height: imageHeight)
                 .padding()
             
-            ExploreDetailView()
+            ExploreDetailView(event: event)
                 .padding()
                 .frame(width: cardWidth, alignment: .leading)
             
@@ -34,6 +36,6 @@ struct ExploreCell: View {
 }
 
 #Preview {
-    ExploreCell()
+    ExploreCell(event: .mockConcert)
 }
 

@@ -8,25 +8,23 @@
 import SwiftUI
 
 struct ExploreDetailView: View {
+    var event: Event
     let screenWidth = UIScreen.main.bounds.width
     
     var body: some View {
         VStack(alignment: .leading, spacing: screenWidth * 0.02) {
             
-            Text("International Band Music Concert")
+            Text(event.bodyText ?? "No title")
                 .font(.system(size: screenWidth * 0.045, weight: .semibold))
                 .lineLimit(1)
                 .truncationMode(.tail)
             
             HStack(spacing: screenWidth * 0.02) {
                 iconView
-                Text("+20 Going")
+                Text("+\(event.favoritesCount ?? 4) Going")
                     .foregroundColor(Color(hex: "#3F38DD"))
-                
                     .font(.system(size: screenWidth * 0.035))
             }
-            
-            // Адрес
             adressView
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -43,7 +41,7 @@ struct ExploreDetailView: View {
     var adressView: some View {
         HStack(spacing: screenWidth * 0.02) {
             Image(.mapPin)
-            Text("36 Guild Street London, UK")
+            Text(event.place?.address ?? "unknown")
                 .foregroundColor(Color(hex: "#2B2849"))
                 .font(.system(size: screenWidth * 0.035))
         }
@@ -52,6 +50,6 @@ struct ExploreDetailView: View {
 
 
 #Preview {
-    ExploreDetailView()
+    ExploreDetailView(event: .mockConcert)
 }
 
