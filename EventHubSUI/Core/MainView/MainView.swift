@@ -17,7 +17,7 @@ struct MainView: View {
         NavigationStack(path: $router.path) {
             ZStack(alignment: .bottom) {
                 TabView(selection: $selectedTab) {
-                    ExploreView()
+                    ExploreView(events: Event.events)
                         .tag(TabBookmarksEnum.exploreView)
                         .toolbar(.hidden, for: .tabBar)
                     EventsView()
@@ -59,7 +59,7 @@ struct MainView: View {
                 case .favoritesScreen:
                     FavoritesView()
                 case .exploreScreen:
-                    ExploreView()
+                    ExploreView(events: Event.events)
                 }
                 
             }
