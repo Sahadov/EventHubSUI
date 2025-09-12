@@ -144,10 +144,10 @@ extension Event {
         bodyText: "The exhibition brings together masterpieces from Monet, Renoir, and Degas...",
         images: [
             EventImage(
-                image: "https://picsum.photos/600/400?1",
+                image: "https://images.unsplash.com/photo-1504196606672-aef5c9cefc92",
                 thumbnails: EventImage.Thumbnails(
-                    size640x384: "https://picsum.photos/640/384?1",
-                    size144x96: "https://picsum.photos/144/96?1"
+                    size640x384: "https://images.unsplash.com/photo-1504196606672-aef5c9cefc92?w=640",
+                    size144x96: "https://images.unsplash.com/photo-1504196606672-aef5c9cefc92?w=144"
                 )
             )
         ],
@@ -173,10 +173,10 @@ extension Event {
         bodyText: "Join thousands of fans for an unforgettable weekend of live performances...",
         images: [
             EventImage(
-                image: "https://picsum.photos/600/400?2",
+                image: "https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2",
                 thumbnails: EventImage.Thumbnails(
-                    size640x384: "https://picsum.photos/640/384?2",
-                    size144x96: "https://picsum.photos/144/96?2"
+                    size640x384: "https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?w=640",
+                    size144x96: "https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?w=144"
                 )
             )
         ],
@@ -202,13 +202,14 @@ extension Event {
         bodyText: "Run through the heart of the city, enjoy the cheering crowds and beautiful views...",
         images: [
             EventImage(
-                image: "https://picsum.photos/600/400?3",
+                image: "https://images.unsplash.com/photo-1546519638-68e109498ffc",
                 thumbnails: EventImage.Thumbnails(
-                    size640x384: "https://picsum.photos/640/384?3",
-                    size144x96: "https://picsum.photos/144/96?3"
+                    size640x384: "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=640",
+                    size144x96: "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=144"
                 )
             )
         ],
         favoritesCount: 540
     )
 }
+
