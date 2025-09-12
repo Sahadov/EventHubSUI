@@ -83,6 +83,34 @@ extension Event: Identifiable {
     }
 }
 
+// Format for eventsCell date 
+extension DateInfo {
+    var day: String {
+        guard let startDate = startDate else { return "" }
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        formatter.locale = Locale(identifier: "ru_RU")
+        if let date = formatter.date(from: startDate) {
+            formatter.dateFormat = "dd"
+            return formatter.string(from: date)
+        }
+        return ""
+    }
+    
+    var month: String {
+        guard let startDate = startDate else { return "" }
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        formatter.locale = Locale(identifier: "ru_RU")
+        if let date = formatter.date(from: startDate) {
+            formatter.dateFormat = "LLLL" // полное название месяца
+            return formatter.string(from: date).capitalized // с большой буквы
+        }
+        return ""
+    }
+}
+
+
 // MARK: - MOCK DATA
 extension EventResponse {
     static let mock = EventResponse(
