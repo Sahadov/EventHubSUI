@@ -7,10 +7,12 @@
 
 import SwiftUI
 import MapKit
+import CoreLocation
 
 struct MapView: View {
     @ObservedObject var viewModel = MapViewModel()
     @State var searchText: String = ""
+    @State private var currentLocation: CLLocationCoordinate2D?
     
     @State private var mapRegion = MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: 55.7569, longitude: 37.6151),
@@ -26,8 +28,16 @@ struct MapView: View {
             gradientView
             bottomCard
         }
-        .padding(.bottom, 50)
+        .padding(.bottom, 30)
+        .onAppear {
+            let manager = CLLocationManager()
+            manager.requestWhenInUseAuthorization()
+            if let coord = manager.location?.coordinate {
+                currentLocation = coord
+            }
+        }
     }
+    
     
     var mapView: some View {
         Map(coordinateRegion: $mapRegion,
@@ -35,15 +45,35 @@ struct MapView: View {
                 event.coordinates != nil ? event : nil
             }) { event in
             MapAnnotation(coordinate: event.coordinates!) {
-                VStack {
-                    Image(systemName: "mappin.circle.fill")
-                        .font(.title)
-                        .foregroundColor(.red)
-                        .scaleEffect(tappedEvent?.id == event.id ? 1.2 : 1)
+                VStack(spacing: 0) {
+                    ZStack {
+                        // внешний белый квадрат
+                        RoundedRectangle(cornerRadius: 8)
+                            .fill(Color.white)
+                            .frame(width: 44, height: 44)
+                            .shadow(radius: 5)
+                        
+                        // внутренний цветной квадрат
+                        RoundedRectangle(cornerRadius: 6)
+                            .fill(Color.accentBlue)
+                            .frame(width: 30, height: 30)
+                        
+                        // иконка поверх
+                        Image(systemName: "mappin.circle.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .foregroundColor(.white)
+                            .frame(width: 18, height: 18)
+                    }
                     
-                    Text(event.title ?? "Без названия")
-                        .font(.caption)
-                        .fixedSize()
+                    Image(systemName: "triangle.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundStyle(.white)
+                        .frame(width: 10, height: 10)
+                        .rotationEffect(Angle(degrees: 180))
+                        .offset(y: -3)
+                        .padding(.bottom, 40)
                 }
                 .onTapGesture {
                     withAnimation(.spring) {
@@ -71,18 +101,31 @@ struct MapView: View {
                 .cornerRadius(12)
                 .shadow(radius: 3)
                 
-                ZStack {
-                    RoundedRectangle(cornerRadius: 10)
-                        .fill(Color.white)
-                        .shadow(radius: 3)
-                    
-                    Image(systemName: "scope")
-                        .foregroundColor(.accentBlue)
+                Button(action: {
+                    if let coord = currentLocation {
+                        withAnimation(.easeInOut) {
+                            MKCoordinateRegion(
+                                center: CLLocationCoordinate2D(latitude: coord.latitude, longitude: coord.longitude),
+                                span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
+                            )
+                        }
+                    }
+                }) {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill(Color.white)
+                            .shadow(radius: 3)
+                        
+                        Image(systemName: "scope")
+                            .foregroundColor(.accentBlue)
+                    }
+                    .frame(width: 50, height: 50)
                 }
-                .frame(width: 50, height: 50)
             }
             .padding(.horizontal)
             .padding(.top, 30)
+            
+            CategoryScrollView(screenType: .map)
             
             Spacer()
         }
