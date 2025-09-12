@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import MapKit
 
 // MARK: - API Models
 struct EventResponse: Codable {
@@ -20,6 +21,16 @@ struct Event: Codable {
     let bodyText: String?
     let images: [EventImage]?
     let favoritesCount: Int?
+    
+    var coordinates: CLLocationCoordinate2D? {
+        guard
+            let lat = place?.coords?.lat,
+            let lon = place?.coords?.lon
+        else {
+            return nil
+        }
+        return CLLocationCoordinate2D(latitude: lat, longitude: lon)
+    }
     
     enum CodingKeys: String, CodingKey {
         case dates, title, place, description, images
