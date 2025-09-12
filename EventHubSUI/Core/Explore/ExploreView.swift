@@ -9,8 +9,11 @@ import SwiftUI
 
 struct ExploreView: View {
     @State private var searchText = ""
+    @State private var isShowingCityPicker = false
+    
+    let cities = ["New York", "Los Angeles", "Moscow", "Paris", "Tokyo"]
     var events = Event.events
-
+    
     var body: some View {
         NavigationStack {
             ZStack(alignment: .top) {
@@ -20,7 +23,7 @@ struct ExploreView: View {
                     .frame(height: 470)
                     .edgesIgnoringSafeArea(.top)
                     .offset(y: -350)
-
+                
                 ScrollView(.vertical, showsIndicators: false) {
                     VStack(spacing: 16) {
                         ExploreSearchBar(text: $searchText, placeholder: "Search") {
@@ -28,7 +31,7 @@ struct ExploreView: View {
                         }
                         CategoryScrollView()
                         FilterScrollView()
-
+                        
                         HStack {
                             Text("Upcoming Events")
                                 .font(.headline)
@@ -36,7 +39,7 @@ struct ExploreView: View {
                             Button("See All") {}
                         }
                         .padding(.horizontal)
-
+                        
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 16) {
                                 ForEach(events, id: \.id) { event in
@@ -45,7 +48,7 @@ struct ExploreView: View {
                             }
                             .padding(.horizontal)
                         }
-
+                        
                         HStack {
                             Text("Nearby You")
                                 .font(.headline)
@@ -53,7 +56,7 @@ struct ExploreView: View {
                             Button("See All") {}
                         }
                         .padding(.horizontal)
-
+                        
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 16) {
                                 ForEach(events, id: \.id) { event in
@@ -68,8 +71,13 @@ struct ExploreView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button {
-                        print("Custom left button tapped")
+                    Menu {
+                        ForEach(cities, id: \.self) { city in
+                            Button(city) {
+                                // action
+                            }
+                        }
+                        
                     } label: {
                         LocationButtonView()
                     }
@@ -80,6 +88,7 @@ struct ExploreView: View {
                 }
                 
             }
+            
         }
     }
 }
