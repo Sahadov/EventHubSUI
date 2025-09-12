@@ -10,6 +10,7 @@ import SwiftUI
 struct TabBarView: View {
     var body: some View {
         TabView {
+
             ExploreView(events: Event.events)
                 .tabItem {
                     Label("Explore", systemImage: "eyes")
