@@ -35,6 +35,11 @@ struct EventsView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .animation(.easeInOut(duration: 0.35), value: selectedTab)
+            
+            CustomSIButton(buttonLableText: "EXPLORE EVENTS")
+                .padding(.vertical, 20)
+            
+            Spacer()
                 
         }
         .background(Color.gray.opacity(0.1))
