@@ -7,23 +7,18 @@
 
 import SwiftUI
 
-enum FilterCategory: String, CaseIterable {
-    case today = "TODAY"
-    case films = "FILMS"
-    case lists = "LISTS"
-}
 
 struct FilterScrollView: View {
-    var onButtonTap: (() -> Void)?
+    var onButtonTap: ((FilterCategory) -> Void)? = nil
     
     var body: some View {
         HStack(spacing: 12) {
             ForEach(FilterCategory.allCases, id: \.self) { filter in
                 Button {
-                    onButtonTap?()
-                    print("Category taped: \(filter.rawValue)") // for test
+                    onButtonTap?(filter)
+                    print("Category taped: \(filter.title)") // for test
                 } label: {
-                    Text(filter.rawValue)
+                    Text(filter.title)
                         .font(.system(size: 14, weight: .bold))
                         .foregroundColor(.white)
                         .frame(width: 106.77, height: 39.06)

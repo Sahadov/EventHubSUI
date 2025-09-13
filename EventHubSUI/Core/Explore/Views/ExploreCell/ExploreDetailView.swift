@@ -14,7 +14,7 @@ struct ExploreDetailView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: screenWidth * 0.02) {
             
-            Text(event.bodyText ?? "No title")
+            Text(event.title ?? "No title")
                 .font(.system(size: screenWidth * 0.045, weight: .semibold))
                 .lineLimit(1)
                 .truncationMode(.tail)

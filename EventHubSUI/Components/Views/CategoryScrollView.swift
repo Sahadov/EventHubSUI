@@ -15,11 +15,14 @@ enum categoyScreenType {
 struct CategoryScrollView: View {
     var screenType: categoyScreenType = .explore
     
+    var onCategorySelected: ((EventCategory) -> Void)? = nil
+    
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 12) {
                 ForEach(EventCategory.allCases, id: \.self) { category in
                     Button {
+                        onCategorySelected?(category)
                         // действие при нажатии
                         // реализовать callback
                     } label: {

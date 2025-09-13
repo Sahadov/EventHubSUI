@@ -21,6 +21,8 @@ struct Event: Codable {
     let bodyText: String?
     let images: [EventImage]?
     let favoritesCount: Int?
+    let categories: [String]?
+    let isFree: Bool?
     
     var coordinates: CLLocationCoordinate2D? {
         guard
@@ -33,9 +35,10 @@ struct Event: Codable {
     }
     
     enum CodingKeys: String, CodingKey {
-        case dates, title, place, description, images
+        case dates, title, place, description, images, categories
         case bodyText       = "body_text"
         case favoritesCount = "favorites_count"
+        case isFree = "is_free"
     }
 }
 
@@ -44,8 +47,11 @@ struct DateInfo: Codable {
     let endDate: String?
     let startTime: String?
     let endTime: String?
+    let start: Double?
+    let end: Double?
     
     enum CodingKeys: String, CodingKey {
+        case start, end
         case startDate   = "start_date"
         case endDate     = "end_date"
         case startTime   = "start_time"
@@ -97,29 +103,24 @@ extension Event: Identifiable {
 // Format for eventsCell date 
 extension DateInfo {
     var day: String {
-        guard let startDate = startDate else { return "" }
+        guard let start = start else { return "" }
+        let date = Date(timeIntervalSince1970: start)
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        formatter.locale = Locale(identifier: "en_US")
-        if let date = formatter.date(from: startDate) {
-            formatter.dateFormat = "dd"
-            return formatter.string(from: date)
-        }
-        return ""
+        formatter.dateFormat = "dd"
+        return formatter.string(from: date)
     }
     
     var month: String {
-        guard let startDate = startDate else { return "" }
+        guard let start = start else { return "" }
+        let date = Date(timeIntervalSince1970: start)
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
+        formatter.dateFormat = "LLLL"
         formatter.locale = Locale(identifier: "en_US")
-        if let date = formatter.date(from: startDate) {
-            formatter.dateFormat = "LLLL" // полное название месяца
-            return formatter.string(from: date).capitalized // с большой буквы
-        }
-        return ""
+        return formatter.string(from: date).capitalized
     }
 }
+
+
 
 
 // MARK: - MOCK DATA
@@ -141,7 +142,9 @@ extension Event {
             startDate: "2025-09-15",
             endDate: "2025-09-20",
             startTime: "10:00:00",
-            endTime: "18:00:00"
+            endTime: "18:00:00",
+            start: -62135433000,
+            end: 253370754000
         )],
         title: "Impressionist Art Exhibition",
         place: Place(
@@ -162,7 +165,9 @@ extension Event {
                 )
             )
         ],
-        favoritesCount: 120
+        favoritesCount: 120,
+        categories: ["Exhibition"],
+        isFree: true
     )
     
     static let mockConcert = Event(
@@ -170,7 +175,9 @@ extension Event {
             startDate: "2025-10-01",
             endDate: "2025-10-02",
             startTime: "18:00:00",
-            endTime: "23:00:00"
+            endTime: "23:00:00",
+            start: 1559925000,
+            end: 1501624800
         )],
         title: "Rock Festival 2025",
         place: Place(
@@ -191,7 +198,9 @@ extension Event {
                 )
             )
         ],
-        favoritesCount: 340
+        favoritesCount: 340,
+        categories: ["Concert"],
+        isFree: true
     )
     
     static let mockMarathon = Event(
@@ -199,7 +208,9 @@ extension Event {
             startDate: "2025-11-05",
             endDate: "2025-11-05",
             startTime: "08:00:00",
-            endTime: "14:00:00"
+            endTime: "14:00:00",
+            start: 1500660000,
+            end: 1501624800
         )],
         title: "City Marathon",
         place: Place(
@@ -220,7 +231,9 @@ extension Event {
                 )
             )
         ],
-        favoritesCount: 540
+        favoritesCount: 540,
+        categories: ["Marathon"],
+        isFree: true
     )
 }
 

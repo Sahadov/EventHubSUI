@@ -35,36 +35,38 @@ enum Endpoint {
     var queryItems: [URLQueryItem] {
         var items: [URLQueryItem] = []
         items.append(contentsOf: [
-           URLQueryItem(name: "fields", value: "dates,title,place,description,body_text,images,favorites_count"),
-           URLQueryItem(name: "number", value: "100"),
+           URLQueryItem(name: "fields", value: "dates,title,place,description,body_text,images,favorites_count,categories,slug,price,is_free"),
+           URLQueryItem(name: "page_size", value: "100"),
            URLQueryItem(name: "text_format", value: "text"),
-           URLQueryItem(name: "expand", value: "place,dates,images")
+           URLQueryItem(name: "expand", value: "place,dates,images,categories,slug,price,is_free")
         ])
-
+        let now = Int(Date().timeIntervalSince1970)
         
         switch self {
         case .getUpcomingEvents(let lat, let lon):
-            items.append(URLQueryItem(name: "actual_since", value: String(Int(Date().timeIntervalSince1970))))
+            items.append(URLQueryItem(name: "order_by", value: "publication_date"))
+            items.append(URLQueryItem(name: "lat", value: String(lat)))
+            items.append(URLQueryItem(name: "lon", value: String(lon)))
+            items.append(URLQueryItem(name: "radius", value: "10000"))
+           
+            
+        case .getNearbyEvents(let lat, let lon):
+            items.append(URLQueryItem(name: "order_by", value: "-publication_date"))
+            items.append(URLQueryItem(name: "lat", value: String(lat)))
+            items.append(URLQueryItem(name: "lon", value: String(lon)))
+            items.append(URLQueryItem(name: "radius", value: "5000"))
+            
+        case .getPastEvents(let lat, let lon, let number):
+            items.append(URLQueryItem(name: "actual_until", value: String(Int(Date().timeIntervalSince1970))))
+            items.append(URLQueryItem(name: "publication_date", value: String(now)))
+            items.append(URLQueryItem(name: "order_by", value: "publication_date"))
             items.append(URLQueryItem(name: "lat", value: String(lat)))
             items.append(URLQueryItem(name: "lon", value: String(lon)))
             items.append(URLQueryItem(name: "radius", value: "10000"))
             
-        case .getNearbyEvents(let lat, let lon):
-            items.append(URLQueryItem(name: "radius", value: "5000"))
-            items.append(URLQueryItem(name: "lat", value: String(lat)))
-            items.append(URLQueryItem(name: "lon", value: String(lon)))
-            
-        case .getPastEvents(let lat, let lon, let number):
-            items.append(URLQueryItem(name: "actual_until", value: String(Int(Date().timeIntervalSince1970))))
-            items.append(URLQueryItem(name: "ordering", value: "-dates"))
-            items.append(URLQueryItem(name: "lat", value: String(lat)))
-            items.append(URLQueryItem(name: "lon", value: String(lon)))
-            items.append(URLQueryItem(name: "radius", value: "5000"))
-            items.append(URLQueryItem(name: "number", value: String(number)))
-            
         case .getEventsBy(let category):
             items.append(URLQueryItem(name: "categories", value: category.rawValue))
-            items.append(URLQueryItem(name: "actual_since", value: String(Int(Date().timeIntervalSince1970))))
+            items.append(URLQueryItem(name: "order_by", value: "-publication_date"))
         }
         
         return items

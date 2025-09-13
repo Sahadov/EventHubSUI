@@ -19,7 +19,7 @@ struct ExploreImageView: View {
 //        Image(.mockEvent)
 //        .resizable()
 //        .scaledToFill()
-        AsyncImage(url: URL(string: event.images?.first?.thumbnails?.size144x96 ?? "https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?w=144")) { phase in
+        AsyncImage(url: URL(string: event.images?.first?.thumbnails?.size640x384 ?? "https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?w=144")) { phase in
             switch phase {
             case .empty:
                 ProgressView() // Пока загружается
