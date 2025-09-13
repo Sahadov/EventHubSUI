@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D18AB2C52E75D7D100855695 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = D18AB2C42E75D7D100855695 /* RealmSwift */; };
 		D1D73CD42E6E4853004F18E9 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = D1D73CD32E6E4853004F18E9 /* SDWebImageSwiftUI */; };
 /* End PBXBuildFile section */
 
@@ -40,6 +41,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D18AB2C52E75D7D100855695 /* RealmSwift in Frameworks */,
 				D1D73CD42E6E4853004F18E9 /* SDWebImageSwiftUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -84,6 +86,7 @@
 			name = EventHubSUI;
 			packageProductDependencies = (
 				D1D73CD32E6E4853004F18E9 /* SDWebImageSwiftUI */,
+				D18AB2C42E75D7D100855695 /* RealmSwift */,
 			);
 			productName = EventHubSUI;
 			productReference = D1D73B7B2E6E30BE004F18E9 /* EventHubSUI.app */;
@@ -115,6 +118,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				D1D73CD22E6E4853004F18E9 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
+				D18AB2C32E75D7D100855695 /* XCRemoteSwiftPackageReference "realm-swift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D1D73B7C2E6E30BE004F18E9 /* Products */;
@@ -358,6 +362,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		D18AB2C32E75D7D100855695 /* XCRemoteSwiftPackageReference "realm-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/realm-swift";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		D1D73CD22E6E4853004F18E9 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI.git";
@@ -369,6 +381,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		D18AB2C42E75D7D100855695 /* RealmSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D18AB2C32E75D7D100855695 /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = RealmSwift;
+		};
 		D1D73CD32E6E4853004F18E9 /* SDWebImageSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = D1D73CD22E6E4853004F18E9 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
