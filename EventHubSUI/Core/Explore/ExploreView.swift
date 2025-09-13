@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ExploreView: View {
+    @StateObject private var viewModel = ExploreViewModel()
     @State private var searchText = ""
     @State private var isShowingCityPicker = false
     
@@ -23,27 +24,49 @@ struct ExploreView: View {
                     .frame(height: 470)
                     .edgesIgnoringSafeArea(.top)
                     .offset(y: -350)
-                
+                // SearchBar
                 ScrollView(.vertical, showsIndicators: false) {
                     VStack(spacing: 16) {
                         ExploreSearchBar(text: $searchText, placeholder: "Search") {
-                            print("Right button tapped")
+                            /// Сброс фильтров по умолчанию
+                            Task {
+                                viewModel.resetToDefault()
+                                await viewModel.fetchInitialEvents()
+                            }
                         }
-                        CategoryScrollView()
-                        FilterScrollView()
+                        CategoryScrollView { category in
+                            Task {
+                                await viewModel.fetchEventsBy(category: category)
+                            }
+                        }
+                        FilterScrollView() { filter in
+                            viewModel.fetchEventsBy(filter: filter)
+                        }
                         
                         HStack {
                             Text("Upcoming Events")
                                 .font(.headline)
                             Spacer()
-                            Button("See All") {}
+                            Button("See All") {
+                                // Go to seeAll view or eventsView ?
+                            }
                         }
                         .padding(.horizontal)
                         
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 16) {
-                                ForEach(events, id: \.id) { event in
-                                    ExploreCell(event: event)
+                                if viewModel.isLoading {
+                                    // 3 фиктивных элемента skeleton
+                                    ForEach(0..<3, id: \.self) { _ in
+                                        ExploreCell(event: .mockConcert, isPlaceholder: true)
+                                    }
+                                } else {
+                                    ForEach(viewModel.isCategoryMode ? viewModel.categoryEvents : viewModel.upcomingEvents, id: \.id) { event in
+                                        NavigationLink(destination: EventDetailsView(event: event)) {
+                                            ExploreCell(event: event, isPlaceholder: false)
+                                        }
+                                        .buttonStyle(.plain) // убираем подсветку ссылки
+                                    }
                                 }
                             }
                             .padding(.horizontal)
@@ -53,18 +76,43 @@ struct ExploreView: View {
                             Text("Nearby You")
                                 .font(.headline)
                             Spacer()
-                            Button("See All") {}
+                            Button("See All") {
+                                // Go to seeAll view or eventsView ?
+                            }
                         }
                         .padding(.horizontal)
-                        
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 16) {
-                                ForEach(events, id: \.id) { event in
-                                    ExploreCell(event: event)
+                                if viewModel.isLoading {
+                                    // Skeleton
+                                    ForEach(0..<3, id: \.self) { _ in
+                                        ExploreCell(event: .mockConcert, isPlaceholder: true)
+                                    }
+                                } else if viewModel.isCategoryMode && viewModel.categoryEvents.isEmpty {
+                                    // Пустое состояние для фильтра FREE
+                                    VStack(spacing: 8) {
+                                        Text("No free events 😢")
+                                            .font(.headline)
+                                            .foregroundColor(.gray)
+                                        Text("Try another category or date")
+                                            .font(.subheadline)
+                                            .foregroundColor(.secondary)
+                                    }
+                                    .frame(width: UIScreen.main.bounds.width - 32, height: 200)
+                                    .padding()
+                                } else {
+                                    // Список событий
+                                    ForEach(viewModel.isCategoryMode ? viewModel.categoryEvents : viewModel.upcomingEvents, id: \.id) { event in
+                                        NavigationLink(destination: EventDetailsView(event: event)) {
+                                            ExploreCell(event: event, isPlaceholder: false)
+                                        }
+                                        .buttonStyle(.plain)
+                                    }
                                 }
                             }
                             .padding(.horizontal)
                         }
+                        
                     }
                     .padding(.vertical)
                 }
@@ -74,7 +122,7 @@ struct ExploreView: View {
                     Menu {
                         ForEach(cities, id: \.self) { city in
                             Button(city) {
-                                // action
+                                print(city)
                             }
                         }
                         
@@ -84,7 +132,7 @@ struct ExploreView: View {
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Image(.bell)
+                    Image(.bell) // заглушка
                 }
                 
             }
