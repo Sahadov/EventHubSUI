@@ -16,15 +16,15 @@ enum TabBookmarksEnum: Int, CaseIterable {
         
         switch self {
         case .exploreView:
-            return "eyes"
+            return "compass"
         case .eventsView:
-            return "bubble.left.and.bubble.right.fill"
+            return "Calendar"
         case .favoritesView:
-            return "bookmark"
+            return "BookMark"
         case .mapView:
-            return "person.fill"
+            return "Location"
         case .profileView:
-            return "person.fill"
+            return "ProfileFill"
         }
     }
     
