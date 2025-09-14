@@ -16,8 +16,6 @@ enum LocationsList: String, CaseIterable {
     case ekb
     case nnv
     case kzn
-    case vbg
-    case smr
     case krd
     case sochi
     case ufa
@@ -32,8 +30,6 @@ enum LocationsList: String, CaseIterable {
         case .ekb: return "Yekaterinburg"
         case .nnv: return "Nizhny Novgorod"
         case .kzn: return "Kazan"
-        case .vbg: return "Vyborg"
-        case .smr: return "Samara"
         case .krd: return "Krasnodar"
         case .sochi: return "Sochi"
         case .ufa: return "Ufa"
@@ -50,8 +46,6 @@ enum LocationsList: String, CaseIterable {
         case .ekb: return 56.8389
         case .nnv: return 56.3269
         case .kzn: return 55.7903
-        case .vbg: return 60.7080
-        case .smr: return 53.1959
         case .krd: return 45.0355
         case .sochi: return 43.5855
         case .ufa: return 54.7388
@@ -68,8 +62,6 @@ enum LocationsList: String, CaseIterable {
         case .ekb: return 60.6057
         case .nnv: return 44.0059
         case .kzn: return 49.1347
-        case .vbg: return 28.7510
-        case .smr: return 50.1000
         case .krd: return 38.9750
         case .sochi: return 39.7200
         case .ufa: return 55.9721
