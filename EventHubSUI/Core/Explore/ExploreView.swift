@@ -37,7 +37,7 @@ struct ExploreView: View {
                         }
                         CategoryScrollView { category in
                             Task {
-                                await viewModel.fetchEventsBy(category: category)
+                                await viewModel.fetchEventsBy(category: category, location: selectedCity)
                             }
                             
                         }

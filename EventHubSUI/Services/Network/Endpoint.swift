@@ -26,7 +26,7 @@ enum Endpoint {
     /// Сортировка: по дате события (от актуальных)
     /// - Parameters:
     ///   - category: Категория события (например, concerts, theatre, exhibitions и т.д.)
-    case getEventsBy(category: EventCategory)
+    case getEventsBy(category: EventCategory, location: LocationsList = .msk)
     case getEventBy(location: LocationsList)
     
     var baseURL: String { "https://kudago.com" }
@@ -37,7 +37,7 @@ enum Endpoint {
         var items: [URLQueryItem] = []
         items.append(contentsOf: [
            URLQueryItem(name: "fields", value: "dates,title,place,description,body_text,images,favorites_count,categories,slug,price,is_free"),
-           URLQueryItem(name: "page_size", value: "100"),
+           URLQueryItem(name: "page_size", value: "20"),
            URLQueryItem(name: "text_format", value: "text"),
            URLQueryItem(name: "expand", value: "place,dates,images,categories,slug,price,is_free")
         ])
@@ -71,7 +71,8 @@ enum Endpoint {
             items.append(URLQueryItem(name: "lon", value: String(lon)))
             items.append(URLQueryItem(name: "radius", value: "10000"))
             
-        case .getEventsBy(let category):
+        case .getEventsBy(let category, let location):
+            items.append(URLQueryItem(name: "location", value: location.rawValue))
             items.append(URLQueryItem(name: "categories", value: category.rawValue))
 //            items.append(URLQueryItem(name: "order_by", value: "dates"))
             items.append(URLQueryItem(name: "actual_since", value: "\(now)"))

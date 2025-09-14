@@ -45,12 +45,12 @@ final class ExploreViewModel: ObservableObject {
     }
       
       /// Загружаем данные по категории
-      func fetchEventsBy(category: EventCategory) async {
+    func fetchEventsBy(category: EventCategory, location: LocationsList) async {
           isLoading = true
           defer { isLoading = false }
           
           do {
-              self.categoryEvents = try await networkService.fetch(from: .getEventsBy(category: category)).results
+              self.categoryEvents = try await networkService.fetch(from: .getEventsBy(category: category, location: location)).results
                   .removingDuplicates()
               self.isCategoryMode = true
           } catch {
