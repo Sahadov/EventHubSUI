@@ -11,15 +11,6 @@ import CoreLocation
 
 struct MapView: View {
     @ObservedObject var viewModel = MapViewModel()
-    @State var searchText: String = ""
-    @State private var currentLocation: CLLocationCoordinate2D?
-    
-    @State private var mapRegion = MKCoordinateRegion(
-        center: CLLocationCoordinate2D(latitude: 55.7569, longitude: 37.6151),
-        span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
-    )
-    
-    @State private var tappedEvent: Event?
     
     var body: some View {
         ZStack {
@@ -33,14 +24,14 @@ struct MapView: View {
             let manager = CLLocationManager()
             manager.requestWhenInUseAuthorization()
             if let coord = manager.location?.coordinate {
-                currentLocation = coord
+                viewModel.currentLocation = coord
             }
         }
     }
     
     
     var mapView: some View {
-        Map(coordinateRegion: $mapRegion,
+        Map(coordinateRegion: $viewModel.mapRegion,
             annotationItems: viewModel.upcomingEvents.compactMap { event in
                 event.coordinates != nil ? event : nil
             }) { event in
@@ -77,7 +68,7 @@ struct MapView: View {
                 }
                 .onTapGesture {
                     withAnimation(.spring) {
-                        tappedEvent = event
+                        viewModel.tappedEvent = event
                     }
                 }
             }
@@ -92,7 +83,7 @@ struct MapView: View {
                     Image(systemName: "magnifyingglass")
                         .foregroundColor(.accentBlue)
                     
-                    TextField("Find food or restaurant", text: $searchText)
+                    TextField("Find food or restaurant", text: $viewModel.searchText)
                         .textFieldStyle(PlainTextFieldStyle())
                 }
                 .padding(.vertical, 14)
@@ -102,7 +93,7 @@ struct MapView: View {
                 .shadow(radius: 3)
                 
                 Button(action: {
-                    if let coord = currentLocation {
+                    if let coord = viewModel.currentLocation {
                         withAnimation(.easeInOut) {
                             MKCoordinateRegion(
                                 center: CLLocationCoordinate2D(latitude: coord.latitude, longitude: coord.longitude),
@@ -149,8 +140,13 @@ struct MapView: View {
         VStack {
             Spacer()
             
-            if let tappedEvent {
-                EventCard(type: .favourites, event: tappedEvent)
+            if let tappedEvent = viewModel.tappedEvent {
+                EventCard(type: .favourites,
+                          event: tappedEvent,
+                          isFavourite: viewModel.isFavorite(tappedEvent)
+                    ){
+                        viewModel.toggleFavorite(tappedEvent)
+                    }
                     .shadow(radius: 5)
                     .padding(.horizontal, 30)
                     .padding(.bottom, 40)
