@@ -44,17 +44,30 @@ struct MapView: View {
                             .frame(width: 44, height: 44)
                             .shadow(radius: 5)
                         
-                        // внутренний цветной квадрат
-                        RoundedRectangle(cornerRadius: 6)
-                            .fill(Color.accentBlue)
+                        // внутренний цветной квадрат с цветом категории
+                        if let category = EventCategory(rawValue: event.categories?.first ?? "concert") {
+                            RoundedRectangle(cornerRadius: 6)
+                            .fill(category.color)
                             .frame(width: 30, height: 30)
-                        
-                        // иконка поверх
-                        Image(systemName: "mappin.circle.fill")
+                                        
+                        // иконка из категории
+                        Image(systemName: category.iconName)
                             .resizable()
                             .scaledToFit()
                             .foregroundColor(.white)
                             .frame(width: 18, height: 18)
+                        } else {
+                        // на случай некорректного значения
+                        RoundedRectangle(cornerRadius: 6)
+                            .fill(Color.customYellow)
+                            .frame(width: 30, height: 30)
+                                        
+                            Image(systemName: "mappin")
+                                .resizable()
+                                .scaledToFit()
+                                .foregroundColor(.white)
+                                .frame(width: 18, height: 18)
+                        }
                     }
                     
                     Image(systemName: "triangle.fill")
