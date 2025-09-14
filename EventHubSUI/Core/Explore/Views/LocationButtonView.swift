@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct LocationButtonView: View {
+    var city: String
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
             HStack(spacing: 4) {
@@ -20,7 +22,7 @@ struct LocationButtonView: View {
                     .frame(width: 12, height: 12)
             }
             
-            Text("New York, USA")
+            Text(city)
                 .font(.system(size: 12))
                 .lineLimit(1)
                 .minimumScaleFactor(0.8)
@@ -31,6 +33,6 @@ struct LocationButtonView: View {
 }
 
 #Preview {
-    LocationButtonView()
+    LocationButtonView(city: "kiev")
         .background(Color.gray)
 }

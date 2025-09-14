@@ -52,18 +52,26 @@ struct ExploreImageView: View {
     }
 
 
-
+    
     var dateView: some View {
         VStack(spacing: screenWidth * 0.01) {
-            Text(event.dates?.first?.day ?? "")
-                .font(.system(size: screenWidth * 0.06, weight: .thin))
-            
-                
-            Text(event.dates?.first?.month ?? "")
-                .font(.system(size: screenWidth * 0.026, weight: .regular))
-                
+            if let nextDate = event.dates?.last {
+                // Есть дата → показываем день и месяц
+                Text(nextDate.day)
+                    .font(.system(size: screenWidth * 0.06, weight: .thin))
+                    .foregroundColor(.red)
+                Text(nextDate.month)
+                    .font(.system(size: screenWidth * 0.026, weight: .regular))
+                    .foregroundColor(.red)
+            } else {
+                // Даты нет → показываем иконку
+                Image(systemName: "calendar.badge.exclamationmark")
+                    .resizable()
+                    .scaledToFit()
+                    .foregroundColor(.red)
+                    .frame(width: screenWidth * 0.06, height: screenWidth * 0.06)
+            }
         }
-        .foregroundColor(.red)
         .frame(width: screenWidth * 0.15, height: screenWidth * 0.15)
         .background(
             RoundedRectangle(cornerRadius: screenWidth * 0.02)

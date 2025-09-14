@@ -14,7 +14,6 @@ enum EventCategory: String, CaseIterable {
     case kids = "kids"
     case party = "party"
     case quest = "quest"
-    case businessEvents = "business-events"
     
     var title: String {
         switch self {
@@ -24,7 +23,6 @@ enum EventCategory: String, CaseIterable {
         case .kids: return "Kids"
         case .party: return "Party"
         case .quest: return "Quest"
-        case .businessEvents: return "Business"
         }
     }
     var color: Color {
@@ -35,7 +33,6 @@ enum EventCategory: String, CaseIterable {
         case .kids: return Color(hex: "#46CDFB")
         case .party: return .cyan
         case .quest: return .mint
-        case .businessEvents: return .brown
             
         }
     }
@@ -48,7 +45,6 @@ enum EventCategory: String, CaseIterable {
         case .kids: return "figure.and.child.holdinghands"
         case .party: return "sparkles"
         case .quest: return "puzzlepiece"
-        case .businessEvents: return "briefcase"
         }
     }
     
