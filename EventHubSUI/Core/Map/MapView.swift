@@ -141,7 +141,12 @@ struct MapView: View {
             Spacer()
             
             if let tappedEvent = viewModel.tappedEvent {
-                EventCard(type: .favourites, event: tappedEvent)
+                EventCard(type: .favourites,
+                          event: tappedEvent,
+                          isFavourite: viewModel.isFavorite(tappedEvent)
+                    ){
+                        viewModel.toggleFavorite(tappedEvent)
+                    }
                     .shadow(radius: 5)
                     .padding(.horizontal, 30)
                     .padding(.bottom, 40)
