@@ -15,7 +15,8 @@ struct AppView: View {
         AppViewBuilder(
             showTabBar: appState,
             tabbarView: {
-                TabBarView()
+//                TabBarView()
+                MainView()
             },
             onboardingView: {
                 WelcomeView()
