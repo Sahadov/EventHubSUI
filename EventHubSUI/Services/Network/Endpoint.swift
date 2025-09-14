@@ -14,19 +14,20 @@ enum Endpoint {
     ///   - lat: Широта (по умолчанию Москва: 37.6151)
     ///   - radius: Радиус поиска вокруг координат (метры, по умолчанию 5000)
     ///     - Примечание: этот параметр передается в queryItems как URLQueryItem(name: "radius", value: "5000")
-    case getUpcomingEvents(_ lon: Double = 55.7569, _ lat: Double = 37.6151)
+    case getUpcomingEvents(lat: Double = 55.7569, lon: Double = 37.6151)
     /// Получение событий рядом с указанными координатами (Nearby events) cортировка по расстоянию от точки
-    case getNearbyEvents(lon: Double = 55.7569, lat: Double = 37.6151)
+    case getNearbyEvents(lat: Double = 55.7569, lon: Double = 37.6151)
     /// Получение прошедших событий (Past events)
     /// Сортировка: по дате события в обратном порядке (сначала недавние прошедшие события)
     ///   - number: Количество событий для загрузки (по умолчанию 20)
     ///     - Примечание: используются параметры `actual_until` (до текущей даты) и `ordering=-dates`
-    case getPastEvents(lon: Double = 55.7569, lat: Double = 37.6151, number: Int = 20)
+    case getPastEvents(lat: Double = 55.7569, lon: Double = 37.6151, number: Int = 20)
     /// Получение событий по категории
     /// Сортировка: по дате события (от актуальных)
     /// - Parameters:
     ///   - category: Категория события (например, concerts, theatre, exhibitions и т.д.)
     case getEventsBy(category: EventCategory)
+    case getEventBy(location: LocationsList)
     
     var baseURL: String { "https://kudago.com" }
     
@@ -41,20 +42,26 @@ enum Endpoint {
            URLQueryItem(name: "expand", value: "place,dates,images,categories,slug,price,is_free")
         ])
         let now = Int(Date().timeIntervalSince1970)
+        let sixMonths = 6 * 30 * 24 * 60 * 60 // 15552000 секунд
+        let actualUntil = Int(now + sixMonths)
         
         switch self {
         case .getUpcomingEvents(let lat, let lon):
-            items.append(URLQueryItem(name: "order_by", value: "publication_date"))
             items.append(URLQueryItem(name: "lat", value: String(lat)))
             items.append(URLQueryItem(name: "lon", value: String(lon)))
-            items.append(URLQueryItem(name: "radius", value: "10000"))
+            items.append(URLQueryItem(name: "radius", value: "15000"))
+            items.append(URLQueryItem(name: "order_by", value: "dates"))
+            items.append(URLQueryItem(name: "actual_since", value: "\(now)"))
+            items.append(URLQueryItem(name: "actual_until", value: "\(actualUntil)"))
            
             
         case .getNearbyEvents(let lat, let lon):
-            items.append(URLQueryItem(name: "order_by", value: "-publication_date"))
             items.append(URLQueryItem(name: "lat", value: String(lat)))
             items.append(URLQueryItem(name: "lon", value: String(lon)))
             items.append(URLQueryItem(name: "radius", value: "5000"))
+            items.append(URLQueryItem(name: "order_by", value: "dates"))
+            items.append(URLQueryItem(name: "actual_since", value: "\(now)"))
+            items.append(URLQueryItem(name: "actual_until", value: "\(actualUntil)"))
             
         case .getPastEvents(let lat, let lon, let number):
             items.append(URLQueryItem(name: "actual_until", value: String(Int(Date().timeIntervalSince1970))))
@@ -66,7 +73,15 @@ enum Endpoint {
             
         case .getEventsBy(let category):
             items.append(URLQueryItem(name: "categories", value: category.rawValue))
-            items.append(URLQueryItem(name: "order_by", value: "-publication_date"))
+//            items.append(URLQueryItem(name: "order_by", value: "dates"))
+            items.append(URLQueryItem(name: "actual_since", value: "\(now)"))
+            items.append(URLQueryItem(name: "actual_until", value: "\(actualUntil)"))
+            
+        case .getEventBy(let location):
+            items.append(URLQueryItem(name: "location", value: location.rawValue))
+            items.append(URLQueryItem(name: "order_by", value: "dates"))
+            items.append(URLQueryItem(name: "actual_since", value: "\(now)"))
+            items.append(URLQueryItem(name: "actual_until", value: "\(actualUntil)"))
         }
         
         return items
