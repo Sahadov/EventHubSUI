@@ -11,8 +11,9 @@ struct ExploreView: View {
     @StateObject private var viewModel = ExploreViewModel()
     @State private var searchText = ""
     @State private var isShowingCityPicker = false
+    @State private var selectedCity: LocationsList = .msk
     
-    let cities = ["New York", "Los Angeles", "Moscow", "Paris", "Tokyo"]
+    
     var events = Event.events
     
     var body: some View {
@@ -38,9 +39,11 @@ struct ExploreView: View {
                             Task {
                                 await viewModel.fetchEventsBy(category: category)
                             }
+                            
                         }
                         FilterScrollView() { filter in
                             viewModel.fetchEventsBy(filter: filter)
+                            
                         }
                         
                         HStack {
@@ -91,7 +94,7 @@ struct ExploreView: View {
                                 } else if viewModel.isCategoryMode && viewModel.categoryEvents.isEmpty {
                                     // Пустое состояние для фильтра FREE
                                     VStack(spacing: 8) {
-                                        Text("No free events 😢")
+                                        Text("No selected events 😢")
                                             .font(.headline)
                                             .foregroundColor(.gray)
                                         Text("Try another category or date")
@@ -102,7 +105,7 @@ struct ExploreView: View {
                                     .padding()
                                 } else {
                                     // Список событий
-                                    ForEach(viewModel.isCategoryMode ? viewModel.categoryEvents : viewModel.upcomingEvents, id: \.id) { event in
+                                    ForEach(viewModel.isCategoryMode ? viewModel.categoryEvents : viewModel.nearEvents, id: \.id) { event in
                                         NavigationLink(destination: EventDetailsView(event: event)) {
                                             ExploreCell(event: event, isPlaceholder: false)
                                         }
@@ -120,14 +123,21 @@ struct ExploreView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Menu {
-                        ForEach(cities, id: \.self) { city in
-                            Button(city) {
+                        ForEach(LocationsList.allCases, id: \.self) { city in
+                            Button(city.title) {
+                                selectedCity = city
                                 print(city)
+                                Task {
+                                    // сбрасываем фильтры
+                                    viewModel.isCategoryMode = false
+                                    viewModel.categoryEvents = []
+                                    await viewModel.fetchEvents(for: city)
+                                }
                             }
                         }
                         
                     } label: {
-                        LocationButtonView()
+                        LocationButtonView(city: selectedCity.title)
                     }
                 }
                 

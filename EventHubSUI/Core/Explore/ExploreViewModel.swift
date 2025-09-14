@@ -14,6 +14,7 @@ final class ExploreViewModel: ObservableObject {
     @Published var upcomingEvents: [Event] = []
     @Published var nearEvents: [Event] = []
     @Published var categoryEvents: [Event] = []
+    @Published var locationEvents: [Event] = []
     
     @Published var isLoading = false
     /// Флаг: показываем ли категорию вместо дефолтных списков
@@ -26,21 +27,22 @@ final class ExploreViewModel: ObservableObject {
         }
     }
     /// Загружаем дефолтные данные
-      func fetchInitialEvents() async {
-          isLoading = true
-          defer { isLoading = false }
-          
-          do {
-              async let upcoming = networkService.fetch(from: .getUpcomingEvents())
-              async let nearby = networkService.fetch(from: .getNearbyEvents())
-              let (upcomingResult, nearbyResult) = try await (upcoming, nearby)
-              self.upcomingEvents = upcomingResult.results
-              self.nearEvents = nearbyResult.results
-              self.isCategoryMode = false
-          } catch {
-              print("Ошибка при загрузке дефолтных событий: \(error)")
-          }
-      }
+    func fetchInitialEvents() async {
+        isLoading = true
+        defer { isLoading = false }
+        
+        do {
+            async let upcoming = networkService.fetch(from: .getUpcomingEvents())
+            async let nearby = networkService.fetch(from: .getNearbyEvents())
+            
+            let (upcomingResult, nearbyResult) = try await (upcoming, nearby)
+            self.upcomingEvents = upcomingResult.results.removingDuplicates()
+            self.nearEvents = nearbyResult.results.removingDuplicates()
+            self.isCategoryMode = false
+        } catch {
+            print("Ошибка при загрузке дефолтных событий: \(error)")
+        }
+    }
       
       /// Загружаем данные по категории
       func fetchEventsBy(category: EventCategory) async {
@@ -49,6 +51,7 @@ final class ExploreViewModel: ObservableObject {
           
           do {
               self.categoryEvents = try await networkService.fetch(from: .getEventsBy(category: category)).results
+                  .removingDuplicates()
               self.isCategoryMode = true
           } catch {
               print("Ошибка при загрузке событий по категории: \(error)")
@@ -69,6 +72,20 @@ final class ExploreViewModel: ObservableObject {
         }
         self.isCategoryMode = true
     }
+
+    func fetchEvents(for location: LocationsList) async {
+          isLoading = true
+          defer { isLoading = false }
+          do {
+              let events = try await networkService.fetch(from: .getEventBy(location: location))
+              // используем и для "upcoming", и для "nearby", чтобы UI не ломался
+              self.upcomingEvents = events.results.removingDuplicates()
+              self.nearEvents = events.results.removingDuplicates()
+              self.isCategoryMode = false
+          } catch {
+              print("Ошибка при загрузке событий по локации \(location): \(error)")
+          }
+      }
 
     /// Сбрасываем фильтр
       func resetToDefault() {
