@@ -6,10 +6,21 @@
 //
 
 import Foundation
+import MapKit
+import CoreLocation
 
 @MainActor
 class MapViewModel: ObservableObject {
     private var networkService = NetworkService()
+    private var repo = EventRepository()
+    
+    @Published var searchText: String = ""
+    @Published var currentLocation: CLLocationCoordinate2D?
+    @Published var mapRegion = MKCoordinateRegion(
+        center: CLLocationCoordinate2D(latitude: 55.7569, longitude: 37.6151),
+        span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
+    )
+    @Published var tappedEvent: Event?
     
     @Published var upcomingEvents: [Event] = []
     
@@ -26,6 +37,14 @@ class MapViewModel: ObservableObject {
         } catch {
             print("Ошибка при загрузке предстоящих событий: \(error)")
         }
+    }
+    
+    func isFavorite(_ event: Event) -> Bool {
+        repo.isFavorite(event: event)
+    }
         
+    func toggleFavorite(_ event: Event) {
+        repo.toggleFavorite(event: event)
+        objectWillChange.send()
     }
 }

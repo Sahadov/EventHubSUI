@@ -120,6 +120,23 @@ extension DateInfo {
     }
 }
 
+extension Event {
+    /// Возвращает ближайшую актуальную дату события, если есть
+    var nextDate: DateInfo? {
+        guard let dates = dates else { return nil }
+        let now = Date().timeIntervalSince1970
+        // Фильтруем даты с корректным start и end, и start >= now
+        let validDates = dates.filter { dateInfo in
+            if let start = dateInfo.start, let end = dateInfo.end {
+                return start > 0 && end > 0 && start >= now
+            }
+            return false
+        }
+        // Сортируем по ближайшему start
+        return validDates.sorted { ($0.start ?? 0) < ($1.start ?? 0) }.first
+    }
+}
+
 
 
 

@@ -16,6 +16,7 @@ enum ScreenType {
 struct EventCard: View {
     var type: ScreenType = .events
     var event: Event
+    var isFavourite: Bool = false
     var onBookmarkTapped: (() -> Void)? = nil
     
     var body: some View {
@@ -47,8 +48,8 @@ struct EventCard: View {
                         Button {
                             onBookmarkTapped?()
                         } label: {
-                            Image(systemName: "bookmark.fill")
-                                .foregroundStyle(Color.accentRed)
+                            Image(systemName: isFavourite ? "bookmark.fill" : "bookmark")
+                            .foregroundStyle(Color.accentRed)
                         }
                     }
                 }
