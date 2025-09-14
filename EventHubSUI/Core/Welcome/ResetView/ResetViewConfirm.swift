@@ -1,33 +1,28 @@
 //
-//  ResetView.swift
+//  ResetViewConfirm.swift
 //  EventHubSUI
 //
-//  Created by Sergey on 10.09.2025.
+//  Created by Sergey on 14.09.2025.
 //
 
 import SwiftUI
 
-struct ResetView: View {
+struct ResetViewConfirm: View {
     
     @Environment(\.dismiss) var dismiss
     
-    @State private var email: String = ""
+    @State var password: String = ""
+    @State var confirmPassword: String = ""
     
     var body: some View {
         VStack(spacing: 26) {
-            Spacer(minLength: 10)
-            Text("Please enter your email address to request a password reset")
-                .frame(width: 310, alignment: .topLeading)
-            EmailTextField(textFieldValue: $email,
-                           textFieldBorderColor: .constant(Color.borderColor()),
-                           icon: .email)
-            Spacer(minLength: 40)
-            CustomSIButton(buttonLableText: "SEND") {
-                
-            }
-            
-            Spacer(minLength: 350)
+            PasswordTextField(textFieldValue: password,
+                              textFieldBorderColor: .constant(Color.borderColor()))
+            PasswordTextField(textFieldValue: confirmPassword,
+                              textFieldBorderColor: .constant(Color.borderColor()))
+            CustomSIButton(buttonLableText: "CHANGE\nPASSWORD")
         }
+        
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
@@ -48,9 +43,10 @@ struct ResetView: View {
                 }
             }
         }
+        
     }
 }
 
 #Preview {
-    ResetView()
+    ResetViewConfirm()
 }

@@ -38,10 +38,10 @@ struct SignInView: View {
                     .foregroundColor(Color(red: 0.07, green: 0.05, blue: 0.15))
                     .offset(x: -120, y: -10)
                 EmailTextField(textFieldValue: $email,
-                               textFieldBorderColor:.constant(Color(cgColor: UIColor(red: 0.896, green: 0.873, blue: 0.873, alpha: 1).cgColor )),
+                               textFieldBorderColor:.constant(Color.borderColor()),
                                icon: .email)
                 
-                PasswordTextField(textFieldValue: password, textFieldBorderColor:.constant(Color(cgColor: UIColor(red: 0.896, green: 0.873, blue: 0.873, alpha: 1).cgColor )),)
+                PasswordTextField(textFieldValue: password, textFieldBorderColor:.constant(Color.borderColor()))
                 HStack {
                     Spacer(minLength: 25)
                     Toggle("", isOn: $isRemembered)
