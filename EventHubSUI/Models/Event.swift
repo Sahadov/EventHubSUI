@@ -13,7 +13,7 @@ struct EventResponse: Codable {
     let results: [Event]
 }
 
-struct Event: Codable {
+struct Event: Codable, Identifiable, Hashable {
     let dates: [DateInfo]?
     let title: String?
     let place: Place?
@@ -42,7 +42,8 @@ struct Event: Codable {
     }
 }
 
-struct DateInfo: Codable {
+struct DateInfo: Codable, Hashable {
+    
     let startDate: String?
     let endDate: String?
     let startTime: String?
@@ -59,7 +60,7 @@ struct DateInfo: Codable {
     }
 }
 
-struct Place: Codable {
+struct Place: Codable, Identifiable, Hashable {
     let id: Int?
     let title: String?
     let address: String?
@@ -67,11 +68,11 @@ struct Place: Codable {
     let subway: String?
 }
 
-struct EventImage: Codable {
+struct EventImage: Codable, Hashable {
     let image: String?
     let thumbnails: Thumbnails?
     
-    struct Thumbnails: Codable {
+    struct Thumbnails: Codable, Hashable {
         let size640x384: String?
         let size144x96: String?
         
@@ -82,14 +83,14 @@ struct EventImage: Codable {
     }
 }
 
-struct Coordinates: Codable {
+struct Coordinates: Codable, Hashable {
     let lat: Double?
     let lon: Double?
 }
 
 //MARK: - Extension Event with id
 
-extension Event: Identifiable {
+extension Event {
     var id: String {
         let t   = title ?? ""
         let pid = place?.id.map(String.init) ?? ""

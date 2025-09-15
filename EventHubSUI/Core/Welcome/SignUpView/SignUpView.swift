@@ -40,28 +40,12 @@ struct SignUpView: View {
             Spacer()
             HStack {
                 Text("Already have an account?")
-                NavigationLink {
-                    Text("OR")
+             
+                Button(action: {}){
                     
-                    Image("GoogleButton")
-                        .resizable()
-                        .frame(width: 363, height: 116)
-                    //MARK: Добавить кнопку для гугла
-                    //            CustomSIButton(buttonLableText: "")
-                    Spacer()
-                    HStack {
-                        Text("Don't have an account?")
-                        NavigationLink {
-                            SignUpView()
-                        } label: {
-                            Text("Sign up")
-                        }
-                        
-                    }  
-                } label: {
                     Text("Sign in")
                 }
-                
+
             }
         }
         .navigationBarBackButtonHidden(true)

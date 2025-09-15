@@ -9,13 +9,19 @@ import SwiftUI
 
 struct SignInView: View {
     
+    @ObservedObject var signInVM: SignInViewModel
+    
     @State private var email: String = .init()
     @State private var password: String = .init()
     @State private var isRemembered: Bool = false
+    @State private var isSignedIn: Bool = false
     
+    init(signInVM: SignInViewModel) {
+        self.signInVM = signInVM
+    }
     
     var body: some View {
-        NavigationView {
+            
             VStack(spacing: 19) {
                 Spacer()
                 Image("Logo")
@@ -52,18 +58,18 @@ struct SignInView: View {
                     
                     Spacer()
                     
-                    NavigationLink {
-                        ResetView()
-                    } label: {
-                        
+                    Button(action: {
+                        self.signInVM.goToForgotPasswordView()
+                    }) {
                         Text("Forgot password?")
-                        
                     }
                     
                     Spacer(minLength: 25)
                 }
                 .padding()
-                CustomSIButton(buttonLableText: "SIGN IN")
+                CustomSIButton(buttonLableText: "SIGN IN") {
+                    signInVM.goToMainView()
+                }
                 Text("OR")
                 
                 Image("GoogleButton")
@@ -74,19 +80,18 @@ struct SignInView: View {
                 Spacer()
                 HStack {
                     Text("Don't have an account?")
-                    NavigationLink {
-                        SignUpView()
-                    } label: {
+                    Button(action: {
+                        self.signInVM.goToSignUpView()
+                    }) {
                         Text("Sign up")
                     }
                     
                 }
                 
             }
-        }
     }
 }
 
 #Preview {
-    SignInView()
+    SignInView(signInVM: SignInViewModel(router: Router()))
 }

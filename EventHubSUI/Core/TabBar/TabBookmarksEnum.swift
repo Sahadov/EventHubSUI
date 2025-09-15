@@ -28,19 +28,4 @@ enum TabBookmarksEnum: Int, CaseIterable {
         }
     }
     
-    var title: String {
-        switch self {
-        case .exploreView:
-            return "Explore"
-        case .eventsView:
-            return "Events"
-        case .favoritesView:
-            return "Favorites"
-        case .mapView:
-            return "Map"
-        case .profileView:
-            return "Profile"
-        }
-    }
-    
 }
