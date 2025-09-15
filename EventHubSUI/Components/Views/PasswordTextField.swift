@@ -9,10 +9,10 @@ import SwiftUI
 
 struct PasswordTextField: View {
     
-    @State var textFieldValue: String = ""
+    @Binding var textFieldValue: String
     @Binding var textFieldBorderColor: Color
     
-    @State private var password: String = ""
+//    @State private var password: String = ""
     
     @State private var showPassword: Bool = false
     
@@ -22,7 +22,7 @@ struct PasswordTextField: View {
     var textFieldWidth: CGFloat = 317
     var textFieldStrokeLineWidth: CGFloat = 1
     var textFieldInternalPadding: CGFloat = 12
-    var keyboardType: UIKeyboardType = .emailAddress
+    var keyboardType: UIKeyboardType = .default
     var fillColor: Color = .white
     var icon: TextFieldImage = TextFieldImage.lock
     
@@ -75,6 +75,6 @@ struct PasswordTextField: View {
     }
 }
 
-#Preview {
-    PasswordTextField(textFieldBorderColor: .constant(Color(cgColor: UIColor(red: 0.896, green: 0.873, blue: 0.873, alpha: 1).cgColor )))
-}
+//#Preview {
+//    PasswordTextField(textFieldValue: .constant(""), textFieldBorderColor: .constant(Color(cgColor: UIColor(red: 0.896, green: 0.873, blue: 0.873, alpha: 1).cgColor )))
+//}

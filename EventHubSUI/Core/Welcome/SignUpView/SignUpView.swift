@@ -23,8 +23,8 @@ struct SignUpView: View {
            
             EmailTextField(textFieldValue: $userName, textFieldBorderColor: .constant(Color(cgColor: UIColor(red: 0.896, green: 0.873, blue: 0.873, alpha: 1).cgColor )), textFieldPlaceholder: "Full name", icon: TextFieldImage.profile)
             EmailTextField(textFieldValue: $userEmail, textFieldBorderColor: .constant(Color(cgColor: UIColor(red: 0.896, green: 0.873, blue: 0.873, alpha: 1).cgColor )), icon: .email)
-            PasswordTextField(textFieldBorderColor: .constant(Color(cgColor: UIColor(red: 0.896, green: 0.873, blue: 0.873, alpha: 1).cgColor )))
-            PasswordTextField(textFieldBorderColor: .constant(Color(cgColor: UIColor(red: 0.896, green: 0.873, blue: 0.873, alpha: 1).cgColor )), textFieldPlaceholder: " Confirm password")
+            PasswordTextField(textFieldValue: $password, textFieldBorderColor: .constant(Color(cgColor: UIColor(red: 0.896, green: 0.873, blue: 0.873, alpha: 1).cgColor )))
+            PasswordTextField(textFieldValue: $password, textFieldBorderColor: .constant(Color(cgColor: UIColor(red: 0.896, green: 0.873, blue: 0.873, alpha: 1).cgColor )), textFieldPlaceholder: " Confirm password")
             CustomSIButton(buttonLableText: "SIGN UP")
                 .offset(x: 0, y: 25)
             Text("OR")

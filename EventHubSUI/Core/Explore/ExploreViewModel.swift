@@ -9,7 +9,9 @@ import Foundation
 
 @MainActor
 final class ExploreViewModel: ObservableObject {
+
     private let networkService = NetworkService()
+    let router: Router
     
     @Published var upcomingEvents: [Event] = []
     @Published var nearEvents: [Event] = []
@@ -20,7 +22,6 @@ final class ExploreViewModel: ObservableObject {
     /// Флаг: показываем ли категорию вместо дефолтных списков
     @Published var isCategoryMode = false
     
-    let router: Router
     
     init(router: Router) {
         self.router = router
