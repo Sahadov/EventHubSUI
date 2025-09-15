@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ExploreView: View {
-    @StateObject private var viewModel = ExploreViewModel()
+    @StateObject var viewModel: ExploreViewModel
     @State private var searchText = ""
     @State private var isShowingCityPicker = false
     @State private var selectedCity: LocationsList = .msk
@@ -17,7 +17,6 @@ struct ExploreView: View {
     var events = Event.events
     
     var body: some View {
-        NavigationStack {
             ZStack(alignment: .top) {
                 // Верхний фон
                 RoundedRectangle(cornerRadius: 40)
@@ -65,10 +64,11 @@ struct ExploreView: View {
                                     }
                                 } else {
                                     ForEach(viewModel.isCategoryMode ? viewModel.categoryEvents : viewModel.upcomingEvents, id: \.id) { event in
-                                        NavigationLink(destination: EventDetailsView(event: event)) {
+                                        Button {
+                                            self.viewModel.goToDetail(event: event)
+                                        } label: {
                                             ExploreCell(event: event, isPlaceholder: false)
                                         }
-                                        .buttonStyle(.plain) // убираем подсветку ссылки
                                     }
                                 }
                             }
@@ -106,10 +106,11 @@ struct ExploreView: View {
                                 } else {
                                     // Список событий
                                     ForEach(viewModel.isCategoryMode ? viewModel.categoryEvents : viewModel.nearEvents, id: \.id) { event in
-                                        NavigationLink(destination: EventDetailsView(event: event)) {
+                                        Button {
+                                            self.viewModel.goToDetail(event: event)
+                                        } label: {
                                             ExploreCell(event: event, isPlaceholder: false)
                                         }
-                                        .buttonStyle(.plain)
                                     }
                                 }
                             }
@@ -141,16 +142,18 @@ struct ExploreView: View {
                     }
                 }
                 
+                
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Image(.bell) // заглушка
                 }
                 
             }
-            
-        }
+            .navigationBarHidden(true)
+            .ignoresSafeArea(.keyboard)
+            .toolbar(.hidden, for: .navigationBar)
     }
 }
 
 #Preview {
-    ExploreView(events: Event.events)
+    ExploreView(viewModel: ExploreViewModel(router: Router()), events: Event.events)
 }

@@ -10,6 +10,8 @@ import SwiftUI
 
 
 class Router: ObservableObject {
+
+    
     
     @Published var path = NavigationPath()
     
@@ -36,21 +38,5 @@ class Router: ObservableObject {
     
 }
 
-enum Routes: Hashable {
 
-//    case signInScreen
-//    case signUpScreen
-//    case resetPasswordScreen
-//    case eventDetailScreen
-//    case searchScreen
-//    case notificationScreen
-//    case webViewScreen
-    case profileScreen
-    case mapScreen
-    case favoritesScreen
-    case eventsScreen
-    case exploreScreen
-    
-    
-}
 

@@ -20,12 +20,15 @@ final class ExploreViewModel: ObservableObject {
     /// Флаг: показываем ли категорию вместо дефолтных списков
     @Published var isCategoryMode = false
     
+    let router: Router
     
-    init() {
+    init(router: Router) {
+        self.router = router
         Task {
             await fetchInitialEvents()
         }
     }
+    
     /// Загружаем дефолтные данные
     func fetchInitialEvents() async {
         isLoading = true
@@ -93,4 +96,8 @@ final class ExploreViewModel: ObservableObject {
               await fetchInitialEvents()
           }
       }
+    
+    func goToDetail(event: Event) {
+        router.goTo(to: .eventDetailScreen(event: event))
+    }
 }

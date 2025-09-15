@@ -43,6 +43,8 @@ struct EventsView: View {
                 
         }
         .background(Color.gray.opacity(0.1))
+        .navigationBarHidden(true)
+        .toolbar(.hidden, for: .navigationBar)
     }
     
     var controls: some View {
@@ -88,6 +90,8 @@ struct EventsView: View {
             insertion: .move(edge: .leading).combined(with: .opacity),
             removal: .move(edge: .trailing).combined(with: .opacity)
         ))
+        .navigationBarHidden(true)
+        .toolbar(.hidden, for: .navigationBar)
     }
 }
 
