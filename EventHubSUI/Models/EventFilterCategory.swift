@@ -8,15 +8,15 @@
 import Foundation
 
 enum FilterCategory: String, CaseIterable {
-    case isFree = "isFree"
-    case films = "films"
-    case others = "others"
+    case today
+    case films
+    case list
     
     var title: String {
         switch self {
-        case .isFree: "FREE"
+        case .today: "TODAY"
         case .films: "FILMS"
-        case .others: "OTHERS"
+        case .list: "LIST"
         }
     }
 }

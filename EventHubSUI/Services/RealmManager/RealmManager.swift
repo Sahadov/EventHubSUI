@@ -5,6 +5,7 @@
 //  Created by Dmitry Volkov on 13/09/2025.
 //
 
+import Foundation
 import RealmSwift
 
 protocol RealmManaging {
@@ -19,14 +20,47 @@ protocol RealmManaging {
 final class RealmManager: RealmManaging {
     static let shared = RealmManager()
     private let realm: Realm
-    
+   
     private init() {
+        // ⚡️ увеличивай номер версии при каждом изменении RealmEvent
+        let config = Realm.Configuration(
+            schemaVersion: 3, // увеличиваем на 1 от предыдущей версии
+            migrationBlock: { migration, oldSchemaVersion in
+                if oldSchemaVersion < 2 {
+                    // Старые миграции для RealmEvent
+                    migration.enumerateObjects(ofType: RealmEvent.className()) { _, newObject in
+                        newObject?["poster"] = nil
+                        newObject?["publicationDate"] = Date().timeIntervalSince1970
+                    }
+                }
+                
+                if oldSchemaVersion < 3 {
+                    // Новые поля для RealmPlace
+                    migration.enumerateObjects(ofType: RealmPlace.className()) { _, newObject in
+                        newObject?["slug"] = nil
+                        newObject?["phone"] = nil
+                        newObject?["isStub"] = false
+                        newObject?["siteURL"] = nil
+                    }
+                }
+            }
+        )
+        Realm.Configuration.defaultConfiguration = config
+        
         do {
             realm = try Realm()
         } catch {
             fatalError("DEBUG: Error initializing Realm: \(error)")
         }
     }
+    
+//    private init() {
+//        do {
+//            realm = try Realm()
+//        } catch {
+//            fatalError("DEBUG: Error initializing Realm: \(error)")
+//        }
+//    }
     
     // MARK: - Save
     

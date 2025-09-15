@@ -14,6 +14,9 @@ struct ExploreView: View {
     @State private var selectedCity: LocationsList = .msk
     
     
+    @State private var selectedFilter: FilterCategory? = nil
+    @State private var isShowingFilterEvents = false
+    
     var events = Event.events
     
     var body: some View {
@@ -29,11 +32,9 @@ struct ExploreView: View {
                 ScrollView(.vertical, showsIndicators: false) {
                     VStack(spacing: 16) {
                         ExploreSearchBar(text: $searchText, placeholder: "Search") {
-                            /// Сброс фильтров по умолчанию
-                            Task {
-                                viewModel.resetToDefault()
-                                await viewModel.fetchInitialEvents()
-                            }
+                            
+                            // Go to FilterView
+                           
                         }
                         CategoryScrollView { category in
                             Task {
@@ -42,9 +43,24 @@ struct ExploreView: View {
                             
                         }
                         FilterScrollView() { filter in
-                            viewModel.fetchEventsBy(filter: filter)
-                            
+                            selectedFilter = filter
+                            isShowingFilterEvents = true
                         }
+                        .navigationDestination(isPresented: $isShowingFilterEvents) {
+                            if let filter = selectedFilter {
+                                switch filter {
+                                case .today:
+                                    SeeAllContentView(event: viewModel.todayEvents)
+                                case .films:
+                                    SeeAllContentView(event: viewModel.movieEvents)
+                                case .list:
+                                    ListContentView(events: viewModel.upcomingEvents)
+                                    
+                                }
+                            }
+                        }
+                        
+                        // Upcoming Events
                         
                         HStack {
                             Text("Upcoming Events")

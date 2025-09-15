@@ -15,6 +15,8 @@ final class ExploreViewModel: ObservableObject {
     @Published var nearEvents: [Event] = []
     @Published var categoryEvents: [Event] = []
     @Published var locationEvents: [Event] = []
+    @Published var todayEvents: [Event] = []
+    @Published var movieEvents: [Event] = []
     
     @Published var isLoading = false
     /// Флаг: показываем ли категорию вместо дефолтных списков
@@ -34,10 +36,14 @@ final class ExploreViewModel: ObservableObject {
         do {
             async let upcoming = networkService.fetch(from: .getUpcomingEvents())
             async let nearby = networkService.fetch(from: .getNearbyEvents())
+            async let movie = networkService.fetch(from: .getMovies())
+            async let today = networkService.fetch(from: .getTodayEvents())
             
-            let (upcomingResult, nearbyResult) = try await (upcoming, nearby)
+            let (upcomingResult, nearbyResult, movieResult, todayResult) = try await (upcoming, nearby, movie, today)
             self.upcomingEvents = upcomingResult.results.removingDuplicates()
             self.nearEvents = nearbyResult.results.removingDuplicates()
+            self.movieEvents = movieResult.results.removingDuplicates()
+            self.todayEvents = todayResult.results
             self.isCategoryMode = false
         } catch {
             print("Ошибка при загрузке дефолтных событий: \(error)")
@@ -50,7 +56,7 @@ final class ExploreViewModel: ObservableObject {
           defer { isLoading = false }
           
           do {
-              self.categoryEvents = try await networkService.fetch(from: .getEventsBy(category: category, location: location)).results
+              self.categoryEvents = try await networkService.fetch(from: .getEventsBy(category, location)).results
                   .removingDuplicates()
               self.isCategoryMode = true
           } catch {
@@ -58,26 +64,35 @@ final class ExploreViewModel: ObservableObject {
           }
       }
 
-    func fetchEventsBy(filter: FilterCategory) {
-        self.categoryEvents = upcomingEvents.filter { event in
-            switch filter {
-            case .isFree:
-                print("Event \(event.title ?? "") isFree: \(String(describing: event.isFree))")
-                return event.isFree ?? false
-            case .films:
-                return event.categories?.contains(where: { $0.lowercased() == "cinema" }) ?? false
-            case .others:
-                return !(event.categories?.contains(where: { $0.lowercased() == "cinema" }) ?? false)
-            }
-        }
-        self.isCategoryMode = true
-    }
+//    func fetchEventsBy(filter: FilterCategory, location: LocationsList) async {
+//        isLoading = true
+//        defer { isLoading = false }
+//        
+//        switch filter {
+//        case .films:
+//            do {
+//                self.movieEvents = try await networkService.fetch(from: .getMovies(location)).results
+//            } catch {
+//                print("Ошибка при загрузке событий по категории: \(error)")
+//            }
+//            
+//        case .today:
+//            do {
+//                self.todayEvents = try await networkService.fetch(from: .getTodayEvents(location)).results
+//            } catch {
+//                print("Ошибка при загрузке событий по категории: \(error)")
+//            }
+//            
+//        case .list:
+//            break
+//        }
+//    }
 
     func fetchEvents(for location: LocationsList) async {
           isLoading = true
           defer { isLoading = false }
           do {
-              let events = try await networkService.fetch(from: .getEventBy(location: location))
+              let events = try await networkService.fetch(from: .getEventBy(location))
               // используем и для "upcoming", и для "nearby", чтобы UI не ломался
               self.upcomingEvents = events.results.removingDuplicates()
               self.nearEvents = events.results.removingDuplicates()
