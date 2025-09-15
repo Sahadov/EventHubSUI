@@ -31,4 +31,8 @@ extension Color {
             opacity: Double(a) / 255
         )
     }
+    
+    static func borderColor() -> Color {
+        return Color(cgColor: UIColor(red: 0.896, green: 0.873, blue: 0.873, alpha: 1).cgColor )
+    }
 }

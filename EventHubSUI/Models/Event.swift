@@ -13,7 +13,7 @@ struct EventResponse: Codable {
     let results: [Event]
 }
 
-struct Event: Codable {
+struct Event: Codable, Identifiable, Hashable {
     let dates: [DateInfo]?
     let title: String?
     let place: Place?
@@ -66,7 +66,8 @@ struct Movie: Codable {
     }
 }
 
-struct DateInfo: Codable {
+struct DateInfo: Codable, Hashable {
+    
     let startDate: String?
     let endDate: String?
     let startTime: String?
@@ -113,11 +114,11 @@ struct Place: Codable {
     }
 }
 
-struct EventImage: Codable {
+struct EventImage: Codable, Hashable {
     let image: String?
     let thumbnails: Thumbnails?
     
-    struct Thumbnails: Codable {
+    struct Thumbnails: Codable, Hashable {
         let size640x384: String?
         let size144x96: String?
         
@@ -128,7 +129,7 @@ struct EventImage: Codable {
     }
 }
 
-struct Coordinates: Codable {
+struct Coordinates: Codable, Hashable {
     let lat: Double?
     let lon: Double?
 }

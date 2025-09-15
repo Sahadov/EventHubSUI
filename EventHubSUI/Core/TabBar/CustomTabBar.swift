@@ -17,7 +17,7 @@ struct CustomTabBar: View {
 
 #Preview {
     struct PreviewWrapper: View {
-        @State private var selectedTab: TabBookmarksEnum = .eventsView
+        @State private var selectedTab: TabBookmarksEnum = .exploreView
         var body: some View {
             ZStack(alignment: .bottom) {
                 CustomTabBar(selectedTab: $selectedTab)
