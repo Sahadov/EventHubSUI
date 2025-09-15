@@ -13,7 +13,7 @@ struct EventResponse: Codable {
     let results: [Event]
 }
 
-struct Event: Codable, Identifiable, Hashable {
+struct Event: Codable, Hashable {
     let dates: [DateInfo]?
     let title: String?
     let place: Place?
@@ -53,7 +53,7 @@ struct Event: Codable, Identifiable, Hashable {
 }
 
 // MARK: - Movie structure
-struct Movie: Codable {
+struct Movie: Codable, Hashable {
     let id: Int?
     let title: String?
     let description: String?
@@ -84,7 +84,7 @@ struct DateInfo: Codable, Hashable {
     }
 }
 
-struct TodayEventObject: Codable {
+struct TodayEventObject: Codable, Hashable {
     let dates: [DateInfo]?
     let title: String?
     let place: Place?
@@ -96,7 +96,7 @@ struct TodayEventObject: Codable {
 }
 
 // MARK: - Place
-struct Place: Codable {
+struct Place: Codable, Hashable {
     let id: Int?
     let title: String?
     let slug: String?
