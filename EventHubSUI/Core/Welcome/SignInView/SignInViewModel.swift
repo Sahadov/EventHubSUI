@@ -55,7 +55,6 @@ final class SignInViewModel: ObservableObject {
             validateResult = try validator.checkString(stringType: .password, string: password, stringForMatching: nil)
             
         } catch {
-            print(password)
             print(error.localizedDescription)
         }
         if password == "" {
