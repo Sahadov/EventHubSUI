@@ -11,9 +11,11 @@ import SwiftUI
 @MainActor
 final class SignInViewModel: ObservableObject {
     
+    let validator: ValidationManager
     let router: Router
     
-    init(router: Router) {
+    init(validator: ValidationManager, router: Router) {
+        self.validator = validator
         self.router = router
     }
     
@@ -29,4 +31,36 @@ final class SignInViewModel: ObservableObject {
         router.goTo(to: .signUpScreen)
     }
     
+    func emailCheck(email: String) -> Bool {
+        var validateResult: Bool = false
+        do {
+            
+            validateResult = try validator.checkString(stringType: .email, string: email, stringForMatching: nil)
+            
+        } catch {
+            print(error.localizedDescription)
+        }
+        if email == "" {
+            return true
+        } else {
+            return validateResult
+        }
+        
+    }
+    
+    func passwordCheck(password: String) -> Bool {
+        var validateResult: Bool = false
+        do {
+            
+            validateResult = try validator.checkString(stringType: .password, string: password, stringForMatching: nil)
+            
+        } catch {
+            print(error.localizedDescription)
+        }
+        if password == "" {
+            return true
+        } else {
+            return validateResult
+        }
+    }
 }

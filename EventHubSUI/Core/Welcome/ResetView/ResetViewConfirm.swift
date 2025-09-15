@@ -16,9 +16,9 @@ struct ResetViewConfirm: View {
     
     var body: some View {
         VStack(spacing: 26) {
-            PasswordTextField(textFieldValue: password,
+            PasswordTextField(textFieldValue: $password,
                               textFieldBorderColor: .constant(Color.borderColor()))
-            PasswordTextField(textFieldValue: confirmPassword,
+            PasswordTextField(textFieldValue: $confirmPassword,
                               textFieldBorderColor: .constant(Color.borderColor()))
             CustomSIButton(buttonLableText: "CHANGE\nPASSWORD")
         }
