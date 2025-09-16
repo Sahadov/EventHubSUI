@@ -74,15 +74,23 @@ struct EventDetailsView: View {
                     .padding(.top, 16)
                 }
             }
-            
-            Button(action: {
-                showShareSheet = true
-            }) {
-                Image(.share)
-                    .frame(width: 36, height: 36)
+            VStack(spacing: 92) {
+                Button(action: {
+                    //
+                }) {
+                    Image(.fav)
+                        .frame(width: 36, height: 36)
+                }
+                
+                Button(action: {
+                    showShareSheet = true
+                }) {
+                    Image(.share)
+                        .frame(width: 36, height: 36)
+                }
             }
-            .padding(.top, 128)
             .padding(.trailing, 16)
+
         }
         .sheet(isPresented: $showShareSheet) {
             ShareBottomSheet()
