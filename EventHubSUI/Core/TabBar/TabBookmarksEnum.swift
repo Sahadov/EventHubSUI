@@ -16,30 +16,30 @@ enum TabBookmarksEnum: Int, CaseIterable {
         
         switch self {
         case .exploreView:
-            return "eyes"
+            return "compassLight"
         case .eventsView:
-            return "bubble.left.and.bubble.right.fill"
+            return "eventsLight"
         case .favoritesView:
-            return "bookmark"
+            return "BookMark"
         case .mapView:
-            return "person.fill"
+            return "mapLight"
         case .profileView:
-            return "person.fill"
+            return "profileLight"
         }
     }
-    
-    var title: String {
+    var iconSelected: String {
+        
         switch self {
         case .exploreView:
-            return "Explore"
+            return "compass"
         case .eventsView:
-            return "Events"
+            return "events"
         case .favoritesView:
-            return "Favorites"
+            return "BookMark"
         case .mapView:
-            return "Map"
+            return "map"
         case .profileView:
-            return "Profile"
+            return "profile"
         }
     }
     

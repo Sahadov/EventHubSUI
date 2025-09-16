@@ -21,7 +21,7 @@ struct CentralButton: View {
                     .frame(width: 44, height: 44)
                   
                 
-                Image("bookmark")
+                Image("BookMark")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 22, height: 22)

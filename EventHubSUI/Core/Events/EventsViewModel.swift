@@ -26,7 +26,7 @@ class EventsViewModel: ObservableObject {
         do {
             self.isLoading = true
             let result = try await networkService.fetch(from: .getUpcomingEvents())
-            self.upcomingEvents = result.results
+            self.upcomingEvents = result.results.removingDuplicates()
             self.isLoading = false
         } catch {
             print("Ошибка при загрузке предстоящих событий: \(error)")
@@ -38,7 +38,7 @@ class EventsViewModel: ObservableObject {
         do {
             self.isLoading = true
             let result = try await networkService.fetch(from: .getPastEvents())
-            self.pastEvents = result.results
+            self.pastEvents = result.results.removingDuplicates()
             self.isLoading = false
         } catch {
             print("Ошибка при загрузке прошлых событий: \(error)")

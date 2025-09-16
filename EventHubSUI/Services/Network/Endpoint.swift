@@ -8,81 +8,106 @@
 import Foundation
 
 enum Endpoint {
-    /// Получение предстоящих событий (Upcoming events)  cортировка по дате добавления/начала события
-    /// - Parameters:
-    ///   - lon: Долгота (по умолчанию Москва: 55.7569)
-    ///   - lat: Широта (по умолчанию Москва: 37.6151)
-    ///   - radius: Радиус поиска вокруг координат (метры, по умолчанию 5000)
-    ///     - Примечание: этот параметр передается в queryItems как URLQueryItem(name: "radius", value: "5000")
-    case getUpcomingEvents(lat: Double = 55.7569, lon: Double = 37.6151)
-    /// Получение событий рядом с указанными координатами (Nearby events) cортировка по расстоянию от точки
-    case getNearbyEvents(lat: Double = 55.7569, lon: Double = 37.6151)
-    /// Получение прошедших событий (Past events)
-    /// Сортировка: по дате события в обратном порядке (сначала недавние прошедшие события)
-    ///   - number: Количество событий для загрузки (по умолчанию 20)
-    ///     - Примечание: используются параметры `actual_until` (до текущей даты) и `ordering=-dates`
-    case getPastEvents(lat: Double = 55.7569, lon: Double = 37.6151, number: Int = 20)
-    /// Получение событий по категории
-    /// Сортировка: по дате события (от актуальных)
-    /// - Parameters:
-    ///   - category: Категория события (например, concerts, theatre, exhibitions и т.д.)
-    case getEventsBy(category: EventCategory, location: LocationsList = .msk)
-    case getEventBy(location: LocationsList)
+    /// Upcoming events - sorted by date
+    case getUpcomingEvents(_ location: LocationsList = .msk)
+    /// Nearby events - sorted by distance
+    case getNearbyEvents(_ location: LocationsList = .msk)
+    /// Past events - sorted by date (reverse order)
+    case getPastEvents(_ location: LocationsList = .msk)
+    /// Events by category - sorted by publication date
+    case getEventsBy(_ category: EventCategory, _ location: LocationsList = .msk)
+    /// Events by location - sorted by date
+    case getEventBy(_ location: LocationsList = .msk)
+    
+    /// Today's events
+    case getTodayEvents(_ location: LocationsList = .msk)
+    /// Movie screenings
+    case getMovies(_ location: LocationsList = .msk)
     
     var baseURL: String { "https://kudago.com" }
     
-    var path: String { "/public-api/v1.4/events/" }
+    var path: String {
+        switch self {
+        case .getUpcomingEvents, .getNearbyEvents, .getPastEvents, .getEventsBy, .getEventBy:
+            "/public-api/v1.4/events/"
+        case .getTodayEvents:
+            "/public-api/v1.4/events-of-the-day/"
+        case .getMovies:
+            "/public-api/v1.4/movie-showings/"
+        }
+    }
     
     var queryItems: [URLQueryItem] {
-        var items: [URLQueryItem] = []
-        items.append(contentsOf: [
-           URLQueryItem(name: "fields", value: "dates,title,place,description,body_text,images,favorites_count,categories,slug,price,is_free"),
-           URLQueryItem(name: "page_size", value: "20"),
-           URLQueryItem(name: "text_format", value: "text"),
-           URLQueryItem(name: "expand", value: "place,dates,images,categories,slug,price,is_free")
-        ])
+        var items: [URLQueryItem] = [
+            URLQueryItem(name: "page_size", value: "20"),
+            URLQueryItem(name: "text_format", value: "text")
+        ]
+        
         let now = Int(Date().timeIntervalSince1970)
-        let sixMonths = 6 * 30 * 24 * 60 * 60 // 15552000 секунд
-        let actualUntil = Int(now + sixMonths)
+        let commonFields = "dates,title,place,description,body_text,images,favorites_count,categories,slug,price,is_free"
+        let commonExpand = "place,dates,images,categories,slug,price,is_free"
         
         switch self {
-        case .getUpcomingEvents(let lat, let lon):
-            items.append(URLQueryItem(name: "lat", value: String(lat)))
-            items.append(URLQueryItem(name: "lon", value: String(lon)))
-            items.append(URLQueryItem(name: "radius", value: "15000"))
-            items.append(URLQueryItem(name: "order_by", value: "dates"))
-            items.append(URLQueryItem(name: "actual_since", value: "\(now)"))
-            items.append(URLQueryItem(name: "actual_until", value: "\(actualUntil)"))
-           
+        case .getUpcomingEvents(let location):
+            items.append(contentsOf: [
+                URLQueryItem(name: "fields", value: "site_url,\(commonFields)"),
+                URLQueryItem(name: "expand", value: commonExpand),
+                URLQueryItem(name: "location", value: location.rawValue),
+                URLQueryItem(name: "order_by", value: "dates"),
+                URLQueryItem(name: "actual_since", value: "\(now)")
+            ])
             
-        case .getNearbyEvents(let lat, let lon):
-            items.append(URLQueryItem(name: "lat", value: String(lat)))
-            items.append(URLQueryItem(name: "lon", value: String(lon)))
-            items.append(URLQueryItem(name: "radius", value: "5000"))
-            items.append(URLQueryItem(name: "order_by", value: "dates"))
-            items.append(URLQueryItem(name: "actual_since", value: "\(now)"))
-            items.append(URLQueryItem(name: "actual_until", value: "\(actualUntil)"))
+        case .getNearbyEvents(let location):
+            items.append(contentsOf: [
+                URLQueryItem(name: "fields", value: commonFields),
+                URLQueryItem(name: "expand", value: commonExpand),
+                URLQueryItem(name: "lat", value: String(location.latitude)),
+                URLQueryItem(name: "lon", value: String(location.longitude)),
+                URLQueryItem(name: "radius", value: "5000"),
+                URLQueryItem(name: "order_by", value: "dates"),
+                URLQueryItem(name: "actual_since", value: "\(now)")
+            ])
             
-        case .getPastEvents(let lat, let lon, let number):
-            items.append(URLQueryItem(name: "actual_until", value: String(Int(Date().timeIntervalSince1970))))
-            items.append(URLQueryItem(name: "publication_date", value: String(now)))
-            items.append(URLQueryItem(name: "order_by", value: "publication_date"))
-            items.append(URLQueryItem(name: "lat", value: String(lat)))
-            items.append(URLQueryItem(name: "lon", value: String(lon)))
-            items.append(URLQueryItem(name: "radius", value: "10000"))
+        case .getPastEvents(let location):
+            items.append(contentsOf: [
+                URLQueryItem(name: "fields", value: commonFields),
+                URLQueryItem(name: "expand", value: commonExpand),
+                URLQueryItem(name: "actual_until", value: "\(now)"),
+                URLQueryItem(name: "order_by", value: "-publication_date"),
+                URLQueryItem(name: "location", value: location.rawValue)
+            ])
             
         case .getEventsBy(let category, let location):
-            items.append(URLQueryItem(name: "location", value: location.rawValue))
-            items.append(URLQueryItem(name: "categories", value: category.rawValue))
-//            items.append(URLQueryItem(name: "order_by", value: "dates"))
-            items.append(URLQueryItem(name: "actual_since", value: "\(now)"))
-            items.append(URLQueryItem(name: "actual_until", value: "\(actualUntil)"))
+            items.append(contentsOf: [
+                URLQueryItem(name: "fields", value: commonFields),
+                URLQueryItem(name: "expand", value: commonExpand),
+                URLQueryItem(name: "location", value: location.rawValue),
+                URLQueryItem(name: "categories", value: category.rawValue),
+                URLQueryItem(name: "order_by", value: "-publication_date")
+            ])
             
         case .getEventBy(let location):
-            items.append(URLQueryItem(name: "location", value: location.rawValue))
-            items.append(URLQueryItem(name: "order_by", value: "dates"))
-            items.append(URLQueryItem(name: "actual_since", value: "\(now)"))
-            items.append(URLQueryItem(name: "actual_until", value: "\(actualUntil)"))
+            items.append(contentsOf: [
+                URLQueryItem(name: "fields", value: commonFields),
+                URLQueryItem(name: "expand", value: commonExpand),
+                URLQueryItem(name: "location", value: location.rawValue),
+                URLQueryItem(name: "order_by", value: "dates"),
+                URLQueryItem(name: "actual_since", value: "\(now)")
+            ])
+            
+        case .getTodayEvents(let location):
+            items.append(contentsOf: [
+                URLQueryItem(name: "fields", value: "object,title,location,date"),
+                URLQueryItem(name: "expand", value: "object,location,place"),
+                URLQueryItem(name: "location", value: location.rawValue)
+            ])
+            
+        case .getMovies(let location):
+            items.append(contentsOf: [
+                URLQueryItem(name: "fields", value: "id,place,datetime,movie"),
+                URLQueryItem(name: "expand", value: "movie,place,datetime"),
+                URLQueryItem(name: "location", value: location.rawValue)
+            ])
         }
         
         return items

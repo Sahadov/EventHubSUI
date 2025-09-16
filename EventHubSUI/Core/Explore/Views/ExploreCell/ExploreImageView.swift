@@ -55,8 +55,15 @@ struct ExploreImageView: View {
     
     var dateView: some View {
         VStack(spacing: screenWidth * 0.01) {
-            if let nextDate = event.dates?.last {
-                // Есть дата → показываем день и месяц
+            if event.isEndless {
+                // Бесконечное событие → иконка бесконечности
+                Image(systemName: "infinity")
+                    .resizable()
+                    .scaledToFit()
+                    .foregroundColor(.red)
+                    .frame(width: screenWidth * 0.07, height: screenWidth * 0.07)
+            } else if let nextDate = event.nextDate {
+                // Конкретная дата
                 Text(nextDate.day)
                     .font(.system(size: screenWidth * 0.06, weight: .thin))
                     .foregroundColor(.red)
@@ -64,7 +71,7 @@ struct ExploreImageView: View {
                     .font(.system(size: screenWidth * 0.026, weight: .regular))
                     .foregroundColor(.red)
             } else {
-                // Даты нет → показываем иконку
+                // Дат вообще нет → иконка-заглушка
                 Image(systemName: "calendar.badge.exclamationmark")
                     .resizable()
                     .scaledToFit()
@@ -78,6 +85,7 @@ struct ExploreImageView: View {
                 .fill(Color.white.opacity(0.6))
         )
     }
+
 
     var bookmarkView: some View {
         Button {
