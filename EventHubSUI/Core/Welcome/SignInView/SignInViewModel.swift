@@ -31,16 +31,15 @@ final class SignInViewModel: ObservableObject {
         router.goTo(to: .signUpScreen)
     }
     
-    func emailCheck(email: String) -> Bool {
+    func stringCheck(checkType: StringType, string: String, passwordMatch: String? = nil) -> Bool {
         var validateResult: Bool = false
         do {
-            
-            validateResult = try validator.checkString(stringType: .email, string: email, stringForMatching: nil)
+            validateResult = try validator.checkString(stringType: checkType, string: string, stringForMatching: passwordMatch)
             
         } catch {
             print(error.localizedDescription)
         }
-        if email == "" {
+        if string == "" {
             return true
         } else {
             return validateResult
@@ -48,19 +47,19 @@ final class SignInViewModel: ObservableObject {
         
     }
     
-    func passwordCheck(password: String) -> Bool {
-        var validateResult: Bool = false
-        do {
-            
-            validateResult = try validator.checkString(stringType: .password, string: password, stringForMatching: nil)
-            
-        } catch {
-            print(error.localizedDescription)
-        }
-        if password == "" {
-            return true
-        } else {
-            return validateResult
-        }
-    }
+//    func passwordCheck(password: String) -> Bool {
+//        var validateResult: Bool = false
+//        do {
+//            
+//            validateResult = try validator.checkString(stringType: .password, string: password, stringForMatching: nil)
+//            
+//        } catch {
+//            print(error.localizedDescription)
+//        }
+//        if password == "" {
+//            return true
+//        } else {
+//            return validateResult
+//        }
+//    }
 }

@@ -51,7 +51,7 @@ struct SignInView: View {
                                textFieldBorderColor:.constant(Color.borderColor()),
                                icon: .email)
                 
-                if signInVM.emailCheck(email: email) == false {
+                if signInVM.stringCheck(checkType: .email, string: email) == false {
                     Text( ValidateInputError.wrongSymbolsEmail.localizedDescription)
                         .foregroundColor(Color.red)
                         .frame(width: 300, height: 7)
@@ -60,7 +60,7 @@ struct SignInView: View {
                 
                 PasswordTextField(textFieldValue: $password, textFieldBorderColor:.constant(Color.borderColor()))
                 
-                if signInVM.passwordCheck(password: password) == false {
+                if signInVM.stringCheck(checkType: .password, string: password) == false {
                     Text(ValidateInputError.passwordIncorrect.localizedDescription)
                         .foregroundColor(Color.red)
                         .frame(width: 300, height: 7)
