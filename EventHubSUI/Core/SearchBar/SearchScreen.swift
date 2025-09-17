@@ -17,9 +17,12 @@ struct SearchScreen: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 12) {
-                ExploreSearchBar(text: $vm.query, placeholder: "Search...") {
-                    // открыть фильтры
-                }
+                ExploreSearchBar(text: $vm.query,
+                                 iconColor: .accentBlue,
+                                 placeholder: "Search...",
+                                 onRightButtonTap:  {
+                    //TODO: открыть фильтры
+                })
                 .padding(.top, 8)
 
                 if vm.isLoading {
@@ -54,26 +57,19 @@ struct SearchScreen: View {
                     .refreshable { await vm.fetchEvents() }
                 }
             }
-            .background(Color(.systemGroupedBackground).ignoresSafeArea())
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button { dismiss() } label: {
-                        Image(systemName: "arrow.left").font(.system(size: 17, weight: .semibold))
-                            .foregroundColor(.black)
-                    }
-                }
-                ToolbarItem(placement: .principal) {
-                    Text("Search").font(.system(size: 20, weight: .semibold))
-                }
-            }
+           
             .onAppear { vm.applyFilter() }
             .onChange(of: vm.query) { _ in vm.applyFilter() }
             .task { await vm.fetchEvents() }
+            .searchNavigationStyle(title: "Search") { dismiss() }
+
         }
+        .navigationBarBackButtonHidden(true)
     }
 }
 
 #Preview {
     SearchScreen(events: [])
 }
+
+
