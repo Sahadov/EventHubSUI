@@ -179,9 +179,10 @@ extension RealmEvent {
             isFree: isFree,
             
             // добавляем новые поля
-            datetime: nil,  // если есть реальные данные, можно заменить
+            datetime: nil,  
             movie: nil,
-            object: nil      
+            object: nil,
+            date: nil
         )
     }
 }
