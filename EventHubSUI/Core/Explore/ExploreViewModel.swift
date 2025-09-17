@@ -34,15 +34,15 @@ final class ExploreViewModel: ObservableObject {
     //MARK: - Network
     
     /// Загружаем дефолтные данные
-    func fetchInitialEvents() async {
+    func fetchInitialEvents(_ location: LocationsList = .msk) async {
         isLoading = true
         defer { isLoading = false }
         
         do {
-            async let upcoming = networkService.fetch(from: .getUpcomingEvents())
-            async let nearby = networkService.fetch(from: .getNearbyEvents())
-            async let movie = networkService.fetch(from: .getMovies())
-            async let today = networkService.fetch(from: .getTodayEvents())
+            async let upcoming = networkService.fetch(from: .getUpcomingEvents(location))
+            async let nearby = networkService.fetch(from: .getNearbyEvents(location))
+            async let movie = networkService.fetch(from: .getMovies(location))
+            async let today = networkService.fetch(from: .getTodayEvents(location))
             
             let (upcomingResult, nearbyResult, movieResult, todayResult) = try await (upcoming, nearby, movie, today)
             self.upcomingEvents = upcomingResult.results.removingDuplicates()
@@ -84,9 +84,9 @@ final class ExploreViewModel: ObservableObject {
       }
 
     /// Сбрасываем фильтр
-      func resetToDefault() {
+    func resetToDefault(_ location: LocationsList) {
           Task {
-              await fetchInitialEvents()
+              await fetchInitialEvents(location)
           }
       }
     //MARK: - Navigation

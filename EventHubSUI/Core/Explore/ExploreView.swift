@@ -142,13 +142,17 @@ private struct ExploreCategoryView: View {
     var body: some View {
         CategoryScrollView { category in
             Task {
-                await viewModel.fetchEventsBy(category: category, location: selectedCity)
+                if category == .all {
+                    await viewModel.resetToDefault(selectedCity)
+                } else {
+                    await viewModel.fetchEventsBy(category: category, location: selectedCity)
+                }
             }
         }
         Spacer(minLength: 20)
     }
 }
-    
+
 private struct ExploreFilterView: View {
     @ObservedObject var viewModel: ExploreViewModel
     
