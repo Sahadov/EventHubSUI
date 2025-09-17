@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ListContentView: View {
+    @Environment(\.dismiss) private var dismiss
     let events: [Event]
 
     var body: some View {
@@ -19,8 +20,9 @@ struct ListContentView: View {
                     }
                 }
             }
-            .navigationTitle("Events")
         }
+        .searchNavigationStyle(title: "Lists") { dismiss() }
+
     }
 }
 

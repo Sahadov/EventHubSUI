@@ -32,6 +32,7 @@ struct Event: Codable, Hashable {
     
     // Для today events
     let object: TodayEventObject?
+    let date: String?
     
     var coordinates: CLLocationCoordinate2D? {
         if let lat = place?.coords?.lat, let lon = place?.coords?.lon {
@@ -44,7 +45,7 @@ struct Event: Codable, Hashable {
     }
     
     enum CodingKeys: String, CodingKey {
-        case dates, title, place, description, images, categories, poster, movie, datetime, object
+        case dates, title, place, description, images, categories, poster, movie, datetime, object, date
         case bodyText = "body_text"
         case favoritesCount = "favorites_count"
         case isFree = "is_free"
@@ -174,12 +175,38 @@ extension Event {
     }
     
     var formattedStartDate: String {
-        guard let ts = firstStartTimestamp else { return "" }
-        let date = Date(timeIntervalSince1970: ts)
-        let formatter = DateFormatter()
-        formatter.dateFormat = "E, dd MMM h:mm a" // такой же, как в листе
-        formatter.locale = Locale(identifier: "en_US")
-        return formatter.string(from: date)
+        // 1. Если есть timestamp → используем его
+        if let ts = firstStartTimestamp {
+            let date = Date(timeIntervalSince1970: ts)
+            
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "E, dd MMM"
+            dateFormatter.locale = Locale(identifier: "en_US")
+            
+            let timeFormatter = DateFormatter()
+            timeFormatter.dateFormat = "h:mm a"
+            timeFormatter.locale = Locale(identifier: "en_US")
+            
+            return "\(dateFormatter.string(from: date)) • \(timeFormatter.string(from: date))"
+        }
+
+        
+        // 2. Если есть просто "date": "2025-09-17"
+        if let rawDate = date {
+            let inFormatter = DateFormatter()
+            inFormatter.dateFormat = "yyyy-MM-dd"
+            inFormatter.locale = Locale(identifier: "en_US_POSIX")
+            
+            if let parsed = inFormatter.date(from: rawDate) {
+                let outFormatter = DateFormatter()
+                outFormatter.dateFormat = "E, dd MMM"
+                outFormatter.locale = Locale(identifier: "en_US")
+                return outFormatter.string(from: parsed)
+            }
+        }
+        
+        // 3. Если ничего нет
+        return ""
     }
 }
 
@@ -262,7 +289,8 @@ extension Event {
         isFree: true,
         datetime: nil,
         movie: nil,
-        object: nil
+        object: nil,
+        date: nil
     )
     
     static let mockConcert = Event(
@@ -279,7 +307,8 @@ extension Event {
         isFree: true,
         datetime: nil,
         movie: nil,
-        object: nil
+        object: nil,
+        date: nil
     )
     
     static let mockMarathon = Event(
@@ -296,7 +325,8 @@ extension Event {
         isFree: true,
         datetime: nil,
         movie: nil,
-        object: nil
+        object: nil,
+        date: nil
     )
     
     static let mockToday = Event(
@@ -322,7 +352,8 @@ extension Event {
             images: nil,
             poster: nil,
             first_image: EventImage(image: "https://media.kudago.com/images/event/36/e5/36e5d01ab9bd130fc9a8816a84b0ce79.jpeg", thumbnails: nil)
-        )
+        ),
+        date: nil
     )
     
     static let mockMovie = Event(
@@ -339,7 +370,8 @@ extension Event {
         isFree: nil,
         datetime: 1757955600,
         movie: Movie(id: 3867, title: "Миллиард", description: nil, bodyText: nil, poster: EventImage(image: "https://media.kudago.com/images/movie/poster/f2/c2/f2c297b62c820a65ee04c34f100f82c3.jpg", thumbnails: nil)),
-        object: nil
+        object: nil,
+        date: nil
     )
 }
 extension Event {

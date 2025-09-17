@@ -8,17 +8,26 @@
 import SwiftUI
 
 struct SeeAllContentView: View {
-    var event: [Event]
+    @Environment(\.dismiss) private var dismiss
+    var events: [Event]
+    
+    
     
     var body: some View {
         ScrollView {
-            ForEach(event, id: \.id) { event in
-                SeeAllCell(event: event)
+            ForEach(events, id: \.id) { event in
+//                SeeAllCell(event: event)
+                EventCard(event: event)
             }
         }
+        .padding()
+        .background(Color.gray.opacity(0.1))
+        .searchNavigationStyle(title: "Events") { dismiss() }
     }
+    
+    
 }
 
 #Preview {
-    SeeAllContentView(event: Event.events)
+    SeeAllContentView(events: Event.events)
 }

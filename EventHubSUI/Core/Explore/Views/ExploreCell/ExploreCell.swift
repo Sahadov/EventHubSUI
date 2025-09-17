@@ -12,6 +12,8 @@ struct ExploreCell: View {
     let isPlaceholder: Bool
     let screenWidth = UIScreen.main.bounds.width
     
+    var onBookmarkTap: (() -> Void)?
+    
     var body: some View {
         let cardWidth = screenWidth * 0.7
         let imageHeight = cardWidth * 0.72
@@ -26,7 +28,7 @@ struct ExploreCell: View {
                     .padding()
                     .frame(width: cardWidth, alignment: .leading)
             } else {
-                ExploreImageView(event: event)
+                ExploreImageView(event: event, onBookmarkTapped: onBookmarkTap)
                     .frame(width: cardWidth, height: imageHeight)
                     .padding()
                 

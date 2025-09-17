@@ -11,15 +11,12 @@ struct ExploreImageView: View {
     let event: Event
     let screenWidth = UIScreen.main.bounds.width
     
+    var onBookmarkTapped: (() -> Void)? = nil
+    
+    @State private var isBookmarked: Bool = false
+    
     var body: some View {
-//        ImageLoaderView(
-//            urlString: event.images?.first?.thumbnails?.size144x96 ?? "https://picsum.photos/640/384?2",
-//            resizingMode: .fill
-//        )
-//        Image(.mockEvent)
-//        .resizable()
-//        .scaledToFill()
-        AsyncImage(url: URL(string: event.images?.first?.thumbnails?.size640x384 ?? "https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?w=144")) { phase in
+        AsyncImage(url: URL(string: event.displayImageURL ?? "https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?w=144")) { phase in
             switch phase {
             case .empty:
                 ProgressView() // Пока загружается
@@ -88,23 +85,24 @@ struct ExploreImageView: View {
 
 
     var bookmarkView: some View {
-        Button {
-            print("Bookmark tapped")
-        } label: {
-            Image(.bookmark2)
-                .resizable()
-                .scaledToFit()
-                .frame(width: screenWidth * 0.045, height: screenWidth * 0.045)
-                .padding(screenWidth * 0.025)
-                .background(
-                    RoundedRectangle(cornerRadius: screenWidth * 0.02)
-                        .fill(Color.white.opacity(0.6))
-                )
+            Button {
+                isBookmarked.toggle()
+                onBookmarkTapped?()
+            } label: {
+                Image(isBookmarked ? "bookmark2" : "bookmark")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: screenWidth * 0.045, height: screenWidth * 0.045)
+                    .padding(screenWidth * 0.025)
+                    .background(
+                        RoundedRectangle(cornerRadius: screenWidth * 0.02)
+                            .fill(Color.white.opacity(0.6))
+                    )
+            }
+            .buttonStyle(.plain)
+            .offset(y: -screenWidth * 0.030)
         }
-        .buttonStyle(.plain)
-        .offset(y: -screenWidth * 0.030)
     }
-}
 
 
 #Preview {

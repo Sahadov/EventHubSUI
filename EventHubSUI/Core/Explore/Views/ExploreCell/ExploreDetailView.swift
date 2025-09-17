@@ -14,10 +14,11 @@ struct ExploreDetailView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: screenWidth * 0.02) {
             
-            Text(event.title ?? "No title")
+            Text(event.title?.capitalized ?? "No title")
                 .font(.system(size: screenWidth * 0.045, weight: .semibold))
                 .lineLimit(1)
                 .truncationMode(.tail)
+                .foregroundStyle(.black)
             
             HStack(spacing: screenWidth * 0.02) {
                 iconView
@@ -41,9 +42,11 @@ struct ExploreDetailView: View {
     var adressView: some View {
         HStack(spacing: screenWidth * 0.02) {
             Image(.mapPin)
-            Text(event.place?.address ?? "unknown")
+            Text(event.place?.address?.capitalized ?? "unknown")
                 .foregroundColor(Color(hex: "#2B2849"))
-                .font(.system(size: screenWidth * 0.035))
+                .font(.system(size: screenWidth * 0.035, weight: .regular))
+                .truncationMode(.tail)
+                .lineLimit(1)
         }
     }
 }

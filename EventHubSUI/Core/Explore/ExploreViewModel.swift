@@ -31,6 +31,7 @@ final class ExploreViewModel: ObservableObject {
             await fetchInitialEvents()
         }
     }
+    //MARK: - Network
     
     /// Загружаем дефолтные данные
     func fetchInitialEvents() async {
@@ -67,31 +68,7 @@ final class ExploreViewModel: ObservableObject {
               print("Ошибка при загрузке событий по категории: \(error)")
           }
       }
-
-//    func fetchEventsBy(filter: FilterCategory, location: LocationsList) async {
-//        isLoading = true
-//        defer { isLoading = false }
-//        
-//        switch filter {
-//        case .films:
-//            do {
-//                self.movieEvents = try await networkService.fetch(from: .getMovies(location)).results
-//            } catch {
-//                print("Ошибка при загрузке событий по категории: \(error)")
-//            }
-//            
-//        case .today:
-//            do {
-//                self.todayEvents = try await networkService.fetch(from: .getTodayEvents(location)).results
-//            } catch {
-//                print("Ошибка при загрузке событий по категории: \(error)")
-//            }
-//            
-//        case .list:
-//            break
-//        }
-//    }
-
+    /// Загружаем данные по локкации
     func fetchEvents(for location: LocationsList) async {
           isLoading = true
           defer { isLoading = false }
@@ -112,8 +89,23 @@ final class ExploreViewModel: ObservableObject {
               await fetchInitialEvents()
           }
       }
+    //MARK: - Navigation
     
     func goToDetail(event: Event) {
         router.goTo(to: .eventDetailScreen(event: event))
+    }
+    
+    /// TODAY, FILMS, See All
+    func goToSeeAll(_ events: [Event]) {
+        router.goTo(to: .seeAllScreen(events: events))
+    }
+    
+    /// LIST
+    func goToList(_ events: [Event]) {
+        router.goTo(to: .listScreen(events: events))
+    }
+    
+    func goToSeach(_ events: [Event]) {
+        router.goTo(to: .searchScreen(events: events))
     }
 }

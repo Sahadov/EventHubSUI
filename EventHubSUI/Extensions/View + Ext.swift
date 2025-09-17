@@ -51,3 +51,38 @@ struct ShimmerAnimationModifier: ViewModifier {
             }
     }
 }
+
+//MARK: - NavbarStyle
+// Вместе с  .navigationBarBackButtonHidden(true)
+
+
+struct SearchNavigationStyle: ViewModifier {
+    let title: String
+    let dismissAction: () -> Void
+
+    func body(content: Content) -> some View {
+        content
+            .background(Color(.systemGroupedBackground).ignoresSafeArea())
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button { dismissAction() } label: {
+                        Image(systemName: "arrow.left")
+                            .font(.system(size: 17, weight: .semibold))
+                            .foregroundColor(.black)
+                    }
+                }
+                ToolbarItem(placement: .principal) {
+                    Text(title)
+                        .font(.system(size: 20, weight: .semibold))
+                }
+            }
+            .navigationBarBackButtonHidden(true)
+    }
+}
+
+extension View {
+    func searchNavigationStyle(title: String, dismissAction: @escaping () -> Void) -> some View {
+        self.modifier(SearchNavigationStyle(title: title, dismissAction: dismissAction))
+    }
+}

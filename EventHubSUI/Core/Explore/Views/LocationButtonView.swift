@@ -33,6 +33,6 @@ struct LocationButtonView: View {
 }
 
 #Preview {
-    LocationButtonView(city: "kiev")
+    LocationButtonView(city: "Moscow")
         .background(Color.gray)
 }
