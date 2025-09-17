@@ -104,4 +104,8 @@ final class ExploreViewModel: ObservableObject {
     func goToList(_ events: [Event]) {
         router.goTo(to: .listScreen(events: events))
     }
+    
+    func goToSeach(_ events: [Event]) {
+        router.goTo(to: .searchScreen(events: events))
+    }
 }
