@@ -39,7 +39,7 @@ struct SeeAllDetail: View {
             // Локация
             HStack {
                 if let place = event.place ?? event.object?.place, let address = place.address, !address.isEmpty {
-                    Image(systemName: "mappin")
+                    Image(.mapPin)
                     Text(address)
                         .font(.system(size: screenWidth * 0.035, weight: .regular))
                         .foregroundStyle(.gray)
