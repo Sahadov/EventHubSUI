@@ -45,6 +45,8 @@ struct ExploreDetailView: View {
             Text(event.place?.address?.capitalized ?? "unknown")
                 .foregroundColor(Color(hex: "#2B2849"))
                 .font(.system(size: screenWidth * 0.035, weight: .regular))
+                .truncationMode(.tail)
+                .lineLimit(1)
         }
     }
 }
