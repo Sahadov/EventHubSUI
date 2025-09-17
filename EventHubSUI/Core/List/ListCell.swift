@@ -13,7 +13,7 @@ struct ListCell: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             // Заголовок
-            Text(event.displayTitle)
+            Text(event.displayTitle.capitalized)
                 .font(.headline)
                 .lineLimit(2)
                 .frame(maxWidth: .infinity, alignment: .leading)
