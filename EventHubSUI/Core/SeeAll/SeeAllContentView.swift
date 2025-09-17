@@ -8,7 +8,10 @@
 import SwiftUI
 
 struct SeeAllContentView: View {
+    @Environment(\.dismiss) private var dismiss
     var events: [Event]
+    
+    
     
     var body: some View {
         ScrollView {
@@ -19,7 +22,10 @@ struct SeeAllContentView: View {
         }
         .padding()
         .background(Color.gray.opacity(0.1))
+        .searchNavigationStyle(title: "Events") { dismiss() }
     }
+    
+    
 }
 
 #Preview {
