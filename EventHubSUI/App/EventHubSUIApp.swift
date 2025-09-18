@@ -53,7 +53,7 @@ struct EventHubSUIApp: App {
                         case .eventDetailScreen(let event):
                             EventDetailsView(event: event)
                         case .resetPasswordConfirmationScreen:
-                            ResetViewConfirm()
+                            ResetViewConfirm(resetVM: ResetViewModel(validator: validator, router: router))
                         case .seeAllScreen(events: let events):
                             SeeAllContentView(events: events)
                         case .listScreen(events: let events):
