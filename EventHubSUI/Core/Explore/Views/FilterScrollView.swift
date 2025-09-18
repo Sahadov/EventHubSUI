@@ -21,15 +21,15 @@ struct FilterScrollView: View {
                     Text(filter.title)
                         .font(.system(size: 14, weight: .bold))
                         .foregroundColor(.white)
-                        .frame(width: 106.77, height: 39.06)
+                        .frame(width: 107, height: 39)
                         .background(Color(hex: "#4A43EC"))
-                        .cornerRadius(20.96)
+                        .cornerRadius(21)
                         .shadow(radius: 2, y: 1)
                 }
                 
             }
         }
-        .padding(.horizontal)
+        .padding(.horizontal, 24)
     }
 }
 
