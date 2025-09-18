@@ -11,7 +11,7 @@ import SwiftUI
 @MainActor
 final class SignInViewModel: ObservableObject {
     
-    let authManager: AuthManager
+    @ObservedObject var authManager: AuthManager
     let validator: ValidationManager
     let router: Router
     
@@ -71,7 +71,17 @@ final class SignInViewModel: ObservableObject {
         
         Task {
             
-              try await authManager.signIn(email: email, password: password)
+            try await authManager.signIn(email: email, password: password)
+            if self.authManager.showError {
+                
+                self.errorTitle = "Sign in error!"
+                self.errorMessage = self.authManager.error
+                self.showError = true
+                return
+                
+            } else {
+                self.router.goTo(to: .exploreScreen)
+            }
             
         }
         
@@ -85,15 +95,10 @@ final class SignInViewModel: ObservableObject {
             
         } catch {
             print(error.localizedDescription)
-//            isWrong = true
         }
         if string == "" {
-//            isWrong = true
             return true
         } else {
-            if validateResult {
-//                isWrong = false
-            }
             return validateResult
         }
         

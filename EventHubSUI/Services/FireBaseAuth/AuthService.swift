@@ -26,6 +26,7 @@ final class AuthManager: ObservableObject {
     @Published var currentUser:User?
     @Published var error:String =  ""
     @Published var showMessage = ""
+    @Published var showError: Bool = false
     
     init() {
            self.userSession = Auth.auth().currentUser
@@ -44,8 +45,10 @@ final class AuthManager: ObservableObject {
         } catch {
             self.isLoading = false
             self.error = error.localizedDescription
+            self.showError = true
         }
     }
+    
     
     func signOut()
         {
@@ -60,12 +63,12 @@ final class AuthManager: ObservableObject {
             }
         }
     
-    func signUp(withEmail email: String,password: String, fullname: String) async throws {
+    func signUp(withEmail email: String,password: String, fullName: String) async throws {
         self.isLoading = true
         do{
             let result = try await Auth.auth().createUser(withEmail: email, password: password)
             self.userSession = result.user
-            let user = User(id: result.user.uid, fullname: fullname, email: email,photoURL: URL(string: ""))
+            let user = User(id: result.user.uid, fullname: fullName, email: email,photoURL: URL(string: ""))
             let encodeUser = try Firestore.Encoder().encode(user)
             try await Firestore.firestore().collection("users").document(user.id).setData(encodeUser)
             self.isLoading = false
