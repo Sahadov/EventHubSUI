@@ -15,7 +15,7 @@ struct ExploreDetailView: View {
         VStack(alignment: .leading, spacing: screenWidth * 0.02) {
             
             Text(event.title?.capitalized ?? "No title")
-                .font(.system(size: screenWidth * 0.045, weight: .semibold))
+                .font(.system(size: screenWidth * 0.035, weight: .semibold))
                 .lineLimit(1)
                 .truncationMode(.tail)
                 .foregroundStyle(.black)
