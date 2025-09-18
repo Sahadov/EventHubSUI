@@ -11,7 +11,8 @@ import SwiftUI
 @MainActor
 final class SignUpViewModel: ObservableObject {
     
-    let validator: ValidationManager
+    @ObservedObject var authManager: AuthManager
+    @ObservedObject var validator: ValidationManager
     let router: Router
     
     @Published var userName: String = ""
@@ -22,7 +23,8 @@ final class SignUpViewModel: ObservableObject {
     @Published var errorMessage: String = ""
     @Published var errorTitle: String = ""
     
-    init(validator: ValidationManager, router: Router) {
+    init(authManager: AuthManager, validator: ValidationManager, router: Router) {
+        self.authManager = authManager
         self.validator = validator
         self.router = router
     }
@@ -49,7 +51,21 @@ final class SignUpViewModel: ObservableObject {
         
         print("INPUT OK")
         
-        
+        Task {
+            
+            try await authManager.signUp(withEmail: userEmail, password: password, fullName: userName)
+            if self.authManager.showError {
+                
+                self.errorTitle = "Sign in error!"
+                self.errorMessage = self.authManager.error
+                self.showError = true
+                return
+                
+            } else {
+                self.router.goTo(to: .exploreScreen)
+            }
+            
+        }
         
     }
     
