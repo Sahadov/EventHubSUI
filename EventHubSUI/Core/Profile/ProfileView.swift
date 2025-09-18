@@ -12,6 +12,8 @@ struct UserProfile {
 struct ProfileView: View {
     @State private var selectedTab: TabBookmarksEnum = .profileView
     
+    @ObservedObject var profileVM: ProfileViewModel
+    
     private let profile = UserProfile(
         name: "Ashfak Sayem",
         avatarImageName: "avatarAshfak",
@@ -43,6 +45,8 @@ Enjoy your favorite dish and a lovely your friends and family and have a great t
 
                 SignOutRow {
                     // TODO: sign out handler
+                    
+                    profileVM.logout()
                 }
                 
                 Spacer()
@@ -189,5 +193,5 @@ private enum UI {
 
 
 #Preview {
-    ProfileView()
+    ProfileView(profileVM: ProfileViewModel(authManager: AuthManager(), router: Router()))
 }

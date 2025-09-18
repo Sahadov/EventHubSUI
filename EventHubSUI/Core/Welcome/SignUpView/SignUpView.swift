@@ -127,5 +127,5 @@ struct SignUpView: View {
 }
 
 #Preview {
-    SignUpView(signUpVM: SignUpViewModel(validator: ValidationManager(), router: Router()))
+    SignUpView(signUpVM: SignUpViewModel(authManager: AuthManager(), validator: ValidationManager(), router: Router()))
 }

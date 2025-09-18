@@ -117,6 +117,8 @@ struct SignInView: View {
                 .alert(signInVM.errorTitle, isPresented: $signInVM.showError) {} message: {
                     Text(signInVM.errorMessage)
                 }
+                .navigationBarHidden(true)
+                .toolbar(.hidden, for: .navigationBar)
                 
             }
     }

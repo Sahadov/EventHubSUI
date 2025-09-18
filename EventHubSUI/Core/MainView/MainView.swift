@@ -12,6 +12,7 @@ struct MainView: View {
     
     @State private var selectedTab: TabBookmarksEnum = .exploreView
     @State var router: Router
+    @State var authManager: AuthManager
     
     var body: some View {
         
@@ -31,7 +32,7 @@ struct MainView: View {
                 MapView()
                     .tag(TabBookmarksEnum.mapView)
                     .toolbar(.hidden, for: .tabBar)
-                ProfileView()
+                ProfileView(profileVM: ProfileViewModel(authManager: authManager, router: router))
                     .tag(TabBookmarksEnum.profileView)
                     .toolbar(.hidden, for: .tabBar)
             }
@@ -49,5 +50,5 @@ struct MainView: View {
 }
 
 #Preview {
-    MainView(router: Router())
+    MainView(router: Router(), authManager: AuthManager())
 }
