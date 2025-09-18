@@ -14,6 +14,7 @@ final class SearchViewModel: ObservableObject {
     @Published private(set) var results: [Event] = []
     @Published var isLoading = false
     @Published var loadError: String?
+    @Published var showFilterSheet = false
 
     private let networkService = NetworkService()
 

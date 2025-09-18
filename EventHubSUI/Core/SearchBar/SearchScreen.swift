@@ -9,6 +9,7 @@ import SwiftUI
 struct SearchScreen: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var vm: SearchViewModel
+    
 
     init(events: [Event]) {
         _vm = StateObject(wrappedValue: SearchViewModel(events: events))
@@ -21,7 +22,7 @@ struct SearchScreen: View {
                                  iconColor: .accentBlue,
                                  placeholder: "Search...",
                                  onRightButtonTap:  {
-                    //TODO: открыть фильтры
+                    vm.showFilterSheet = true
                 })
                 .padding(.top, 8)
 
@@ -62,6 +63,9 @@ struct SearchScreen: View {
             .onChange(of: vm.query) { _ in vm.applyFilter() }
             .task { await vm.fetchEvents() }
             .searchNavigationStyle(title: "Search") { dismiss() }
+            .sheet(isPresented: $vm.showFilterSheet) {
+                FilterView()
+            }
 
         }
         .navigationBarBackButtonHidden(true)

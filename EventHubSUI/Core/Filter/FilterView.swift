@@ -16,6 +16,8 @@ struct FilterView: View {
             VStack(alignment: .leading, spacing: 16) {
                 heading(title: "Filter")
                 
+                FilterCategories()
+                
                 VStack(alignment: .leading) {
                     heading(title: "Time & Date")
                     FilterButtonsView()
