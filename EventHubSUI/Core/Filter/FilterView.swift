@@ -16,11 +16,13 @@ struct FilterView: View {
             VStack(alignment: .leading, spacing: 16) {
                 heading(title: "Filter")
                 
-                heading(title: "Time & Date")
-                
-                
+                VStack(alignment: .leading) {
+                    heading(title: "Time & Date")
+                    FilterButtonsView()
+                }
+            
                 heading(title: "Location")
-                
+                LocationPickerView()
                 
                 HStack {
                     heading(title: "Select price range")
@@ -48,7 +50,7 @@ struct FilterView: View {
                             .font(.headline)
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .foregroundColor(.primary)
+                            .foregroundColor(.secondary)
                     }
                     .background(Color.clear)
                     .overlay(
