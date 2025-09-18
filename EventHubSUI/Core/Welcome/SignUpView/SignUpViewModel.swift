@@ -14,15 +14,18 @@ final class SignUpViewModel: ObservableObject {
     let validator: ValidationManager
     let router: Router
     
+    @Published var userName: String = ""
+    @Published var userEmail: String = ""
+    @Published var password: String = ""
+    @Published var passwordConfirmation: String = ""
+    @Published var showError: Bool = false
+    
     init(validator: ValidationManager, router: Router) {
         self.validator = validator
         self.router = router
     }
     
-    func goToSignInView() {
-        
-        
-    }
+    
     
     func signUpButtonPressed() {
         

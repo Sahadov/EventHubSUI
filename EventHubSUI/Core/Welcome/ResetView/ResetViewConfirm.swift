@@ -9,17 +9,38 @@ import SwiftUI
 
 struct ResetViewConfirm: View {
     
+    @ObservedObject private var resetVM: ResetViewModel
+    
+    
     @Environment(\.dismiss) var dismiss
     
-    @State var password: String = ""
-    @State var confirmPassword: String = ""
+    
+    init(resetVM: ResetViewModel) {
+        self.resetVM = resetVM
+    }
     
     var body: some View {
         VStack(spacing: 26) {
-            PasswordTextField(textFieldValue: $password,
+            PasswordTextField(textFieldValue: $resetVM.password,
                               textFieldBorderColor: .constant(Color.borderColor()))
-            PasswordTextField(textFieldValue: $confirmPassword,
+            
+            if resetVM.stringCheck(checkType: .password, string: resetVM.password) == false {
+                Text( ValidateInputError.passwordIncorrect.localizedDescription)
+                    .foregroundColor(Color.red)
+                    .frame(width: 300, height: 7)
+                    .offset(x: -70, y: -13)
+            }
+            
+            PasswordTextField(textFieldValue: $resetVM.confirmPassword,
                               textFieldBorderColor: .constant(Color.borderColor()))
+            
+            if resetVM.stringCheck(checkType: .passwordMatch, string: resetVM.confirmPassword, passwordMatch: resetVM.password) == false {
+                Text( ValidateInputError.passwordNotMatch.localizedDescription)
+                    .foregroundColor(Color.red)
+                    .frame(width: 300, height: 7)
+                    .offset(x: -70, y: -13)
+            }
+            
             CustomSIButton(buttonLableText: "CHANGE\nPASSWORD")
         }
         
@@ -48,5 +69,5 @@ struct ResetViewConfirm: View {
 }
 
 #Preview {
-    ResetViewConfirm()
+    ResetViewConfirm(resetVM: ResetViewModel(validator: ValidationManager(), router: Router()))
 }

@@ -49,11 +49,11 @@ struct EventHubSUIApp: App {
                         case .signUpScreen:
                             SignUpView(signUpVM: SignUpViewModel(validator: validator, router: router))
                         case .resetPasswordScreen:
-                            ResetView()
+                            ResetView(resetVM: ResetViewModel(validator: validator, router: router))
                         case .eventDetailScreen(let event):
                             EventDetailsView(event: event)
                         case .resetPasswordConfirmationScreen:
-                            ResetViewConfirm()
+                            ResetViewConfirm(resetVM: ResetViewModel(validator: validator, router: router))
                         }
                         
                     }

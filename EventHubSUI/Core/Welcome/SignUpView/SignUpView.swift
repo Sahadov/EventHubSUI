@@ -11,10 +11,10 @@ struct SignUpView: View {
     
     @ObservedObject private var signUpVM: SignUpViewModel
     
-    @State private var userName: String = .init()
-    @State private var userEmail: String = .init()
-    @State private var password: String = .init()
-    @State private var passwordConfirmation: String = .init()
+//    @State private var userName: String = .init()
+//    @State private var userEmail: String = .init()
+//    @State private var password: String = .init()
+//    @State private var passwordConfirmation: String = .init()
     
     @Environment(\.dismiss) var dismiss
     
@@ -28,49 +28,53 @@ struct SignUpView: View {
             
             Spacer(minLength: 30)
             
-            EmailTextField(textFieldValue: $userName,
+            EmailTextField(textFieldValue: $signUpVM.userName,
                            textFieldBorderColor: .constant(Color.borderColor()),
                            textFieldPlaceholder: "Full name",
                            icon: TextFieldImage.profile)
             
-            if signUpVM.stringCheck(checkType: .userName, string: userName) == false {
+            if signUpVM.stringCheck(checkType: .userName, string: signUpVM.userName) == false {
                 Text( ValidateInputError.userNameError.localizedDescription)
                     .foregroundColor(Color.red)
                     .frame(width: 300, height: 7)
                     .offset(x: -70, y: -13)
             }
             
-            EmailTextField(textFieldValue: $userEmail,
+            EmailTextField(textFieldValue: $signUpVM.userEmail,
                            textFieldBorderColor: .constant(Color.borderColor()),
                            icon: .email)
             
-            if signUpVM.stringCheck(checkType: .email, string: userEmail) == false {
+            if signUpVM.stringCheck(checkType: .email, string: signUpVM.userEmail) == false {
                 Text( ValidateInputError.wrongSymbolsEmail.localizedDescription)
                     .foregroundColor(Color.red)
                     .frame(width: 300, height: 7)
                     .offset(x: -70, y: -13)
             }
-            PasswordTextField(textFieldValue: $password,
+            PasswordTextField(textFieldValue: $signUpVM.password,
                               textFieldBorderColor: .constant(Color.borderColor()))
             
-            if signUpVM.stringCheck(checkType: .password, string: password) == false {
+            if signUpVM.stringCheck(checkType: .password, string: signUpVM.password) == false {
                 Text( ValidateInputError.passwordIncorrect.localizedDescription)
                     .foregroundColor(Color.red)
                     .frame(width: 300, height: 7)
                     .offset(x: -70, y: -13)
             }
-            PasswordTextField(textFieldValue: $passwordConfirmation,
+            PasswordTextField(textFieldValue: $signUpVM.passwordConfirmation,
                               textFieldBorderColor: .constant(Color.borderColor()),
                               textFieldPlaceholder: " Confirm password")
             
-            if signUpVM.stringCheck(checkType: .passwordMatch, string: passwordConfirmation, passwordMatch: password) == false {
+            if signUpVM.stringCheck(checkType: .passwordMatch, string: signUpVM.passwordConfirmation, passwordMatch: signUpVM.password) == false {
                 Text( ValidateInputError.passwordNotMatch.localizedDescription)
                     .foregroundColor(Color.red)
                     .frame(width: 300, height: 7)
                     .offset(x: -70, y: -13)
             }
             
-            CustomSIButton(buttonLableText: "SIGN UP")
+            CustomSIButton(buttonLableText: "SIGN UP") {
+                
+                signUpVM.signUpButtonPressed()
+                
+            }
                 .offset(x: 0, y: 25)
             Text("OR")
                 .offset(x: 0, y: 50)
@@ -86,7 +90,11 @@ struct SignUpView: View {
             HStack {
                 Text("Already have an account?")
                 
-                Button(action: {}){
+                Button(action: {
+                    
+                    dismiss()
+                    
+                }){
                     
                     Text("Sign in")
                 }
