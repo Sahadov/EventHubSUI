@@ -22,29 +22,10 @@ struct EventCard: View {
     var body: some View {
         HStack(alignment: .top, spacing: 15) {
             ImageLoaderView(urlString: event.displayImageURL ?? "fff")
-//            event.images?.first?.thumbnails?.size144x96 ?? "fff"
-            
                 .aspectRatio(0.9, contentMode: .fit)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
             VStack(alignment: .leading) {
                 HStack {
-//                    if let date = event.dates?.first?.startDate {
-//                        if let time = event.dates?.first?.startTime {
-//                            Text("\(date.formattedAsEventDate()) • \(String(time.prefix(5)))")
-//                                .font(.Airbnb.book(size: 17))
-//                                .foregroundStyle(.accentBlue)
-//                        } else {
-//                            Text("\(date.formattedAsEventDate())")
-//                                .font(.Airbnb.book(size: 17))
-//                                .foregroundStyle(.accentBlue)
-//                        }
-//                    } else {
-//                        Text("Soon")
-//                            .font(.Airbnb.book(size: 17))
-//                            .foregroundStyle(.accentBlue)
-//                    }
-                    
-                    /// Убрал логику форматирование в модель
                     Text(event.formattedStartDate)
                         .font(.Airbnb.book(size: 17))
                         .foregroundStyle(.accentBlue)
@@ -62,7 +43,6 @@ struct EventCard: View {
                 
                 Spacer()
                 Text(event.displayTitle.capitalized)
-//                event.title?.capitalized ?? "Мероприятие"
                     .font(.Airbnb.medium(size: 18))
                     .lineLimit(2)
                     .truncationMode(.tail)
@@ -74,7 +54,6 @@ struct EventCard: View {
                             .resizable()
                             .frame(width: 15, height: 15)
                         Text(event.place?.address ?? "Уточните адрес")
-                        
                             .font(.Airbnb.book(size: 17))
                             .foregroundStyle(.secondary)
                     }

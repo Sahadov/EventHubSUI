@@ -19,93 +19,91 @@ struct ExploreImageView: View {
         AsyncImage(url: URL(string: event.displayImageURL ?? "https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?w=144")) { phase in
             switch phase {
             case .empty:
-                ProgressView() // Пока загружается
+                ProgressView()
             case .success(let image):
                 image
                     .resizable()
                     .scaledToFill()
             case .failure(_):
-                Image(.mockEvent) // Фолбэк при ошибке
+                Image(.mockEvent)
                     .resizable()
                     .scaledToFill()
             @unknown default:
                 EmptyView()
             }
         }
-        .frame(width: screenWidth * 0.7, height: screenWidth * 0.7 * 0.72)
+        .frame(width: screenWidth * 0.55, height: screenWidth * 0.55 * 0.72)
         .clipped()
         .cornerRadius(screenWidth * 0.03)
         .overlay(
             HStack {
                 dateView
-                    .padding(.leading, screenWidth * 0.02)
+                    .padding(.leading, screenWidth * 0.03)
+                    .padding(.top, screenWidth * 0.03)
                 Spacer()
                 bookmarkView
-                    .padding(.trailing, screenWidth * 0.02)
-            }
-            .padding(.top, screenWidth * 0.02),
+                    .padding(.trailing, screenWidth * 0.03)
+                    .padding(.top, screenWidth * 0.025)
+            },
             alignment: .top
         )
     }
-
-
     
+    // MARK: - Date View
     var dateView: some View {
         VStack(spacing: screenWidth * 0.01) {
             if event.isEndless {
-                // Бесконечное событие → иконка бесконечности
                 Image(systemName: "infinity")
                     .resizable()
                     .scaledToFit()
                     .foregroundColor(.red)
-                    .frame(width: screenWidth * 0.07, height: screenWidth * 0.07)
+                    .frame(width: screenWidth * 0.04, height: screenWidth * 0.04)
             } else if let nextDate = event.nextDate {
-                // Конкретная дата
                 Text(nextDate.day)
-                    .font(.system(size: screenWidth * 0.06, weight: .thin))
+                    .font(.system(size: screenWidth * 0.03, weight: .light, design: .default))
                     .foregroundColor(.red)
+                    .textCase(.uppercase)
+                    .multilineTextAlignment(.center)
                 Text(nextDate.month)
-                    .font(.system(size: screenWidth * 0.026, weight: .regular))
+                    .font(.system(size: screenWidth * 0.013, weight: .bold, design: .default))
                     .foregroundColor(.red)
+                    .textCase(.uppercase)
+                    .multilineTextAlignment(.center)
             } else {
-                // Дат вообще нет → иконка-заглушка
                 Image(systemName: "calendar.badge.exclamationmark")
                     .resizable()
                     .scaledToFit()
                     .foregroundColor(.red)
-                    .frame(width: screenWidth * 0.06, height: screenWidth * 0.06)
+                    .frame(width: screenWidth * 0.04, height: screenWidth * 0.04)
             }
         }
-        .frame(width: screenWidth * 0.15, height: screenWidth * 0.15)
+        .frame(width: screenWidth * 0.1, height: screenWidth * 0.1)
         .background(
             RoundedRectangle(cornerRadius: screenWidth * 0.02)
-                .fill(Color.white.opacity(0.6))
+                .fill(Color.white.opacity(0.8))
         )
     }
-
-
+    
+    // MARK: - Bookmark View
     var bookmarkView: some View {
-            Button {
-                isBookmarked.toggle()
-                onBookmarkTapped?()
-            } label: {
-                Image(isBookmarked ? "bookmark2" : "bookmark")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: screenWidth * 0.045, height: screenWidth * 0.045)
-                    .padding(screenWidth * 0.025)
-                    .background(
-                        RoundedRectangle(cornerRadius: screenWidth * 0.02)
-                            .fill(Color.white.opacity(0.6))
-                    )
-            }
-            .buttonStyle(.plain)
-            .offset(y: -screenWidth * 0.030)
+        Button {
+            isBookmarked.toggle()
+            onBookmarkTapped?()
+        } label: {
+            Image(isBookmarked ? "bookmark2" : "bookmark")
+                .resizable()
+                .scaledToFit()
+                .frame(width: screenWidth * 0.03, height: screenWidth * 0.03)
+                .padding(screenWidth * 0.015)
+                .background(
+                    RoundedRectangle(cornerRadius: screenWidth * 0.014)
+                        .fill(Color.white.opacity(0.8))
+                )
         }
+        .buttonStyle(.plain)
     }
-
+}
 
 #Preview {
-    ExploreImageView(event: .mockConcert)
-        
+    ExploreImageView(event: .mockMarathon)
 }

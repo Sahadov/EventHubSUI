@@ -8,6 +8,7 @@
 import SwiftUI
 
 enum EventCategory: String, CaseIterable {
+    case all /// Сброс по умолчанию
     case concert = "concert"
     case exhibition = "exhibition"
     case festival = "festival"
@@ -17,6 +18,7 @@ enum EventCategory: String, CaseIterable {
     
     var title: String {
         switch self {
+        case .all: return "All"
         case .concert: return "Concert"
         case .exhibition: return "Exhibition"
         case .festival: return "Festival"
@@ -27,18 +29,20 @@ enum EventCategory: String, CaseIterable {
     }
     var color: Color {
         switch self {
-        case .concert: return Color(hex: "#F0635A")
-        case .exhibition: return  Color(hex: "#F59762")
-        case .festival: return Color(hex: "#29D697")
-        case .kids: return Color(hex: "#46CDFB")
-        case .party: return .cyan
-        case .quest: return .mint
+        case .all: return Color(hex: "#F0635A")
+        case .concert: return Color(hex: "#F59762")
+        case .exhibition: return Color(hex: "#29D697")
+        case .festival: return Color(hex: "#46CDFB")
+        case .kids: return .cyan
+        case .party: return .mint
+        case .quest: return .purple
             
         }
     }
     
     var iconName: String {
         switch self {
+        case .all: return "square.grid.2x2"
         case .concert: return "music.note"
         case .exhibition: return "paintpalette"
         case .festival: return "sun.max"

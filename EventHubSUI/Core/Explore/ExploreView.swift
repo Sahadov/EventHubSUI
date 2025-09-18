@@ -18,47 +18,50 @@ struct ExploreView: View {
     
     var body: some View {
         ZStack(alignment: .top) {
-            ExploreToolBar(viewModel: viewModel, selectedCity: $selectedCity)
             
-            ScrollView(.vertical, showsIndicators: false) {
-                ZStack(alignment: .top) {
-                    Background()
-                    
-                    VStack(spacing: 0) {
-                        Spacer().frame(height: 100) 
-     
-                        ExploreSearchBar(
-                              text: $searchText,
-                              placeholder: "Search",
-                              asButton: true,
-                              onRightButtonTap: {
-//TODO: Open filter view
-                                  
-                              },
-                              onTapSearchBar: {
-                                  viewModel.goToSeach(viewModel.upcomingEvents)
-                              }
-                          )
-                          
-                        ExploreCategoryView(viewModel: viewModel, selectedCity: selectedCity)
-                      
-                        ExploreFilterView(viewModel: viewModel)
+            Color(hex: "#F5F5F5")
+            ZStack(alignment: .top) {
+                ExploreToolBar(viewModel: viewModel, selectedCity: $selectedCity)
+                
+                ScrollView(.vertical, showsIndicators: false) {
+                    ZStack(alignment: .top) {
+                        Background()
                         
-                        EventTitle(title: "Upcoming Events", viewModel: viewModel, events: viewModel.upcomingEvents)
-                        
-                        HorizontalEventListView(viewModel: viewModel, events: viewModel.upcomingEvents)
-                        
-                        EventTitle(title: "Nearby You", viewModel: viewModel, events: viewModel.nearEvents)
-                        
-                        HorizontalEventListView(viewModel: viewModel, events: viewModel.nearEvents)
+                        VStack(spacing: 0) {
+                            Spacer().frame(height: 100)
+                            
+                            ExploreSearchBar(
+                                text: $searchText,
+                                placeholder: "Search",
+                                asButton: true,
+                                onRightButtonTap: {
+                                    //TODO: Open filter view
+                                    
+                                },
+                                onTapSearchBar: {
+                                    viewModel.goToSeach(viewModel.upcomingEvents)
+                                }
+                            )
+                            
+                            ExploreCategoryView(viewModel: viewModel, selectedCity: selectedCity)
+                            
+                            ExploreFilterView(viewModel: viewModel)
+                            
+                            EventTitle(title: "Upcoming Events", viewModel: viewModel, events: viewModel.upcomingEvents)
+                            
+                            HorizontalEventListView(viewModel: viewModel, events: viewModel.upcomingEvents)
+                            
+                            EventTitle(title: "Nearby You", viewModel: viewModel, events: viewModel.nearEvents)
+                            
+                            HorizontalEventListView(viewModel: viewModel, events: viewModel.nearEvents)
+                        }
+                        .padding(.vertical)
                     }
-                    .padding(.vertical)
                 }
             }
+            .edgesIgnoringSafeArea(.top)
         }
-        .edgesIgnoringSafeArea(.top)
     }
-    
     
 }
 
@@ -88,7 +91,7 @@ private struct ExploreToolBar: View {
                             // Обновляем события при смене города
                             viewModel.isCategoryMode = false
                             viewModel.categoryEvents = []
-                            await viewModel.fetchEvents(for: city)
+                            await viewModel.fetchInitialEvents(city)
                         }
                     }
                 }
@@ -104,7 +107,6 @@ private struct ExploreToolBar: View {
         .padding()
         .background(Color(.accentBlue))
         .foregroundColor(.white)
-        .padding(.horizontal)
         .padding(.top, UIApplication.shared.connectedScenes
             .compactMap { $0 as? UIWindowScene }
             .first?.windows.first?.safeAreaInsets.top ?? 0)
@@ -125,7 +127,7 @@ private struct EventTitle: View {
                 .font(.headline)
             Spacer()
             Button("See All") {
-                viewModel.goToSeeAll(events)
+                viewModel.goToSeeAll(events, viewModel.isLoading)
             }
             .foregroundStyle(.customGray)
         }
@@ -142,13 +144,17 @@ private struct ExploreCategoryView: View {
     var body: some View {
         CategoryScrollView { category in
             Task {
-                await viewModel.fetchEventsBy(category: category, location: selectedCity)
+                if category == .all {
+                    await viewModel.resetToDefault(selectedCity)
+                } else {
+                    await viewModel.fetchEventsBy(category: category, location: selectedCity)
+                }
             }
         }
         Spacer(minLength: 20)
     }
 }
-    
+
 private struct ExploreFilterView: View {
     @ObservedObject var viewModel: ExploreViewModel
     
@@ -156,9 +162,9 @@ private struct ExploreFilterView: View {
         FilterScrollView { filter in
             switch filter {
             case .today:
-                viewModel.goToSeeAll(viewModel.todayEvents)
+                viewModel.goToSeeAll(viewModel.todayEvents, viewModel.isLoading)
             case .films:
-                viewModel.goToSeeAll(viewModel.movieEvents)
+                viewModel.goToSeeAll(viewModel.movieEvents, viewModel.isLoading)
             case .list:
                 viewModel.goToList(viewModel.upcomingEvents)
             }
@@ -196,6 +202,7 @@ private struct HorizontalEventListView: View {
                 }
             }
             .padding(.horizontal)
+            .padding(.top, 12)
         }
     }
 }

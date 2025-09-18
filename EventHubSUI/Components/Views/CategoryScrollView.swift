@@ -7,38 +7,20 @@
 
 import SwiftUI
 
-enum categoyScreenType {
-    case explore
-    case map
+enum CategoryScreenType {
+    case explore, map
 }
 
 struct CategoryScrollView: View {
-    var screenType: categoyScreenType = .explore
-    
+    var screenType: CategoryScreenType = .explore
     var onCategorySelected: ((EventCategory) -> Void)? = nil
     
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 12) {
                 ForEach(EventCategory.allCases, id: \.self) { category in
-                    Button {
+                    CategoryButton(category: category, screenType: screenType) {
                         onCategorySelected?(category)
-                        // действие при нажатии
-                        // реализовать callback
-                    } label: {
-                        HStack(spacing: 8) {
-                            Image(systemName: category.iconName)
-                                .foregroundColor(screenType == .map ? category.color : Color.white)
-                            Text(category.title)
-                                .foregroundColor(screenType == .map ? .gray : Color.white)
-                                .bold()
-                                .font(.system(size: 13, weight: .bold))
-                        }
-                        .frame(width: 106.77, height: 39.06)
-                        .minimumScaleFactor(0.2)
-                        .background(screenType == .map ? Color.white : category.color)
-                        .cornerRadius(20.96)
-                        .shadow(radius: 2, y: 1)
                     }
                 }
             }
@@ -48,6 +30,30 @@ struct CategoryScrollView: View {
     }
 }
 
+// MARK: - Subviews
+struct CategoryButton: View {
+    let category: EventCategory
+    let screenType: CategoryScreenType
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 8) {
+                Image(systemName: category.iconName)
+                    .foregroundColor(screenType == .map ? category.color : .white)
+                Text(category.title)
+                    .foregroundColor(screenType == .map ? .gray : .white)
+                    .bold()
+                    .font(.system(size: 13, weight: .bold))
+            }
+            .frame(width: 107, height: 39)
+            .minimumScaleFactor(0.2)
+            .background(screenType == .map ? Color.white : category.color)
+            .cornerRadius(21)
+            .shadow(radius: 2, y: 1)
+        }
+    }
+}
 
 #Preview {
     CategoryScrollView()
