@@ -47,13 +47,13 @@ struct EventHubSUIApp: App {
                         case .signInScreen:
                             SignInView(signInVM: SignInViewModel(validator: validator, router: router))
                         case .signUpScreen:
-                            SignUpView()
+                            SignUpView(signUpVM: SignUpViewModel(validator: validator, router: router))
                         case .resetPasswordScreen:
-                            ResetView()
+                            ResetView(resetVM: ResetViewModel(validator: validator, router: router))
                         case .eventDetailScreen(let event):
                             EventDetailsView(event: event)
                         case .resetPasswordConfirmationScreen:
-                            ResetViewConfirm()
+                            ResetViewConfirm(resetVM: ResetViewModel(validator: validator, router: router))
                         case .seeAllScreen(events: let events):
                             SeeAllContentView(events: events)
                         case .listScreen(events: let events):
