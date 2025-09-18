@@ -33,6 +33,9 @@ struct FavoritesView: View {
                         .padding(.vertical, 12)
                     }
                     .background(Color(UIColor.systemGroupedBackground).ignoresSafeArea())
+                    .refreshable {
+                        vm.loadFavorites()
+                    }
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
@@ -71,6 +74,7 @@ struct FavoritesView: View {
                 }
             }
         }
+        .onAppear{ vm.loadFavorites() }
     }
 }
 

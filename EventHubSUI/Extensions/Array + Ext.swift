@@ -25,4 +25,20 @@ extension Array where Element == Event {
             }
         }
     }
+    
+    /// Сортировка по возрастанию даты
+    func sortedByDate() -> [Event] {
+        sorted { a, b in
+            switch (a.displayDate, b.displayDate) {
+            case let (la?, lb?): return la < lb
+            case (nil,  _?):     return false
+            case (_?,   nil):    return true
+            case (nil, nil):     return false
+            }
+        }
+    }
+    
+    func uniqueSortedByDate() -> [Event] {
+        removingDuplicates().sortedByDate()
+    }
 }
