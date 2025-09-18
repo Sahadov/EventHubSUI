@@ -14,7 +14,8 @@ struct FilterView: View {
     
     var body: some View {
             VStack(alignment: .leading, spacing: 16) {
-                heading(title: "Filter")
+                Text("Filter")
+                    .font(.Airbnb.medium(size: 25))
                 
                 FilterCategories()
                 
@@ -36,7 +37,7 @@ struct FilterView: View {
                         .font(.Airbnb.medium(size: 16))
                         .foregroundStyle(.accentBlue)
                 }
-                .padding(.bottom)
+                .padding(.vertical)
                 
                 RangeSlider(minValue: $minPrice, maxValue: $maxPrice, range: 0.0...200.0)
                 

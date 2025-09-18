@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CalendarButtonView: View {
-    @State private var selectedDate: Date? = nil
+    @Binding var selectedDate: Date?
     @State private var showDatePicker = false
     
     private var formattedDate: String {
@@ -19,7 +19,6 @@ struct CalendarButtonView: View {
     }
     
     var body: some View {
-        
         HStack {
             Button(action: {
                 showDatePicker.toggle()
@@ -28,9 +27,13 @@ struct CalendarButtonView: View {
                     Image(systemName: "calendar")
                         .foregroundColor(.blue)
                     Text("Choose from calendar")
+                        .font(.Airbnb.light(size: 15))
+                        .foregroundColor(.secondary)
+                    Image(systemName: "chevron.right")
                         .foregroundColor(.blue)
                 }
-                .padding()
+                .padding(.horizontal)
+                .padding(.vertical, 10)
                 .background(
                     RoundedRectangle(cornerRadius: 8)
                         .stroke(Color.gray, lineWidth: 1)
@@ -55,19 +58,26 @@ struct CalendarButtonView: View {
                     .padding()
                 }
             }
+            
             Spacer()
             
-            if let date = selectedDate {
+            if selectedDate != nil {
                 Text(formattedDate)
-                    .foregroundColor(.gray)
+                    .font(.Airbnb.light(size: 15))
+                    .foregroundColor(.secondary)
             }
+            
+            
         }
     }
 }
 
+// MARK: Preview
 struct CalendarButtonView_Previews: PreviewProvider {
+    @State static var date: Date? = Date()
+    
     static var previews: some View {
-        CalendarButtonView()
+        CalendarButtonView(selectedDate: $date)
             .padding()
             .previewLayout(.sizeThatFits)
     }
