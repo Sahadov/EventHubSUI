@@ -12,6 +12,7 @@ struct AppView: View {
     @State var appState: Bool = true // change later
     @State var router: Router
     @State var validator: ValidationManager
+    @State var authManager: AuthManager
     
     
     var body: some View {
@@ -20,7 +21,7 @@ struct AppView: View {
             tabbarView: {
 //                TabBarView()
 //                MainView()
-                SignInView(signInVM: SignInViewModel(validator: validator, router: router))
+                SignInView(signInVM: SignInViewModel(authManager: authManager, validator: validator, router: router))
             },
             onboardingView: {
                 WelcomeView()

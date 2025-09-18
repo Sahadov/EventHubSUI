@@ -6,17 +6,14 @@
 //
 
 import SwiftUI
+import GoogleSignIn
+import GoogleSignInSwift
+
 
 struct SignInView: View {
     
     @ObservedObject var signInVM: SignInViewModel
     
-    @State private var email: String = .init()
-    @State private var password: String = .init()
-    @State private var isRemembered: Bool = false
-    @State private var isSignedIn: Bool = false
-    @State private var emailCheck:Bool = true
-    @State private var passwordCheck:Bool = true
     
     init(signInVM: SignInViewModel) {
         self.signInVM = signInVM
@@ -47,20 +44,20 @@ struct SignInView: View {
                     )
                     .foregroundColor(Color(red: 0.07, green: 0.05, blue: 0.15))
                     .offset(x: -120, y: -10)
-                EmailTextField(textFieldValue: $email,
+                EmailTextField(textFieldValue: $signInVM.email,
                                textFieldBorderColor:.constant(Color.borderColor()),
                                icon: .email)
                 
-                if signInVM.emailCheck(email: email) == false {
+                if signInVM.stringCheck(checkType: .email, string: signInVM.email) == false {
                     Text( ValidateInputError.wrongSymbolsEmail.localizedDescription)
                         .foregroundColor(Color.red)
                         .frame(width: 300, height: 7)
                         .offset(x: -70, y: -13)
                 }
                 
-                PasswordTextField(textFieldValue: $password, textFieldBorderColor:.constant(Color.borderColor()))
+                PasswordTextField(textFieldValue: $signInVM.password, textFieldBorderColor:.constant(Color.borderColor()))
                 
-                if signInVM.passwordCheck(password: password) == false {
+                if signInVM.stringCheck(checkType: .password, string: signInVM.password) == false {
                     Text(ValidateInputError.passwordIncorrect.localizedDescription)
                         .foregroundColor(Color.red)
                         .frame(width: 300, height: 7)
@@ -72,7 +69,7 @@ struct SignInView: View {
                 HStack {
                     
                     Spacer(minLength: 25)
-                    Toggle("", isOn: $isRemembered)
+                    Toggle("", isOn: $signInVM.isRemembered)
                         .toggleStyle(.automatic)
                         .labelsHidden()
                     Spacer(minLength: 10)
@@ -90,13 +87,21 @@ struct SignInView: View {
                 }
                 .padding()
                 CustomSIButton(buttonLableText: "SIGN IN") {
-                    signInVM.goToMainView()
+                    signInVM.signInButtonTapped()
                 }
+//                .disabled(signInVM.isWrong)
                 Text("OR")
                 
-                Image("GoogleButton")
-                    .resizable()
-                    .frame(width: 363, height: 116)
+                Button(action: {
+                    self.signInVM.signInWithGoogleTapped()
+                }) {
+                    
+                    Image("GoogleButton")
+                        .resizable()
+                        .frame(width: 363, height: 116)
+                    
+                }
+                
                 //MARK: Добавить кнопку для гугла
                 //            CustomSIButton(buttonLableText: "")
                 Spacer()
@@ -109,11 +114,14 @@ struct SignInView: View {
                     }
                     
                 }
+                .alert(signInVM.errorTitle, isPresented: $signInVM.showError) {} message: {
+                    Text(signInVM.errorMessage)
+                }
                 
             }
     }
 }
 
 #Preview {
-    SignInView(signInVM: SignInViewModel(validator: ValidationManager(), router: Router()))
+    SignInView(signInVM: SignInViewModel(authManager: AuthManager(), validator: ValidationManager(), router: Router()))
 }

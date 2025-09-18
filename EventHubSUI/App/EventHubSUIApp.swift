@@ -23,12 +23,13 @@ struct EventHubSUIApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @StateObject private var router = Router()
     @StateObject private var validator = ValidationManager()
+    @StateObject private var authManager = AuthManager()
     
     var body: some Scene {
         WindowGroup {
             NavigationStack(path: $router.path) {
                 
-                AppView(router: router, validator: validator)
+                AppView(router: router, validator: validator, authManager: authManager)
                     .navigationBarHidden(true)
                     .ignoresSafeArea(.keyboard)
                     .navigationDestination(for: Routes.self) { route in
@@ -45,15 +46,15 @@ struct EventHubSUIApp: App {
                         case .exploreScreen:
                             MainView(router: router)
                         case .signInScreen:
-                            SignInView(signInVM: SignInViewModel(validator: validator, router: router))
+                            SignInView(signInVM: SignInViewModel(authManager: authManager, validator: validator, router: router))
                         case .signUpScreen:
-                            SignUpView()
+                            SignUpView(signUpVM: SignUpViewModel(validator: validator, router: router))
                         case .resetPasswordScreen:
-                            ResetView()
+                            ResetView(resetVM: ResetViewModel(validator: validator, router: router))
                         case .eventDetailScreen(let event):
                             EventDetailsView(event: event)
                         case .resetPasswordConfirmationScreen:
-                            ResetViewConfirm()
+                            ResetViewConfirm(resetVM: ResetViewModel(validator: validator, router: router))
                         case .seeAllScreen(events: let events, isLoading: let loading):
                             SeeAllContentView(events: events, isLoading: loading)
                         case .listScreen(events: let events):

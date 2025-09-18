@@ -9,29 +9,74 @@ import SwiftUI
 
 struct SignUpView: View {
     
-    @State private var userName: String = .init()
-    @State private var userEmail: String = .init()
-    @State private var password: String = .init()
+    @ObservedObject private var signUpVM: SignUpViewModel
+    
     
     @Environment(\.dismiss) var dismiss
+    
+    init(signUpVM: SignUpViewModel) {
+        self.signUpVM = signUpVM
+    }
     
     var body: some View {
         
         VStack(spacing: 19) {
             
             Spacer(minLength: 30)
-           
-            EmailTextField(textFieldValue: $userName, textFieldBorderColor: .constant(Color(cgColor: UIColor(red: 0.896, green: 0.873, blue: 0.873, alpha: 1).cgColor )), textFieldPlaceholder: "Full name", icon: TextFieldImage.profile)
-            EmailTextField(textFieldValue: $userEmail, textFieldBorderColor: .constant(Color(cgColor: UIColor(red: 0.896, green: 0.873, blue: 0.873, alpha: 1).cgColor )), icon: .email)
-            PasswordTextField(textFieldValue: $password, textFieldBorderColor: .constant(Color(cgColor: UIColor(red: 0.896, green: 0.873, blue: 0.873, alpha: 1).cgColor )))
-            PasswordTextField(textFieldValue: $password, textFieldBorderColor: .constant(Color(cgColor: UIColor(red: 0.896, green: 0.873, blue: 0.873, alpha: 1).cgColor )), textFieldPlaceholder: " Confirm password")
-            CustomSIButton(buttonLableText: "SIGN UP")
+            
+            EmailTextField(textFieldValue: $signUpVM.userName,
+                           textFieldBorderColor: .constant(Color.borderColor()),
+                           textFieldPlaceholder: "Full name",
+                           icon: TextFieldImage.profile)
+            
+            if signUpVM.stringCheck(checkType: .userName, string: signUpVM.userName) == false {
+                Text( ValidateInputError.userNameError.localizedDescription)
+                    .foregroundColor(Color.red)
+                    .frame(width: 300, height: 7)
+                    .offset(x: -70, y: -13)
+            }
+            
+            EmailTextField(textFieldValue: $signUpVM.userEmail,
+                           textFieldBorderColor: .constant(Color.borderColor()),
+                           icon: .email)
+            
+            if signUpVM.stringCheck(checkType: .email, string: signUpVM.userEmail) == false {
+                Text( ValidateInputError.wrongSymbolsEmail.localizedDescription)
+                    .foregroundColor(Color.red)
+                    .frame(width: 300, height: 7)
+                    .offset(x: -70, y: -13)
+            }
+            PasswordTextField(textFieldValue: $signUpVM.password,
+                              textFieldBorderColor: .constant(Color.borderColor()))
+            
+            if signUpVM.stringCheck(checkType: .password, string: signUpVM.password) == false {
+                Text( ValidateInputError.passwordIncorrect.localizedDescription)
+                    .foregroundColor(Color.red)
+                    .frame(width: 300, height: 7)
+                    .offset(x: -70, y: -13)
+            }
+            PasswordTextField(textFieldValue: $signUpVM.passwordConfirmation,
+                              textFieldBorderColor: .constant(Color.borderColor()),
+                              textFieldPlaceholder: " Confirm password")
+            
+            if signUpVM.stringCheck(checkType: .passwordMatch, string: signUpVM.passwordConfirmation, passwordMatch: signUpVM.password) == false {
+                Text( ValidateInputError.passwordNotMatch.localizedDescription)
+                    .foregroundColor(Color.red)
+                    .frame(width: 300, height: 7)
+                    .offset(x: -70, y: -13)
+            }
+            
+            CustomSIButton(buttonLableText: "SIGN UP") {
+                
+                signUpVM.signUpButtonPressed()
+                
+            }
                 .offset(x: 0, y: 25)
             Text("OR")
                 .offset(x: 0, y: 50)
             
             Image("GoogleButton")
-             
+            
                 .resizable()
                 .frame(width: 363, height: 116)
                 .offset(x: 0, y: 55)
@@ -40,37 +85,47 @@ struct SignUpView: View {
             Spacer()
             HStack {
                 Text("Already have an account?")
-             
-                Button(action: {}){
+                
+                Button(action: {
+                    
+                    dismiss()
+                    
+                }){
                     
                     Text("Sign in")
                 }
-
+                
+            }
+            .alert(signUpVM.errorTitle, isPresented: $signUpVM.showError) {} message: {
+                Text(signUpVM.errorMessage)
             }
         }
-        .navigationBarBackButtonHidden(true)
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Button(action: {
-                    
-                   dismiss()
-                    
-                }) {
-                    Image(systemName: "arrow.backward")
-                        .foregroundColor(.primary)
-                    Text("                Sign up")
-                        .foregroundStyle(.black)
-                        .font(.system(size: 25, weight: .bold))
-                        .multilineTextAlignment(.leading)
-                        .padding()
-                        .frame(maxWidth: .infinity, alignment: .leading)
+    
 
-                }
+
+    .navigationBarBackButtonHidden(true)
+    .toolbar {
+        ToolbarItem(placement: .topBarLeading) {
+            Button(action: {
+                
+                dismiss()
+                
+            }) {
+                Image(systemName: "arrow.backward")
+                    .foregroundColor(.primary)
+                Text("                Sign up")
+                    .foregroundStyle(.black)
+                    .font(.system(size: 25, weight: .bold))
+                    .multilineTextAlignment(.leading)
+                    .padding()
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                
             }
         }
     }
 }
+}
 
 #Preview {
-    SignUpView()
+    SignUpView(signUpVM: SignUpViewModel(validator: ValidationManager(), router: Router()))
 }
