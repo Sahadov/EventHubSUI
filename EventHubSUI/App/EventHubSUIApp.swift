@@ -23,12 +23,13 @@ struct EventHubSUIApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @StateObject private var router = Router()
     @StateObject private var validator = ValidationManager()
+    @StateObject private var authManager = AuthManager()
     
     var body: some Scene {
         WindowGroup {
             NavigationStack(path: $router.path) {
                 
-                AppView(router: router, validator: validator)
+                AppView(router: router, validator: validator, authManager: authManager)
                     .navigationBarHidden(true)
                     .ignoresSafeArea(.keyboard)
                     .navigationDestination(for: Routes.self) { route in
@@ -45,7 +46,7 @@ struct EventHubSUIApp: App {
                         case .exploreScreen:
                             MainView(router: router)
                         case .signInScreen:
-                            SignInView(signInVM: SignInViewModel(validator: validator, router: router))
+                            SignInView(signInVM: SignInViewModel(authManager: authManager, validator: validator, router: router))
                         case .signUpScreen:
                             SignUpView(signUpVM: SignUpViewModel(validator: validator, router: router))
                         case .resetPasswordScreen:
