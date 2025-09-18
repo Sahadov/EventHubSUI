@@ -19,6 +19,8 @@ final class SignUpViewModel: ObservableObject {
     @Published var password: String = ""
     @Published var passwordConfirmation: String = ""
     @Published var showError: Bool = false
+    @Published var errorMessage: String = ""
+    @Published var errorTitle: String = ""
     
     init(validator: ValidationManager, router: Router) {
         self.validator = validator
@@ -28,6 +30,26 @@ final class SignUpViewModel: ObservableObject {
     
     
     func signUpButtonPressed() {
+        
+        do {
+            
+            try _ = validator.checkString(stringType: .userName, string: userName, stringForMatching: nil)
+            try _ = validator.checkString(stringType: .email, string: userEmail, stringForMatching: nil)
+            try _ = validator.checkString(stringType: .password, string: password, stringForMatching: nil)
+            try _ = validator.checkString(stringType: .passwordMatch, string: passwordConfirmation, stringForMatching: password)
+            
+        } catch {
+            
+            print(error.localizedDescription)
+            errorTitle = "Please, check your user name or email and password"
+            errorMessage = error.localizedDescription
+            showError = true
+            
+        }
+        
+        print("INPUT OK")
+        
+        
         
     }
     

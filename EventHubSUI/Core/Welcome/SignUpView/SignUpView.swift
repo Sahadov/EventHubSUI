@@ -11,10 +11,6 @@ struct SignUpView: View {
     
     @ObservedObject private var signUpVM: SignUpViewModel
     
-//    @State private var userName: String = .init()
-//    @State private var userEmail: String = .init()
-//    @State private var password: String = .init()
-//    @State private var passwordConfirmation: String = .init()
     
     @Environment(\.dismiss) var dismiss
     
@@ -99,6 +95,9 @@ struct SignUpView: View {
                     Text("Sign in")
                 }
                 
+            }
+            .alert(signUpVM.errorTitle, isPresented: $signUpVM.showError) {} message: {
+                Text(signUpVM.errorMessage)
             }
         }
     

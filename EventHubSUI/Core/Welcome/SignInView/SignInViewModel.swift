@@ -11,6 +11,7 @@ import SwiftUI
 @MainActor
 final class SignInViewModel: ObservableObject {
     
+    let authManager: AuthManager
     let validator: ValidationManager
     let router: Router
     
@@ -18,9 +19,13 @@ final class SignInViewModel: ObservableObject {
     @Published var password: String = ""
     @Published var isRemembered: Bool = false
     @Published var showError: Bool = false
+    @Published var errorMessage: String = ""
+    @Published var errorTitle: String = ""
+    @Published var isWrong: Bool = false
     
     
-    init(validator: ValidationManager, router: Router) {
+    init(authManager: AuthManager, validator: ValidationManager, router: Router) {
+        self.authManager = authManager
         self.validator = validator
         self.router = router
     }
@@ -37,14 +42,40 @@ final class SignInViewModel: ObservableObject {
         router.goTo(to: .signUpScreen)
     }
     
+    func signInWithGoogleTapped() {
+        Task {
+            
+            if await authManager.signInWithGoogle() == true {
+                self.goToMainView()
+                
+            }
+        }
+    }
+    
     func signInButtonTapped() {
-        var validateResult: Bool = false
+        //        var validateResult: Bool = false
         do {
-            validateResult = try validator.checkString(stringType: .email, string: email, stringForMatching: nil)
+            try _ = validator.checkString(stringType: .email, string: email, stringForMatching: nil)
+            try _ = validator.checkString(stringType: .password, string: password, stringForMatching: nil)
+            try _ = validator.checkString(stringType: .emptyString, string: email, stringForMatching: nil)
+            try _ = validator.checkString(stringType: .emptyString, string: password, stringForMatching: nil)
             
         } catch {
             print(error.localizedDescription)
+            errorTitle = "Please, check your email and password"
+            errorMessage = error.localizedDescription
+            showError = true
+            return
         }
+        print("SIGNIN INPUT OK")
+        
+        Task {
+            
+              try await authManager.signIn(email: email, password: password)
+            
+        }
+        
+        
     }
     
     func stringCheck(checkType: StringType, string: String, passwordMatch: String? = nil) -> Bool {
@@ -54,13 +85,18 @@ final class SignInViewModel: ObservableObject {
             
         } catch {
             print(error.localizedDescription)
+//            isWrong = true
         }
         if string == "" {
+//            isWrong = true
             return true
         } else {
+            if validateResult {
+//                isWrong = false
+            }
             return validateResult
         }
         
     }
-
+    
 }

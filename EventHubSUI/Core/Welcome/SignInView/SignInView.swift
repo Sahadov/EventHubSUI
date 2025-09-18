@@ -6,6 +6,9 @@
 //
 
 import SwiftUI
+import GoogleSignIn
+import GoogleSignInSwift
+
 
 struct SignInView: View {
     
@@ -84,13 +87,21 @@ struct SignInView: View {
                 }
                 .padding()
                 CustomSIButton(buttonLableText: "SIGN IN") {
-                    signInVM.goToMainView()
+                    signInVM.signInButtonTapped()
                 }
+//                .disabled(signInVM.isWrong)
                 Text("OR")
                 
-                Image("GoogleButton")
-                    .resizable()
-                    .frame(width: 363, height: 116)
+                Button(action: {
+                    self.signInVM.signInWithGoogleTapped()
+                }) {
+                    
+                    Image("GoogleButton")
+                        .resizable()
+                        .frame(width: 363, height: 116)
+                    
+                }
+                
                 //MARK: Добавить кнопку для гугла
                 //            CustomSIButton(buttonLableText: "")
                 Spacer()
@@ -103,11 +114,14 @@ struct SignInView: View {
                     }
                     
                 }
+                .alert(signInVM.errorTitle, isPresented: $signInVM.showError) {} message: {
+                    Text(signInVM.errorMessage)
+                }
                 
             }
     }
 }
 
 #Preview {
-    SignInView(signInVM: SignInViewModel(validator: ValidationManager(), router: Router()))
+    SignInView(signInVM: SignInViewModel(authManager: AuthManager(), validator: ValidationManager(), router: Router()))
 }
