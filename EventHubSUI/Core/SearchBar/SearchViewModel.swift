@@ -19,8 +19,8 @@ final class SearchViewModel: ObservableObject {
     private let networkService = NetworkService()
 
     init(events: [Event]) {
-        self.all = events
-        self.results = events
+        self.all = events.uniqueSortedByDate()
+        self.results = self.all
     }
 
     func fetchEvents() async {
@@ -28,7 +28,7 @@ final class SearchViewModel: ObservableObject {
         loadError = nil
         do {
             let resp = try await networkService.fetch(from: .getUpcomingEvents())
-            all = resp.results.removingDuplicates()
+            all = resp.results.uniqueSortedByDate()
             applyFilter()
         } catch {
             loadError = error.localizedDescription
@@ -38,18 +38,18 @@ final class SearchViewModel: ObservableObject {
 
     func applyFilter() {
         let q = query.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        guard !q.isEmpty else {
-            results = all
+        
+        if q.isEmpty {
+            results = all.sortedByDate()
             return
         }
-        results = all.filter { e in
-            [
-                e.title,
-                e.place?.title,
-                e.place?.address
-            ]
-            .compactMap { $0?.lowercased() }
-            .contains { $0.contains(q) }
+
+        let filtered = all.filter { e in
+            [e.title, e.object?.title, e.movie?.title]
+                .compactMap { $0?.lowercased() }
+                .contains { $0.contains(q) }
         }
+
+        results = filtered.uniqueSortedByDate()
     }
 }
