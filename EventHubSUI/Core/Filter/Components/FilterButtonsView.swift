@@ -15,33 +15,33 @@ enum FilterOption: String, CaseIterable {
 
 struct FilterButtonsView: View {
     @State private var selected: FilterOption? = nil
+    @State private var selectedDate: Date? = nil
     
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 16) {
+            
+            // MARK: Filter buttons
             HStack(spacing: 12) {
                 ForEach(FilterOption.allCases, id: \.self) { option in
                     Button(action: {
                         selected = option
+                        selectedDate = nil
                     }) {
                         Text(option.rawValue)
-                            .font(.system(size: 16, weight: .semibold))
-                            .padding(.vertical, 8)
+                            .font(.system(size: 15, weight: .medium))
+                            .padding(.vertical, 12)
                             .padding(.horizontal, 16)
                             .frame(minWidth: 80)
                             .background(
-                                selected == option
-                                ? Color.blue
-                                : Color.clear
+                                (selected == option && selectedDate == nil) ? Color.blue : Color.clear
                             )
                             .foregroundColor(
-                                selected == option
-                                ? .white
-                                : .secondary
+                                (selected == option && selectedDate == nil) ? .white : .secondary
                             )
                             .overlay(
                                 RoundedRectangle(cornerRadius: 8)
                                     .stroke(
-                                        selected == option ? Color.blue : Color.gray,
+                                        (selected == option && selectedDate == nil) ? Color.blue : Color.gray,
                                         lineWidth: 1
                                     )
                             )
@@ -49,8 +49,11 @@ struct FilterButtonsView: View {
                     }
                 }
             }
-            CalendarButtonView()
+            
+            // MARK: Calendar button
+            CalendarButtonView(selectedDate: $selectedDate)
         }
+        .padding(.vertical)
     }
 }
 
