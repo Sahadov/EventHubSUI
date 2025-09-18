@@ -14,11 +14,11 @@ struct EventInfoView: View {
     var body: some View {
         HStack(spacing: 14) {
             ZStack {
-                Image(iconName)
                 Rectangle()
                     .frame(width: 48, height: 48)
                     .foregroundStyle(.accentBlue.opacity(0.1))
                     .cornerRadius(12)
+                Image(iconName)
             }
             VStack(alignment: .leading, spacing: 1) {
                 Text(firstText)

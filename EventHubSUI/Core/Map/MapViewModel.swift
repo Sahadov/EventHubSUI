@@ -33,7 +33,7 @@ class MapViewModel: ObservableObject {
     func fetchUpcomingEvents() async {
         do {
             let result = try await networkService.fetch(from: .getUpcomingEvents())
-            self.upcomingEvents = result.results
+            self.upcomingEvents = result.results.removingDuplicates()
         } catch {
             print("Ошибка при загрузке предстоящих событий: \(error)")
         }

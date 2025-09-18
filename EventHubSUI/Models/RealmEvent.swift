@@ -20,6 +20,10 @@ class RealmEvent: Object, Identifiable {
     @objc dynamic var favoritesCount: Int = 0
     @objc dynamic var isFree: Bool = false
     
+    // новые свойства
+     @objc dynamic var poster: RealmEventImage? = nil
+     @objc dynamic var publicationDate: Double = 0
+    
     override static func primaryKey() -> String? {
         "id"
     }
@@ -37,9 +41,13 @@ class RealmDateInfo: Object {
 class RealmPlace: Object {
     @objc dynamic var id: Int = 0
     @objc dynamic var title: String? = nil
+    @objc dynamic var slug: String? = nil       // новое
     @objc dynamic var address: String? = nil
+    @objc dynamic var phone: String? = nil      // новое
+    @objc dynamic var isStub: Bool = false      // новое
+    @objc dynamic var siteURL: String? = nil    // новое
     @objc dynamic var coords: RealmCoordinates? = nil
-    @objc dynamic var subway: String? = nil
+    @objc dynamic var subway: String? = nil     // если нужно оставить
 }
 
 class RealmEventImage: Object {
@@ -68,6 +76,10 @@ extension RealmEvent {
         self.favoritesCount = event.favoritesCount ?? 0
         self.isFree = event.isFree ?? false
         
+        // новый property
+        self.publicationDate = event.publicationDate ?? 0
+        
+        
         if let categories = event.categories {
             self.categories.append(objectsIn: categories)
         }
@@ -85,6 +97,12 @@ extension RealmEvent {
             let realmImages = images.map { RealmEventImage(from: $0) }
             self.images.append(objectsIn: realmImages)
         }
+        
+        // новый property
+        if let poster = event.poster {
+            self.poster = RealmEventImage(from: poster)
+        }
+        
     }
 }
 
@@ -102,15 +120,18 @@ extension RealmDateInfo {
 
 extension RealmPlace {
     convenience init(from place: Place) {
-        self.init()
-        self.id = place.id ?? 0
-        self.title = place.title
-        self.address = place.address
-        self.subway = place.subway
-        if let coords = place.coords {
-            self.coords = RealmCoordinates(from: coords)
-        }
-    }
+          self.init()
+          self.id = place.id ?? 0
+          self.title = place.title
+          self.slug = place.slug
+          self.address = place.address
+          self.phone = place.phone
+          self.isStub = place.isStub ?? false
+          self.siteURL = place.siteURL
+          if let coords = place.coords {
+              self.coords = RealmCoordinates(from: coords)
+          }
+      }
 }
 
 extension RealmCoordinates {
@@ -149,9 +170,19 @@ extension RealmEvent {
             description: eventDescription,
             bodyText: bodyText,
             images: images.map { $0.toEventImage() },
+            // новый property
+            poster: poster?.toEventImage(),
+            // новый property
+            publicationDate: publicationDate == 0 ? nil : publicationDate,            
             favoritesCount: favoritesCount,
             categories: Array(categories),
-            isFree: isFree
+            isFree: isFree,
+            
+            // добавляем новые поля
+            datetime: nil,  
+            movie: nil,
+            object: nil,
+            date: nil
         )
     }
 }
@@ -174,12 +205,14 @@ extension RealmPlace {
         return Place(
             id: id,
             title: title,
+            slug: slug,
             address: address,
-            coords: coords?.toCoordinates(),
-            subway: subway
+            phone: phone,
+            isStub: isStub,
+            siteURL: siteURL,
+            coords: coords?.toCoordinates()
         )
-    }
-}
+    }}
 
 extension RealmCoordinates {
     func toCoordinates() -> Coordinates {
