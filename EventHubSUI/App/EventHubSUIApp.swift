@@ -54,8 +54,8 @@ struct EventHubSUIApp: App {
                             EventDetailsView(event: event)
                         case .resetPasswordConfirmationScreen:
                             ResetViewConfirm()
-                        case .seeAllScreen(events: let events):
-                            SeeAllContentView(events: events)
+                        case .seeAllScreen(events: let events, isLoading: let loading):
+                            SeeAllContentView(events: events, isLoading: loading)
                         case .listScreen(events: let events):
                             ListContentView(events: events)
                         case .searchScreen(events: let events):

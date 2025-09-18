@@ -7,6 +7,14 @@
 
 import Foundation
 
+enum EventListType: Hashable {
+    case today
+    case movies
+    case nearby
+    case upcoming
+    case category
+}
+
 @MainActor
 final class ExploreViewModel: ObservableObject {
 
@@ -16,7 +24,7 @@ final class ExploreViewModel: ObservableObject {
     @Published var upcomingEvents: [Event] = []
     @Published var nearEvents: [Event] = []
     @Published var categoryEvents: [Event] = []
-    @Published var locationEvents: [Event] = []
+//    @Published var locationEvents: [Event] = []
     @Published var todayEvents: [Event] = []
     @Published var movieEvents: [Event] = []
     
@@ -96,8 +104,8 @@ final class ExploreViewModel: ObservableObject {
     }
     
     /// TODAY, FILMS, See All
-    func goToSeeAll(_ events: [Event]) {
-        router.goTo(to: .seeAllScreen(events: events))
+    func goToSeeAll(_ events: [Event], _ isLoading: Bool) {
+        router.goTo(to: .seeAllScreen(events: events, isLoading: isLoading))
     }
     
     /// LIST

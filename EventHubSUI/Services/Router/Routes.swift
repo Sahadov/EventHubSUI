@@ -12,7 +12,7 @@ enum Routes: Hashable {
     case resetPasswordScreen
     case resetPasswordConfirmationScreen
     case eventDetailScreen(event: Event)
-    case seeAllScreen(events: [Event])
+    case seeAllScreen(events: [Event], isLoading: Bool)
     case listScreen(events: [Event])
     case searchScreen(events: [Event])
 //    case notificationScreen
