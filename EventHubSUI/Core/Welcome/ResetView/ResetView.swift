@@ -6,24 +6,38 @@
 //
 
 import SwiftUI
+import Combine
 
 struct ResetView: View {
     
-    @Environment(\.dismiss) var dismiss
+    @ObservedObject var resetVM: ResetViewModel
     
-    @State private var email: String = ""
+    @Environment(\.dismiss) var dismiss
+    @State var wrongInput: Bool = false
+    
+    init(resetVM: ResetViewModel) {
+        self.resetVM = resetVM
+    }
     
     var body: some View {
         VStack(spacing: 26) {
             Spacer(minLength: 10)
             Text("Please enter your email address to request a password reset")
                 .frame(width: 310, alignment: .topLeading)
-            EmailTextField(textFieldValue: $email,
+            EmailTextField(textFieldValue: $resetVM.email,
                            textFieldBorderColor: .constant(Color.borderColor()),
                            icon: .email)
+            
+            if resetVM.stringCheck(checkType: .email, string: resetVM.email) == false {
+                Text(ValidateInputError.wrongSymbolsEmail.localizedDescription)
+                    .foregroundColor(Color.red)
+                    .frame(width: 300, height: 7)
+                    .offset(x: -70, y: -13)
+            } 
+            
             Spacer(minLength: 40)
             CustomSIButton(buttonLableText: "SEND") {
-                
+                self.resetVM.resetButtonTapped()
             }
             
             Spacer(minLength: 350)
@@ -52,5 +66,5 @@ struct ResetView: View {
 }
 
 #Preview {
-    ResetView()
+    ResetView(resetVM: ResetViewModel(validator: ValidationManager(), router: Router()))
 }

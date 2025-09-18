@@ -23,12 +23,14 @@ struct EventHubSUIApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @StateObject private var router = Router()
     @StateObject private var validator = ValidationManager()
+    @StateObject private var authManager = AuthManager()
     
     var body: some Scene {
         WindowGroup {
             NavigationStack(path: $router.path) {
                 
                 AppView(router: router, validator: validator)
+                    .environmentObject(authManager)
                     .navigationBarHidden(true)
                     .ignoresSafeArea(.keyboard)
                     .navigationDestination(for: Routes.self) { route in
@@ -37,19 +39,19 @@ struct EventHubSUIApp: App {
                         case .eventsScreen:
                             EventsView()
                         case .profileScreen:
-                            ProfileView()
+                            ProfileView(profileVM: ProfileViewModel(authManager: authManager, router: router))
                         case .mapScreen:
                             MapView()
                         case .favoritesScreen:
                             FavoritesView()
                         case .exploreScreen:
-                            MainView(router: router)
+                            MainView(router: router, authManager: authManager)
                         case .signInScreen:
-                            SignInView(signInVM: SignInViewModel(validator: validator, router: router))
+                            SignInView(signInVM: SignInViewModel(authManager: authManager, validator: validator, router: router))
                         case .signUpScreen:
-                            SignUpView()
+                            SignUpView(signUpVM: SignUpViewModel(authManager: authManager, validator: validator, router: router))
                         case .resetPasswordScreen:
-                            ResetView()
+                            ResetView(resetVM: ResetViewModel(validator: validator, router: router))
                         case .eventDetailScreen(let event):
                             EventDetailsView(event: event)
                         case .resetPasswordConfirmationScreen:
