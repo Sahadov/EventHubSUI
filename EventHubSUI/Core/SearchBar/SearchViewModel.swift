@@ -20,7 +20,7 @@ final class SearchViewModel: ObservableObject {
 
     init(events: [Event]) {
         self.all = events.uniqueSortedByDate()
-        self.results = events
+        self.results = self.all
     }
 
     func fetchEvents() async {
@@ -39,22 +39,17 @@ final class SearchViewModel: ObservableObject {
     func applyFilter() {
         let q = query.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
         
-        let base: [Event]
         if q.isEmpty {
-            base = all
-        } else {
-            base = all.filter { e in
-                [
-                    e.title,
-                    e.object?.title,
-                    e.movie?.title
-                ]
-                    .compactMap { $0?.lowercased() }
-                    .contains { $0.contains(q) }
-            }
+            results = all.sortedByDate()
+            return
         }
-        
-        // результаты всегда сортируем по дате
-        results = base.sortedByDate()
+
+        let filtered = all.filter { e in
+            [e.title, e.object?.title, e.movie?.title]
+                .compactMap { $0?.lowercased() }
+                .contains { $0.contains(q) }
+        }
+
+        results = filtered.uniqueSortedByDate()
     }
 }

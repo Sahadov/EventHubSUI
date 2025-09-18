@@ -11,7 +11,7 @@ struct FavoritesView: View {
     @StateObject private var vm = FavoritesViewModel()
     @State private var isSearching = false
     @FocusState private var searchFocused: Bool
-
+    
     var body: some View {
         NavigationView {
             ZStack {
@@ -22,12 +22,14 @@ struct FavoritesView: View {
                     ScrollView {
                         LazyVStack(spacing: 12) {
                             ForEach(vm.filteredFavorites) { event in
-                                EventCard(type: .favourites, event: event) {
-                                    withAnimation(.snappy) {
-                                        vm.toggleFavorite(event)
+                                NavigationLink(destination: EventDetailsView(event: event)) {
+                                    EventCard(type: .favourites, event: event) {
+                                        withAnimation(.snappy) {
+                                            vm.toggleFavorite(event)
+                                        }
                                     }
                                 }
-                                    .padding(.horizontal, 16)
+                                .padding(.horizontal, 16)
                             }
                         }
                         .padding(.vertical, 12)
