@@ -25,7 +25,7 @@ struct EventsView: View {
                     .scaleEffect(1.5)
                 }
                 
-                ScrollView {
+                ScrollView(.vertical, showsIndicators: false) {
                     if selectedTab == 0 {
                         upcomingView
                     } else {
@@ -37,13 +37,16 @@ struct EventsView: View {
             .animation(.easeInOut(duration: 0.35), value: selectedTab)
             
             CustomSIButton(buttonLableText: "EXPLORE EVENTS")
-                .padding(.vertical, 20)
+                .padding(.bottom, 90)
+                .padding(.top, 10)
             
             Spacer()
                 
         }
-        .background(Color.gray.opacity(0.1))
         .navigationBarHidden(true)
+        .safeAreaInset(edge: .top) {
+            CustomNavBar(title: "Events")
+        }
         .toolbar(.hidden, for: .navigationBar)
     }
     
@@ -68,6 +71,7 @@ struct EventsView: View {
         VStack {
             ForEach(Array(viewModel.upcomingEvents.enumerated()), id: \.element.title) { _, event in
                 EventCard(event: event)
+                    .shadow(color: Color.black.opacity(0.1), radius: 3, x: 0, y: 2)
             }
         }
         .padding(.horizontal, 25)
