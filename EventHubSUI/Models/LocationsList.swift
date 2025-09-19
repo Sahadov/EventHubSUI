@@ -7,9 +7,7 @@
 
 import Foundation
 
-import Foundation
-
-enum LocationsList: String, CaseIterable {
+enum LocationsList: String, CaseIterable, Codable {
     case spb
     case msk
     case nsk
