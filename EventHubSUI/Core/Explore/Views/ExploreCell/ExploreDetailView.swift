@@ -15,7 +15,7 @@ struct ExploreDetailView: View {
         VStack(alignment: .leading, spacing: screenWidth * 0.02) {
             
             Text(event.title?.capitalized ?? "No title")
-                .font(.system(size: screenWidth * 0.035, weight: .semibold))
+                .font(.system(size: screenWidth * 0.039, weight: .semibold))
                 .lineLimit(1)
                 .truncationMode(.tail)
                 .foregroundStyle(.black)
@@ -42,11 +42,16 @@ struct ExploreDetailView: View {
     var adressView: some View {
         HStack(spacing: screenWidth * 0.02) {
             Image(.mapPin)
-            Text(event.place?.address?.capitalized ?? "unknown")
-                .foregroundColor(Color(hex: "#2B2849"))
-                .font(.system(size: screenWidth * 0.035, weight: .regular))
+//            Text(event.place?.address?.capitalized ?? "unknown")
+            Text("36 Guild street London, UK")
+                .foregroundColor(Color(hex: "#9593a4"))
+//                .font(.system(size: screenWidth * 0.035, weight: .regular))
                 .truncationMode(.tail)
                 .lineLimit(1)
+            
+                .font(.Airbnb.light(size: screenWidth * 0.035))
+
+//            screenWidth * 0.035
         }
     }
 }

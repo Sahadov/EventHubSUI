@@ -16,7 +16,7 @@ struct ExploreImageView: View {
     @State private var isBookmarked: Bool = false
     
     var body: some View {
-        AsyncImage(url: URL(string: event.displayImageURL ?? "https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?w=144")) { phase in
+        AsyncImage(url: URL(string: "https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?w=144" ?? "https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?w=144")) { phase in
             switch phase {
             case .empty:
                 ProgressView()
@@ -32,20 +32,21 @@ struct ExploreImageView: View {
                 EmptyView()
             }
         }
-        .frame(width: screenWidth * 0.55, height: screenWidth * 0.55 * 0.72)
+        .frame(width: screenWidth * 0.55, height: screenWidth * 0.49 * 0.72)
         .clipped()
         .cornerRadius(screenWidth * 0.03)
         .overlay(
-            HStack {
+            ZStack {
                 dateView
-                    .padding(.leading, screenWidth * 0.03)
-                    .padding(.top, screenWidth * 0.03)
-                Spacer()
+                    .padding(.top, screenWidth * 0.02)
+                    .padding(.leading, screenWidth * 0.02)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+
                 bookmarkView
-                    .padding(.trailing, screenWidth * 0.03)
-                    .padding(.top, screenWidth * 0.025)
-            },
-            alignment: .top
+                    .padding(.top, screenWidth * 0.02)
+                    .padding(.trailing, screenWidth * 0.02)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+            }
         )
     }
     
@@ -64,11 +65,14 @@ struct ExploreImageView: View {
                     .foregroundColor(.red)
                     .textCase(.uppercase)
                     .multilineTextAlignment(.center)
+                    .scaleEffect(x: 0.7, y: 1.3, anchor: .center)
+                    
                 Text(nextDate.month)
-                    .font(.system(size: screenWidth * 0.013, weight: .bold, design: .default))
+                    .font(.system(size: screenWidth * 0.013, weight: .bold, design: .monospaced))
                     .foregroundColor(.red)
                     .textCase(.uppercase)
                     .multilineTextAlignment(.center)
+                    .scaleEffect(x: 1, y: 1.6, anchor: .center)
             } else {
                 Image(systemName: "calendar.badge.exclamationmark")
                     .resizable()
@@ -77,7 +81,7 @@ struct ExploreImageView: View {
                     .frame(width: screenWidth * 0.04, height: screenWidth * 0.04)
             }
         }
-        .frame(width: screenWidth * 0.1, height: screenWidth * 0.1)
+        .frame(width: screenWidth * 0.111, height: screenWidth * 0.111)
         .background(
             RoundedRectangle(cornerRadius: screenWidth * 0.02)
                 .fill(Color.white.opacity(0.8))
@@ -93,8 +97,8 @@ struct ExploreImageView: View {
             Image(isBookmarked ? "bookmark2" : "bookmark")
                 .resizable()
                 .scaledToFit()
-                .frame(width: screenWidth * 0.03, height: screenWidth * 0.03)
-                .padding(screenWidth * 0.015)
+                .frame(width: screenWidth * 0.04, height: screenWidth * 0.04)
+                .padding(screenWidth * 0.019)
                 .background(
                     RoundedRectangle(cornerRadius: screenWidth * 0.014)
                         .fill(Color.white.opacity(0.8))
