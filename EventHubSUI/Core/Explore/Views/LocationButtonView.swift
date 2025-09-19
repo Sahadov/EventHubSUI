@@ -14,7 +14,7 @@ struct LocationButtonView: View {
         VStack(alignment: .leading, spacing: 2) {
             HStack(spacing: 4) {
                 Text("Current Location")
-                    .font(.system(size: 14, weight: .bold))
+                    .font(.system(size: 12, weight: .light))
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
                 Image(.downArrow)
@@ -23,7 +23,7 @@ struct LocationButtonView: View {
             }
             
             Text(city)
-                .font(.system(size: 12))
+                .font(.system(size: 14, weight: .medium))
                 .lineLimit(1)
                 .minimumScaleFactor(0.8)
         }

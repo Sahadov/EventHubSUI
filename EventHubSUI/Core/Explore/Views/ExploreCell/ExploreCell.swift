@@ -15,33 +15,35 @@ struct ExploreCell: View {
     var onBookmarkTap: (() -> Void)?
     
     var body: some View {
-        let cardWidth = screenWidth * 0.7
-        let imageHeight = cardWidth * 0.72
+        let cardWidth = screenWidth * 0.55
+        let imageHeight = cardWidth * 0.45
         
         VStack(spacing: 0) {
             if isPlaceholder {
                 placeholderImage
                     .frame(width: cardWidth, height: imageHeight)
                     .padding()
-                
+                  
                 placeholderDetails
-                    .padding()
+                    .padding(.horizontal)
                     .frame(width: cardWidth, alignment: .leading)
             } else {
                 ExploreImageView(event: event, onBookmarkTapped: onBookmarkTap)
                     .frame(width: cardWidth, height: imageHeight)
-                    .padding()
+                    .padding(10)
+                    .padding(.top, 20)
                 
                 ExploreDetailView(event: event)
-                    .padding()
+                    .padding(.vertical, 25)
+                    
                     .frame(width: cardWidth, alignment: .leading)
             }
         }
         .background(
             RoundedRectangle(cornerRadius: screenWidth * 0.03)
-                .fill(Color.white)
+                .fill(Color(hex: "#ffffff"))
         )
-        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
+//        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)  убрал тень, как в figma 
         .padding(.vertical, screenWidth * 0.02)
     }
     
@@ -51,23 +53,27 @@ struct ExploreCell: View {
             .fill(Color.gray.opacity(0.3))
             .shimmering()
     }
-    
     var placeholderDetails: some View {
         VStack(alignment: .leading, spacing: screenWidth * 0.02) {
-            RoundedRectangle(cornerRadius: 6)
+            RoundedRectangle(cornerRadius: screenWidth * 0.015)
                 .fill(Color.gray.opacity(0.2))
-                .frame(height: 16)
+                .frame(height: screenWidth * 0.035) 
                 .shimmering()
-            RoundedRectangle(cornerRadius: 6)
+            
+            RoundedRectangle(cornerRadius: screenWidth * 0.015)
                 .fill(Color.gray.opacity(0.2))
-                .frame(height: 12)
+                .frame(height: screenWidth * 0.03)
                 .shimmering()
-            RoundedRectangle(cornerRadius: 6)
+            
+            RoundedRectangle(cornerRadius: screenWidth * 0.015)
                 .fill(Color.gray.opacity(0.2))
-                .frame(width: 100, height: 12)
+                .frame(width: screenWidth * 0.25, height: screenWidth * 0.03)
                 .shimmering()
         }
+        .padding(.horizontal, screenWidth * 0.02)
+        .padding(.vertical, screenWidth * 0.09)
     }
+
 }
 
 

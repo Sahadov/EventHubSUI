@@ -7,6 +7,14 @@
 
 import Foundation
 
+enum EventListType: Hashable {
+    case today
+    case movies
+    case nearby
+    case upcoming
+    case category
+}
+
 @MainActor
 final class ExploreViewModel: ObservableObject {
 
@@ -16,7 +24,7 @@ final class ExploreViewModel: ObservableObject {
     @Published var upcomingEvents: [Event] = []
     @Published var nearEvents: [Event] = []
     @Published var categoryEvents: [Event] = []
-    @Published var locationEvents: [Event] = []
+//    @Published var locationEvents: [Event] = []
     @Published var todayEvents: [Event] = []
     @Published var movieEvents: [Event] = []
     
@@ -34,15 +42,15 @@ final class ExploreViewModel: ObservableObject {
     //MARK: - Network
     
     /// Загружаем дефолтные данные
-    func fetchInitialEvents() async {
+    func fetchInitialEvents(_ location: LocationsList = .msk) async {
         isLoading = true
         defer { isLoading = false }
         
         do {
-            async let upcoming = networkService.fetch(from: .getUpcomingEvents())
-            async let nearby = networkService.fetch(from: .getNearbyEvents())
-            async let movie = networkService.fetch(from: .getMovies())
-            async let today = networkService.fetch(from: .getTodayEvents())
+            async let upcoming = networkService.fetch(from: .getUpcomingEvents(location))
+            async let nearby = networkService.fetch(from: .getNearbyEvents(location))
+            async let movie = networkService.fetch(from: .getMovies(location))
+            async let today = networkService.fetch(from: .getTodayEvents(location))
             
             let (upcomingResult, nearbyResult, movieResult, todayResult) = try await (upcoming, nearby, movie, today)
             self.upcomingEvents = upcomingResult.results.removingDuplicates()
@@ -84,9 +92,9 @@ final class ExploreViewModel: ObservableObject {
       }
 
     /// Сбрасываем фильтр
-      func resetToDefault() {
+    func resetToDefault(_ location: LocationsList) {
           Task {
-              await fetchInitialEvents()
+              await fetchInitialEvents(location)
           }
       }
     //MARK: - Navigation
@@ -96,8 +104,8 @@ final class ExploreViewModel: ObservableObject {
     }
     
     /// TODAY, FILMS, See All
-    func goToSeeAll(_ events: [Event]) {
-        router.goTo(to: .seeAllScreen(events: events))
+    func goToSeeAll(_ events: [Event], _ isLoading: Bool) {
+        router.goTo(to: .seeAllScreen(events: events, isLoading: isLoading))
     }
     
     /// LIST

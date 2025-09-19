@@ -10,11 +10,11 @@ struct SearchScreen: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var vm: SearchViewModel
     
-
+    
     init(events: [Event]) {
         _vm = StateObject(wrappedValue: SearchViewModel(events: events))
     }
-
+    
     var body: some View {
         NavigationView {
             VStack(spacing: 12) {
@@ -25,7 +25,7 @@ struct SearchScreen: View {
                     vm.showFilterSheet = true
                 })
                 .padding(.top, 8)
-
+                
                 if vm.isLoading {
                     Spacer()
                     ProgressView()
@@ -49,8 +49,11 @@ struct SearchScreen: View {
                     ScrollView {
                         LazyVStack(spacing: 12) {
                             ForEach(vm.results) { event in
-                                EventCard(type: .search, event: event)
-                                    .padding(.horizontal, 16)
+                                NavigationLink(destination: EventDetailsView(event: event)) {
+                                    EventCard(type: .search, event: event)
+                                        .padding(.horizontal, 16)
+                                }
+                                
                             }
                         }
                         .padding(.vertical, 8)
@@ -58,15 +61,15 @@ struct SearchScreen: View {
                     .refreshable { await vm.fetchEvents() }
                 }
             }
-           
+            
             .onAppear { vm.applyFilter() }
             .onChange(of: vm.query) { _ in vm.applyFilter() }
             .task { await vm.fetchEvents() }
             .searchNavigationStyle(title: "Search") { dismiss() }
             .sheet(isPresented: $vm.showFilterSheet) {
-                FilterView()
+                FilterView(isPresented: $vm.showFilterSheet)
             }
-
+            
         }
         .navigationBarBackButtonHidden(true)
     }

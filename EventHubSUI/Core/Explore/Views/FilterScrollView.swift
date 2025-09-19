@@ -18,18 +18,19 @@ struct FilterScrollView: View {
                     onButtonTap?(filter)
                     print("Category taped: \(filter.title)") // for test
                 } label: {
-                    Text(filter.title)
-                        .font(.system(size: 14, weight: .bold))
+                    Text(filter.title.uppercased())
+//                        .font(.system(size: 14, weight: .bold))
+                        .font(.Airbnb.medium(size: 13))
                         .foregroundColor(.white)
-                        .frame(width: 106.77, height: 39.06)
+                        .frame(width: 107, height: 42)
                         .background(Color(hex: "#4A43EC"))
-                        .cornerRadius(20.96)
-                        .shadow(radius: 2, y: 1)
+                        .cornerRadius(21)
+//                        .shadow(radius: 2, y: 1)
                 }
                 
             }
         }
-        .padding(.horizontal)
+//        .padding(.horizontal, 24)
     }
 }
 

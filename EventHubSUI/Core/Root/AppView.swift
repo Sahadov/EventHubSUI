@@ -25,7 +25,8 @@ struct AppView: View {
                 if authManager.userSession != nil {
                     MainView(router: router, authManager: authManager)
                 } else {
-                    SignInView(signInVM: SignInViewModel(authManager: authManager, validator: validator, router: router))
+                    MainView(router: router, authManager: authManager)
+                    //SignInView(signInVM: SignInViewModel(authManager: authManager, validator: validator, router: router))
                 }
             },
             onboardingView: {

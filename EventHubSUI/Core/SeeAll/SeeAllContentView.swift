@@ -9,25 +9,74 @@ import SwiftUI
 
 struct SeeAllContentView: View {
     @Environment(\.dismiss) private var dismiss
-    var events: [Event]
-    
-    
+    var events: [Event] = []
+    var isLoading: Bool 
     
     var body: some View {
-        ScrollView {
-            ForEach(events, id: \.id) { event in
-//                SeeAllCell(event: event)
-                EventCard(event: event)
+        ZStack {
+            if !events.isEmpty {
+                ScrollView {
+                    VStack(spacing: 16) {
+                        ForEach(events) { event in
+                            EventCard(event: event)
+                        }
+                    }
+                    .padding()
+                }
+            }
+
+            if events.isEmpty {
+                if isLoading {
+                    LoadingView()
+                } else {
+                    EmptyStateView()
+                }
             }
         }
-        .padding()
-        .background(Color.gray.opacity(0.1))
         .searchNavigationStyle(title: "Events") { dismiss() }
     }
-    
-    
 }
 
+// MARK: - Subviews
+
+private struct LoadingView: View {
+    var body: some View {
+        VStack {
+            ProgressView()
+                .scaleEffect(1.5)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+private struct EmptyStateView: View {
+    var body: some View {
+        VStack(spacing: 16) {
+            Text("😔")
+                .font(.system(size: 80))
+            Text("No events found")
+                .font(.title2)
+                .foregroundColor(.gray)
+                .multilineTextAlignment(.center)
+            Text("We couldn't find any events at the moment. Try again later!")
+                .font(.body)
+                .foregroundColor(.gray.opacity(0.7))
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 40)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+// MARK: - Preview
+
 #Preview {
-    SeeAllContentView(events: Event.events)
+    Group {
+        SeeAllContentView(events: [], isLoading: true)
+            .previewDisplayName("Loading")
+        SeeAllContentView(events: [], isLoading: false)
+            .previewDisplayName("Empty")
+        SeeAllContentView(events: Event.events, isLoading: false)
+            .previewDisplayName("With Data")
+    }
 }
