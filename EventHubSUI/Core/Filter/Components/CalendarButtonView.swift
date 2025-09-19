@@ -58,16 +58,6 @@ struct CalendarButtonView: View {
                     .padding()
                 }
             }
-            
-            Spacer()
-            
-            if selectedDate != nil {
-                Text(formattedDate)
-                    .font(.Airbnb.light(size: 15))
-                    .foregroundColor(.secondary)
-            }
-            
-            
         }
     }
 }

@@ -9,29 +9,37 @@ import SwiftUI
 final class FavoritesViewModel: ObservableObject {
     @Published var favorites: [Event] = []
     @Published var query: String = ""
+    
+    private let repo: EventRepositoryProtocol
 
-    init() {
-        loadMocks()
+    init(repo: EventRepositoryProtocol = EventRepository()) {
+        self.repo = repo
+        loadFavorites()
+    }
+    
+    func loadFavorites() {
+        favorites = repo.getFavorites().uniqueSortedByDate()
     }
     
     var filteredFavorites: [Event] {
-            let q = query.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-            guard !q.isEmpty else { return favorites }
-            return favorites.filter { e in
-                let title = (e.title ?? "").lowercased()
-                return title.contains(q)
+        let q = query.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        let base: [Event]
+        if q.isEmpty {
+            base = favorites
+        } else {
+            base = favorites.filter { e in
+                (e.title ?? "")
+                    .lowercased()
+                    .contains(q)
             }
         }
-
+        
+        return base.uniqueSortedByDate()
+    }
+    
     func toggleFavorite(_ event: Event) {
-        if let index = favorites.firstIndex(where: { $0.id == event.id }) {
-            favorites.remove(at: index)
-        } else {
-            favorites.append(event)
-        }
+        repo.toggleFavorite(event: event)
+        loadFavorites()
     }
 
-    func loadMocks() {
-        favorites = [Event.mockConcert, Event.mockExhibition, Event.mockMarathon]
-    }
 }

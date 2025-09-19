@@ -8,46 +8,67 @@
 import SwiftUI
 
 struct FilterView: View {
-    @State private var minPrice: Double = 20
-    @State private var maxPrice: Double = 120
-    
-    
+    @StateObject private var viewModel = FilterViewModel()
+    @Binding var isPresented: Bool
+
     var body: some View {
             VStack(alignment: .leading, spacing: 16) {
                 Text("Filter")
                     .font(.Airbnb.medium(size: 25))
                 
-                FilterCategories()
+                FilterCategories(
+                    selectedCategories: Binding(
+                        get: {
+                            Set(viewModel.preferences.selectedCategories.compactMap(EventCategory.init(rawValue:)))
+                        },
+                        set: { newSet in
+                            viewModel.preferences.selectedCategories = newSet.map { $0.rawValue }
+                        }
+                    )
+                )
                 
                 VStack(alignment: .leading) {
                     heading(title: "Time & Date")
-                    FilterButtonsView()
+                    FilterButtonsView(
+                        startDate: $viewModel.preferences.startDate,
+                        endDate: $viewModel.preferences.endDate
+                    )
                 }
             
                 heading(title: "Location")
-                LocationPickerView()
+                LocationPickerView(
+                    selectedLocation: $viewModel.preferences.location
+                )
                 
                 HStack {
                     heading(title: "Select price range")
                     Spacer()
-                    Text("$\(Int(minPrice)) -")
+                    Text("$\(Int(viewModel.preferences.minPrice ?? 0)) -")
                         .font(.Airbnb.medium(size: 16))
                         .foregroundStyle(.accentBlue)
-                    Text("$\(Int(maxPrice))")
+                    Text("$\(Int(viewModel.preferences.maxPrice ?? 0))")
                         .font(.Airbnb.medium(size: 16))
                         .foregroundStyle(.accentBlue)
                 }
                 .padding(.vertical)
                 
-                RangeSlider(minValue: $minPrice, maxValue: $maxPrice, range: 0.0...200.0)
-                
-
+                RangeSlider(
+                    minValue: Binding(
+                        get: { viewModel.preferences.minPrice ?? 0 },
+                        set: { viewModel.preferences.minPrice = $0 }
+                    ),
+                    maxValue: Binding(
+                        get: { viewModel.preferences.maxPrice ?? 0 },
+                        set: { viewModel.preferences.maxPrice = $0 }
+                    ),
+                        range: 0.0...200.0
+                )
                 
                 Spacer()
                 
                 HStack {
                     Button(action: {
-                        
+                        viewModel.reset()
                     }) {
                         Text("Reset")
                             .font(.headline)
@@ -63,7 +84,8 @@ struct FilterView: View {
                     .cornerRadius(10)
                     
                     Button(action: {
-                        
+                        viewModel.apply()
+                        isPresented = false
                     }) {
                         Text("Apply")
                             .font(.headline)
@@ -88,6 +110,5 @@ struct FilterView: View {
     }
 }
 
-#Preview {
-    FilterView()
-}
+
+

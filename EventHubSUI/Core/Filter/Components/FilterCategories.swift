@@ -8,8 +8,7 @@
 import SwiftUI
 
 struct FilterCategories: View {
-    var onCategorySelected: ((Set<EventCategory>) -> Void)? = nil
-    @State private var selectedCategories: Set<EventCategory> = []
+    @Binding var selectedCategories: Set<EventCategory>
     
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
@@ -22,20 +21,21 @@ struct FilterCategories: View {
                             } else {
                                 selectedCategories.insert(category)
                             }
-                            onCategorySelected?(selectedCategories)
                         }
                     } label: {
                         VStack(spacing: 10) {
                             ZStack {
                                 Circle()
-                                    .fill(selectedCategories.contains(category) ? Color.blue : Color.white)
+                                    .fill(selectedCategories.contains(category) ? Color.accentColor : Color.white)
                                     .frame(width: 64, height: 64)
                                     .overlay(
                                         Circle()
                                             .strokeBorder(Color.gray, lineWidth: 1)
                                     )
-                                    .shadow(color: selectedCategories.contains(category) ? Color.blue.opacity(0.3) : Color.clear,
-                                                                                radius: 5, x: 0, y: 4)
+                                    .shadow(
+                                        color: selectedCategories.contains(category) ? Color.blue.opacity(0.3) : Color.clear,
+                                        radius: 5, x: 0, y: 4
+                                    )
                                 
                                 Image(systemName: category.iconName)
                                     .resizable()
@@ -59,6 +59,4 @@ struct FilterCategories: View {
 }
 
 
-#Preview {
-    FilterCategories()
-}
+

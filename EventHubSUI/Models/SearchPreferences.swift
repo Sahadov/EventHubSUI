@@ -8,11 +8,12 @@
 import Foundation
 
 struct SearchPreferences: Codable {
-    var selectedCategory: String
-    var searchDate: Date
-    var searchLocation: String
-    var priceFrom: Double
-    var priceTo: Double
+    var selectedCategories: [String] = []
+    var startDate: Date? = nil
+    var endDate: Date? = nil
+    var location: LocationsList = .msk
+    var minPrice: Double? = nil
+    var maxPrice: Double? = nil
 }
 
 
