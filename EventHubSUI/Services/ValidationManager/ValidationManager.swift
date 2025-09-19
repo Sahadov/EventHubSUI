@@ -8,7 +8,7 @@
 import Foundation
 
 
-
+@MainActor
 class ValidationManager: ObservableObject {
     
     func checkString(stringType: StringType, string: String, stringForMatching: String?) throws -> Bool {

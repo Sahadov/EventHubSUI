@@ -12,7 +12,7 @@ struct AppView: View {
     @State var appState: Bool = true // change later
     @State var router: Router
     @State var validator: ValidationManager
-    @EnvironmentObject var authManager: AuthManager
+    @State var authManager: AuthManager
     
     
     
@@ -25,8 +25,8 @@ struct AppView: View {
                 if authManager.userSession != nil {
                     MainView(router: router, authManager: authManager)
                 } else {
-                    MainView(router: router, authManager: authManager)
-                    //SignInView(signInVM: SignInViewModel(authManager: authManager, validator: validator, router: router))
+//                    MainView(router: router, authManager: authManager)
+                    SignInView(signInVM: SignInViewModel(authManager: authManager, validator: validator, router: router))
                 }
             },
             onboardingView: {

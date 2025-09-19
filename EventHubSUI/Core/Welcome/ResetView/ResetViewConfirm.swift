@@ -41,7 +41,9 @@ struct ResetViewConfirm: View {
                     .offset(x: -70, y: -13)
             }
             
-            CustomSIButton(buttonLableText: "CHANGE\nPASSWORD")
+            CustomSIButton(buttonLableText: "CHANGE\nPASSWORD") {
+                resetVM.changePasswordButtonTapped()
+            }
         }
         
         .navigationBarBackButtonHidden(true)
@@ -69,5 +71,5 @@ struct ResetViewConfirm: View {
 }
 
 #Preview {
-    ResetViewConfirm(resetVM: ResetViewModel(validator: ValidationManager(), router: Router()))
+    ResetViewConfirm(resetVM: ResetViewModel(validator: ValidationManager(), router: Router(), authManager: AuthManager()))
 }

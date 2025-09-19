@@ -13,17 +13,15 @@ final class ProfileViewModel: ObservableObject {
     
     @ObservedObject var authManager: AuthManager
     
-    let router: Router
+    @ObservedObject  var router: Router
     
     @State var errorTitle: String = ""
     @State var errorMessage: String = ""
     @State var isShowingError: Bool = false
     
     init(authManager: AuthManager, router: Router) {
-        
         self.authManager = authManager
         self.router = router
-        
     }
     
     func logout() {

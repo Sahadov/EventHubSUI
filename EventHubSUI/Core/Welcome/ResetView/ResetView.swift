@@ -37,7 +37,7 @@ struct ResetView: View {
             
             Spacer(minLength: 40)
             CustomSIButton(buttonLableText: "SEND") {
-                self.resetVM.resetButtonTapped()
+                self.resetVM.sendButtonTapped()
             }
             
             Spacer(minLength: 350)
@@ -66,5 +66,5 @@ struct ResetView: View {
 }
 
 #Preview {
-    ResetView(resetVM: ResetViewModel(validator: ValidationManager(), router: Router()))
+    ResetView(resetVM: ResetViewModel(validator: ValidationManager(), router: Router(), authManager: AuthManager()))
 }

@@ -12,8 +12,8 @@ import SwiftUI
 final class SignInViewModel: ObservableObject {
     
     @ObservedObject var authManager: AuthManager
-    let validator: ValidationManager
-    let router: Router
+    @ObservedObject var validator: ValidationManager
+    @ObservedObject var router: Router
     
     @Published var email: String = ""
     @Published var password: String = ""
@@ -80,7 +80,7 @@ final class SignInViewModel: ObservableObject {
                 return
                 
             } else {
-                self.router.goTo(to: .exploreScreen)
+                self.goToMainView()
             }
             
         }

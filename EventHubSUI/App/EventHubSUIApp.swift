@@ -29,8 +29,7 @@ struct EventHubSUIApp: App {
         WindowGroup {
             NavigationStack(path: $router.path) {
                 
-                AppView(router: router, validator: validator)
-                    .environmentObject(authManager)
+                AppView(router: router, validator: validator, authManager: authManager)
                     .navigationBarHidden(true)
                     .ignoresSafeArea(.keyboard)
                     .navigationDestination(for: Routes.self) { route in
@@ -51,11 +50,11 @@ struct EventHubSUIApp: App {
                         case .signUpScreen:
                             SignUpView(signUpVM: SignUpViewModel(authManager: authManager, validator: validator, router: router))
                         case .resetPasswordScreen:
-                            ResetView(resetVM: ResetViewModel(validator: validator, router: router))
+                            ResetView(resetVM: ResetViewModel(validator: validator, router: router, authManager: authManager))
                         case .eventDetailScreen(let event):
                             EventDetailsView(event: event)
                         case .resetPasswordConfirmationScreen:
-                            ResetViewConfirm(resetVM: ResetViewModel(validator: validator, router: router))
+                            ResetViewConfirm(resetVM: ResetViewModel(validator: validator, router: router, authManager: authManager))
                         case .seeAllScreen(events: let events, isLoading: let loading):
                             SeeAllContentView(events: events, isLoading: loading)
                         case .listScreen(events: let events):
