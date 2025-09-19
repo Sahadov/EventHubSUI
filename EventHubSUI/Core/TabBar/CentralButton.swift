@@ -17,14 +17,15 @@ struct CentralButton: View {
         } label: {
             ZStack {
                 Circle()
-                    .fill(Color.blue)
-                    .frame(width: 44, height: 44)
+                    .fill(Color(hex: "#5669ff"))
+                    .frame(width: 46, height: 46)
+                    .shadow(color: .black.opacity(0.25), radius: 6, x: 0, y: 4)
                   
                 
-                Image("BookMark")
+                Image(.centerButton)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 22, height: 22)
+                    .frame(width: 23, height: 23)
                 
             }
         }

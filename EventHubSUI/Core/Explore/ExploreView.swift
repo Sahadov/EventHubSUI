@@ -19,7 +19,7 @@ struct ExploreView: View {
     var body: some View {
         ZStack(alignment: .top) {
             
-            Color(hex: "#F5F5F5")
+            Color(hex: "#f9f9fb")
             ZStack(alignment: .top) {
                 ExploreToolBar(viewModel: viewModel, selectedCity: $selectedCity)
                 
@@ -28,7 +28,7 @@ struct ExploreView: View {
                         Background()
                         
                         VStack(spacing: 0) {
-                            Spacer().frame(height: 100)
+                            Spacer().frame(height: 110)
                             
                             ExploreSearchBar(
                                 text: $searchText,
@@ -70,9 +70,9 @@ struct ExploreView: View {
 private struct Background: View {
     var body: some View {
         RoundedRectangle(cornerRadius: 40)
-            .fill(Color(.accentBlue))
+            .fill(Color(hex: "#4a43ec"))
             .frame(height: 400)
-            .offset(y: -200)
+            .offset(y: -190)
     }
 }
 
@@ -105,12 +105,11 @@ private struct ExploreToolBar: View {
             
         }
         .padding()
-        .background(Color(.accentBlue))
         .foregroundColor(.white)
         .padding(.top, UIApplication.shared.connectedScenes
             .compactMap { $0 as? UIWindowScene }
             .first?.windows.first?.safeAreaInsets.top ?? 0)
-        .background(Color(.accentBlue))
+        .background(Color(hex: "#4a43ec"))
         .zIndex(1)
         
     }
@@ -124,14 +123,15 @@ private struct EventTitle: View {
     var body: some View {
         HStack {
             Text(title)
-                .font(.headline)
+                .font(.Airbnb.medium(size: 18))
+                .foregroundStyle(Color(hex: "#383449"))
             Spacer()
             Button("See All") {
                 viewModel.goToSeeAll(events, viewModel.isLoading)
             }
-            .foregroundStyle(.customGray)
+            .foregroundStyle(Color(hex: "#747688"))
         }
-        .padding(.horizontal, 25)
+        .padding(.horizontal, 20)
         
     }
         
@@ -151,7 +151,7 @@ private struct ExploreCategoryView: View {
                 }
             }
         }
-        Spacer(minLength: 20)
+        Spacer(minLength: 30)
     }
 }
 
@@ -202,7 +202,7 @@ private struct HorizontalEventListView: View {
                 }
             }
             .padding(.horizontal)
-            .padding(.top, 12)
+            .padding(.top, 5)
         }
     }
 }

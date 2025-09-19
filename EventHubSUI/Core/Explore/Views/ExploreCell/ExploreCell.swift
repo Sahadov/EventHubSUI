@@ -16,33 +16,34 @@ struct ExploreCell: View {
     
     var body: some View {
         let cardWidth = screenWidth * 0.55
-        let imageHeight = cardWidth * 0.55
+        let imageHeight = cardWidth * 0.45
         
         VStack(spacing: 0) {
             if isPlaceholder {
                 placeholderImage
                     .frame(width: cardWidth, height: imageHeight)
                     .padding()
-                
+                  
                 placeholderDetails
                     .padding(.horizontal)
                     .frame(width: cardWidth, alignment: .leading)
             } else {
                 ExploreImageView(event: event, onBookmarkTapped: onBookmarkTap)
                     .frame(width: cardWidth, height: imageHeight)
-                    .padding()
-                    .padding(.top)
+                    .padding(10)
+                    .padding(.top, 20)
                 
                 ExploreDetailView(event: event)
-                    .padding()
+                    .padding(.vertical, 25)
+                    
                     .frame(width: cardWidth, alignment: .leading)
             }
         }
         .background(
             RoundedRectangle(cornerRadius: screenWidth * 0.03)
-                .fill(Color.white)
+                .fill(Color(hex: "#ffffff"))
         )
-        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
+//        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)  убрал тень, как в figma 
         .padding(.vertical, screenWidth * 0.02)
     }
     

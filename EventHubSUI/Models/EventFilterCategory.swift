@@ -16,7 +16,7 @@ enum FilterCategory: String, CaseIterable {
         switch self {
         case .today: "TODAY"
         case .films: "FILMS"
-        case .list: "LIST"
+        case .list: "LISTS"
         }
     }
 }
