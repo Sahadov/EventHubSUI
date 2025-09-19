@@ -202,7 +202,7 @@ private struct HorizontalEventListView: View {
                 }
             }
             .padding(.horizontal)
-            .padding(.top, 12)
+            .padding(.top, 5)
         }
     }
 }
