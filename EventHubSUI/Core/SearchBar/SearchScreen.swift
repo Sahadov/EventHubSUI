@@ -67,7 +67,7 @@ struct SearchScreen: View {
             .task { await vm.fetchEvents() }
             .searchNavigationStyle(title: "Search") { dismiss() }
             .sheet(isPresented: $vm.showFilterSheet) {
-                FilterView()
+                FilterView(isPresented: $vm.showFilterSheet)
             }
             
         }
