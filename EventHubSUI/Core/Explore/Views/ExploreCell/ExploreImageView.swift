@@ -16,7 +16,7 @@ struct ExploreImageView: View {
     @State private var isBookmarked: Bool = false
     
     var body: some View {
-        AsyncImage(url: URL(string: "https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?w=144" ?? "https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?w=144")) { phase in
+        AsyncImage(url: URL(string: event.displayImageURL ?? "https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?w=144")) { phase in
             switch phase {
             case .empty:
                 ProgressView()
