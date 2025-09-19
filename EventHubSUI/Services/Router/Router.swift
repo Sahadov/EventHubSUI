@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-
+@MainActor
 class Router: ObservableObject {
 
     

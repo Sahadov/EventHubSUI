@@ -13,7 +13,7 @@ final class SignUpViewModel: ObservableObject {
     
     @ObservedObject var authManager: AuthManager
     @ObservedObject var validator: ValidationManager
-    let router: Router
+    @ObservedObject var router: Router
     
     @Published var userName: String = ""
     @Published var userEmail: String = ""

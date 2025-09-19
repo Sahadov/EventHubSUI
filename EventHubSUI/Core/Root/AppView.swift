@@ -12,7 +12,7 @@ struct AppView: View {
     @State var appState: Bool = true // change later
     @State var router: Router
     @State var validator: ValidationManager
-    @EnvironmentObject var authManager: AuthManager
+    @State var authManager: AuthManager
     
     
     
