@@ -10,6 +10,7 @@ import SwiftUI
 struct ExploreCell: View {
     let event: Event
     let isPlaceholder: Bool
+    let isBookmarked: Bool
     let screenWidth = UIScreen.main.bounds.width
     
     var onBookmarkTap: (() -> Void)?
@@ -23,19 +24,21 @@ struct ExploreCell: View {
                 placeholderImage
                     .frame(width: cardWidth, height: imageHeight)
                     .padding()
-                  
                 placeholderDetails
                     .padding(.horizontal)
                     .frame(width: cardWidth, alignment: .leading)
             } else {
-                ExploreImageView(event: event, onBookmarkTapped: onBookmarkTap)
-                    .frame(width: cardWidth, height: imageHeight)
-                    .padding(10)
-                    .padding(.top, 20)
+                ExploreImageView(
+                    event: event,
+                    onBookmarkTapped: onBookmarkTap,
+                    isBookmarked: isBookmarked // <-- проброс в картинку
+                )
+                .frame(width: cardWidth, height: imageHeight)
+                .padding(10)
+                .padding(.top, 20)
                 
                 ExploreDetailView(event: event)
                     .padding(.vertical, 25)
-                    
                     .frame(width: cardWidth, alignment: .leading)
             }
         }
@@ -43,9 +46,9 @@ struct ExploreCell: View {
             RoundedRectangle(cornerRadius: screenWidth * 0.03)
                 .fill(Color(hex: "#ffffff"))
         )
-//        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)  убрал тень, как в figma 
         .padding(.vertical, screenWidth * 0.02)
     }
+
     
     // MARK: - Skeleton Views
     var placeholderImage: some View {
@@ -79,6 +82,6 @@ struct ExploreCell: View {
 
 
 #Preview {
-    ExploreCell(event: .mockConcert, isPlaceholder: true)
+    ExploreCell(event: .mockConcert, isPlaceholder: true, isBookmarked: true)
 }
 

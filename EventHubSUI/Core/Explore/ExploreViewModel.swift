@@ -19,18 +19,19 @@ enum EventListType: Hashable {
 final class ExploreViewModel: ObservableObject {
 
     private let networkService = NetworkService()
-    let router: Router
-    
-    @Published var upcomingEvents: [Event] = []
-    @Published var nearEvents: [Event] = []
-    @Published var categoryEvents: [Event] = []
-//    @Published var locationEvents: [Event] = []
-    @Published var todayEvents: [Event] = []
-    @Published var movieEvents: [Event] = []
-    
-    @Published var isLoading = false
-    /// Флаг: показываем ли категорию вместо дефолтных списков
-    @Published var isCategoryMode = false
+     private var eventRepository = EventRepository()
+     
+     let router: Router
+     
+     @Published var upcomingEvents: [Event] = []
+     @Published var nearEvents: [Event] = []
+     @Published var categoryEvents: [Event] = []
+     @Published var todayEvents: [Event] = []
+     @Published var movieEvents: [Event] = []
+     
+     @Published var isLoading = false
+     @Published var isCategoryMode = false
+     @Published var tappedEvent: Event?
     
     
     init(router: Router) {
@@ -116,4 +117,17 @@ final class ExploreViewModel: ObservableObject {
     func goToSeach(_ events: [Event]) {
         router.goTo(to: .searchScreen(events: events))
     }
+    
+    
+    //MARK: - Favorites
+    func isFavorite(_ event: Event) -> Bool {
+        eventRepository.isFavorite(event: event)
+    }
+    
+    func toggleFavorite(_ event: Event) {
+        eventRepository.toggleFavorite(event: event)
+        objectWillChange.send() // обновляем UI
+    }
+
 }
+

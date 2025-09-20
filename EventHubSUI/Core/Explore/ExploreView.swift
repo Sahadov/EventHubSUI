@@ -35,8 +35,9 @@ struct ExploreView: View {
                                 placeholder: "Search",
                                 asButton: true,
                                 onRightButtonTap: {
-                                    //TODO: Open filter view
+//TODO: Open filter view
                                     
+//
                                 },
                                 onTapSearchBar: {
                                     viewModel.goToSeach(viewModel.upcomingEvents)
@@ -173,30 +174,31 @@ private struct ExploreFilterView: View {
     }
 }
 
-
 private struct HorizontalEventListView: View {
     @ObservedObject var viewModel: ExploreViewModel
     let events: [Event]
     var showEmptyState: Bool = false
     
-    var onBookmarkTap: (() -> Void)?
-    
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 16) {
                 if viewModel.isLoading {
-                    // Skeleton
                     ForEach(0..<3, id: \.self) { _ in
-                        ExploreCell(event: .mockConcert, isPlaceholder: true)
+                        ExploreCell(event: .mockConcert, isPlaceholder: true, isBookmarked: false)
                     }
                 } else {
                     ForEach(viewModel.isCategoryMode ? viewModel.categoryEvents : events, id: \.id) { event in
                         Button {
                             viewModel.goToDetail(event: event)
                         } label: {
-                            ExploreCell(event: event, isPlaceholder: false) {
- // TODO: релизовать сохрание в закладки
-                            }
+                            ExploreCell(
+                                event: event,
+                                isPlaceholder: false,
+                                isBookmarked: viewModel.isFavorite(event), // <-- статус берём из Realm
+                                onBookmarkTap: {
+                                    viewModel.toggleFavorite(event)
+                                }
+                            )
                         }
                     }
                 }
@@ -206,6 +208,8 @@ private struct HorizontalEventListView: View {
         }
     }
 }
+
+
 
 
 
