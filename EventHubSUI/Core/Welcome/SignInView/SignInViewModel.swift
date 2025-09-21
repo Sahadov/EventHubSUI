@@ -28,6 +28,11 @@ final class SignInViewModel: ObservableObject {
         self.authManager = authManager
         self.validator = validator
         self.router = router
+        if let userEmail = UserDefaults.standard.string(forKey: "isRemembered") {
+            self.email = userEmail
+        } else {
+            self.email = ""
+        }
     }
     
     func goToMainView() {
@@ -80,7 +85,12 @@ final class SignInViewModel: ObservableObject {
                 return
                 
             } else {
-                self.goToMainView()
+                if self.isRemembered {
+                    UserDefaults.standard.set(email, forKey: "isRemembered")
+                } else {
+                    UserDefaults.standard.removeObject(forKey: "isRemembered")
+                    self.goToMainView()
+                }
             }
             
         }
