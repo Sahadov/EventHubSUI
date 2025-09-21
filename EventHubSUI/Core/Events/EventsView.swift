@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct EventsView: View {
-    @ObservedObject var viewModel = EventsViewModel()
+    @ObservedObject var viewModel: EventsViewModel
     @State private var selectedTab = 0
     @Namespace private var animation
         
@@ -36,7 +36,9 @@ struct EventsView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .animation(.easeInOut(duration: 0.35), value: selectedTab)
             
-            CustomSIButton(buttonLableText: "EXPLORE EVENTS")
+            CustomSIButton(buttonLableText: "EXPLORE EVENTS") {
+                viewModel.goToSeeAll()
+            }
                 .padding(.bottom, 90)
                 .padding(.top, 10)
             
@@ -69,9 +71,15 @@ struct EventsView: View {
     
     var upcomingView: some View {
         VStack {
-            ForEach(Array(viewModel.upcomingEvents.enumerated()), id: \.element.title) { _, event in
-                EventCard(event: event)
-                    .shadow(color: Color.black.opacity(0.1), radius: 3, x: 0, y: 2)
+            ForEach(Array(arrayLiteral: viewModel.upcomingEvents.enumerated()), id: \.element.title) {event in
+                Button {
+                    viewModel.goToDetailedView(event: event)
+                } label: {
+                    EventCard(event: event)
+                        .shadow(color: Color.black.opacity(0.1), radius: 3, x: 0, y: 2)
+                }
+                .buttonStyle(.plain)
+                
             }
         }
         .padding(.horizontal, 25)
@@ -84,8 +92,14 @@ struct EventsView: View {
     
     var pastEventsView: some View {
         VStack {
-            ForEach(Array(viewModel.pastEvents.enumerated()), id: \.element.title) { _, event in
-                EventCard(event: event)
+            ForEach(Array(arrayLiteral: viewModel.pastEvents.enumerated()), id: \.element.title) {event in
+                Button {
+                    viewModel.goToDetailedView(event: event)
+                } label: {
+                    EventCard(event: event)
+                        .shadow(color: Color.black.opacity(0.1), radius: 3, x: 0, y: 2)
+                }
+                .buttonStyle(.plain)
             }
         }
         .padding(.horizontal, 25)
