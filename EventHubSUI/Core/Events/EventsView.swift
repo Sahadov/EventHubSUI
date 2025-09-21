@@ -71,7 +71,7 @@ struct EventsView: View {
     
     var upcomingView: some View {
         VStack {
-            ForEach(Array(arrayLiteral: viewModel.upcomingEvents.enumerated()), id: \.element.title) {event in
+            ForEach(viewModel.upcomingEvents, id: \.id) { event in
                 Button {
                     viewModel.goToDetailedView(event: event)
                 } label: {
@@ -79,7 +79,6 @@ struct EventsView: View {
                         .shadow(color: Color.black.opacity(0.1), radius: 3, x: 0, y: 2)
                 }
                 .buttonStyle(.plain)
-                
             }
         }
         .padding(.horizontal, 25)
@@ -92,7 +91,7 @@ struct EventsView: View {
     
     var pastEventsView: some View {
         VStack {
-            ForEach(Array(arrayLiteral: viewModel.pastEvents.enumerated()), id: \.element.title) {event in
+            ForEach(viewModel.upcomingEvents, id: \.id) { event in
                 Button {
                     viewModel.goToDetailedView(event: event)
                 } label: {
@@ -113,9 +112,3 @@ struct EventsView: View {
     }
 }
 
-
-struct EventsView_Previews: PreviewProvider {
-    static var previews: some View {
-        EventsView()
-    }
-}

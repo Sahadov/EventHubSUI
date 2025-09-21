@@ -36,7 +36,7 @@ struct EventHubSUIApp: App {
                         
                         switch route {
                         case .eventsScreen:
-                            EventsView()
+                            EventsView(viewModel: EventsViewModel(router: router))
                         case .profileScreen:
                             ProfileView(profileVM: ProfileViewModel(authManager: authManager, router: router))
                         case .mapScreen:
