@@ -53,6 +53,7 @@ final class AuthManager: ObservableObject {
     func signOut()
         {
             do{
+                GIDSignIn.sharedInstance.signOut()
                 try Auth.auth().signOut()
                 self.userSession = nil
                 self.currentUser = nil

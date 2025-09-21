@@ -69,6 +69,20 @@ final class SignUpViewModel: ObservableObject {
         
     }
     
+    func goToMainView() {
+        router.goTo(to: .exploreScreen)
+    }
+    
+    func signInWithGoogleTapped() {
+        Task {
+            
+            if await authManager.signInWithGoogle() == true {
+                self.goToMainView()
+                
+            }
+        }
+    }
+    
     func stringCheck(checkType: StringType, string: String, passwordMatch: String? = nil) -> Bool {
         var validateResult: Bool = false
         do {

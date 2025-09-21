@@ -75,13 +75,19 @@ struct SignUpView: View {
             Text("OR")
                 .offset(x: 0, y: 50)
             
-            Image("GoogleButton")
             
-                .resizable()
-                .frame(width: 363, height: 116)
-                .offset(x: 0, y: 55)
             //MARK: Добавить кнопку для гугла
             //            CustomSIButton(buttonLableText: "")
+            Spacer()
+            Button(action: {
+                self.signUpVM.signInWithGoogleTapped()
+            }) {
+                
+                Image("GoogleButton")
+                    .resizable()
+                    .frame(width: 363, height: 116)
+                
+            }
             Spacer()
             HStack {
                 Text("Already have an account?")

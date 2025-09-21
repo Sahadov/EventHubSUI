@@ -98,6 +98,12 @@ final class SignInViewModel: ObservableObject {
         
     }
     
+    func googleButtonTapped() {
+        
+        
+        
+    }
+    
     func stringCheck(checkType: StringType, string: String, passwordMatch: String? = nil) -> Bool {
         var validateResult: Bool = false
         do {

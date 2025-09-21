@@ -25,6 +25,7 @@ final class ProfileViewModel: ObservableObject {
     }
     
     func logout() {
+    
         authManager.signOut()
         if self.authManager.showError {
             
