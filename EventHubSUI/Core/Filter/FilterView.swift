@@ -10,6 +10,8 @@ import SwiftUI
 struct FilterView: View {
     @StateObject private var viewModel = FilterViewModel()
     @Binding var isPresented: Bool
+    
+    var onApply: ((SearchPreferences) -> Void)? = nil
 
     var body: some View {
             VStack(alignment: .leading, spacing: 16) {
@@ -86,6 +88,8 @@ struct FilterView: View {
                     Button(action: {
                         viewModel.apply()
                         isPresented = false
+                        
+                        onApply?(viewModel.preferences)
                     }) {
                         Text("Apply")
                             .font(.headline)
@@ -94,6 +98,8 @@ struct FilterView: View {
                             .background(Color.accentBlue)
                             .foregroundColor(.white)
                             .cornerRadius(10)
+                        
+                      
                     }
                 }
                 

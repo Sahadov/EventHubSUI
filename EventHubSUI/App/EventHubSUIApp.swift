@@ -61,6 +61,11 @@ struct EventHubSUIApp: App {
                             ListContentView(events: events)
                         case .searchScreen(events: let events):
                             SearchScreen(events: events)
+                        case .notificationScreen:
+                            
+//TODO: GO to notification
+                            
+                            MapView() // заглушка пока нет notif view
                         }
                         
                     }

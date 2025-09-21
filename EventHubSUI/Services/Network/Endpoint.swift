@@ -24,11 +24,14 @@ enum Endpoint {
     /// Movie screenings
     case getMovies(_ location: LocationsList = .msk)
     
+    /// Movie screenings
+    case getEventsWith(_ preferences: SearchPreferences)
+    
     var baseURL: String { "https://kudago.com" }
     
     var path: String {
         switch self {
-        case .getUpcomingEvents, .getNearbyEvents, .getPastEvents, .getEventsBy, .getEventBy:
+        case .getUpcomingEvents, .getNearbyEvents, .getPastEvents, .getEventsBy, .getEventBy, .getEventsWith:
             "/public-api/v1.4/events/"
         case .getTodayEvents:
             "/public-api/v1.4/events-of-the-day/"
@@ -108,6 +111,36 @@ enum Endpoint {
                 URLQueryItem(name: "expand", value: "movie,place,datetime"),
                 URLQueryItem(name: "location", value: location.rawValue)
             ])
+            
+        case .getEventsWith(let preferences):
+            items.append(contentsOf: [
+                URLQueryItem(name: "fields", value: commonFields),
+                URLQueryItem(name: "expand", value: commonExpand),
+                URLQueryItem(name: "location", value: preferences.location.rawValue)
+            ])
+            
+            if !preferences.selectedCategories.isEmpty {
+                let cats = preferences.selectedCategories.joined(separator: ",")
+                items.append(URLQueryItem(name: "categories", value: cats))
+            }
+            
+//            if let minPrice = preferences.minPrice {
+//                items.append(URLQueryItem(name: "price_from", value: "\(Int(minPrice))"))
+//            }
+//            if let maxPrice = preferences.maxPrice {
+//                items.append(URLQueryItem(name: "price_to", value: "\(Int(maxPrice))"))
+//            }
+            
+            if let startDate = preferences.startDate {
+                let ts = Int(startDate.timeIntervalSince1970)
+                items.append(URLQueryItem(name: "actual_since", value: "\(ts)"))
+            }
+            
+            if let endDate = preferences.endDate {
+                let ts = Int(endDate.timeIntervalSince1970)
+                items.append(URLQueryItem(name: "actual_until", value: "\(ts)"))
+            }
+            
         }
         
         return items

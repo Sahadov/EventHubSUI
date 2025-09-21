@@ -11,6 +11,7 @@ struct ExploreView: View {
     @StateObject var viewModel: ExploreViewModel
     @State private var searchText = ""
     @State private var isShowingCityPicker = false
+    @State private var isFiltersAppear: Bool = false
     @State private var selectedCity: LocationsList = .msk
     
     
@@ -35,14 +36,14 @@ struct ExploreView: View {
                                 placeholder: "Search",
                                 asButton: true,
                                 onRightButtonTap: {
-//TODO: Open filter view
-                                    
-//
+                                    isFiltersAppear = true
+
                                 },
                                 onTapSearchBar: {
                                     viewModel.goToSeach(viewModel.upcomingEvents)
                                 }
                             )
+                       
                             
                             ExploreCategoryView(viewModel: viewModel, selectedCity: selectedCity)
                             
@@ -61,6 +62,15 @@ struct ExploreView: View {
                 }
             }
             .edgesIgnoringSafeArea(.top)
+            .sheet(isPresented: $isFiltersAppear) {
+                FilterView(isPresented: $isFiltersAppear)  { preferences in
+                    
+                    Task {
+                        await viewModel.fetchEvents(by: preferences)
+                    }
+                    
+                }
+            }
         }
     }
     
@@ -102,8 +112,15 @@ private struct ExploreToolBar: View {
             
             Spacer()
             
-            Image(.bell)
-            
+            Button() {
+//TODO: Переход на Notification
+        
+                viewModel.goToNotification()
+        
+    } label: {
+        Image(.bell)
+    }
+ 
         }
         .padding()
         .foregroundColor(.white)

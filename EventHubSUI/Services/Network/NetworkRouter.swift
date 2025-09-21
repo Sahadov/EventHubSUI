@@ -16,6 +16,7 @@ enum NetworkRouter {
                 var components = $0
                 components.path = endpoint.path
                 components.queryItems = endpoint.queryItems
+                print(components.url)
                 return components.url
             }
             .map { return URLRequest(url: $0) }
