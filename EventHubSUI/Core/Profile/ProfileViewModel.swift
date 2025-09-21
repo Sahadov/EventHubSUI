@@ -15,13 +15,21 @@ final class ProfileViewModel: ObservableObject {
     
     @ObservedObject  var router: Router
     
+    @State var userImage: String = ""
+    @State var aboutUser: String = ""
+    
     @State var errorTitle: String = ""
     @State var errorMessage: String = ""
     @State var isShowingError: Bool = false
+    @Published var user: User?
     
     init(authManager: AuthManager, router: Router) {
         self.authManager = authManager
         self.router = router
+        Task {
+            await authManager.fetchUser()
+            self.user = authManager.currentUser ?? User.MOCK_USER
+        }
     }
     
     func logout() {
@@ -29,13 +37,29 @@ final class ProfileViewModel: ObservableObject {
         authManager.signOut()
         if self.authManager.showError {
             
-            self.errorTitle = "Sign in error!"
+            self.errorTitle = "Sign out error!"
             self.errorMessage = self.authManager.error
             self.isShowingError = true
             return
             
         } else {
             self.router.goTo(to: .signInScreen)
+        }
+    }
+    
+    func updateUser() {
+        isShowingError = true
+        if let user = user {
+            Task {
+                do {
+                    try await authManager.updateUserData(user: user)
+                } catch {
+                    self.errorTitle = "Update user error!"
+                    self.errorMessage = error.localizedDescription
+                    self.isShowingError = true
+                    return
+                }
+            }
         }
     }
 }

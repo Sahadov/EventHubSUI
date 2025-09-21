@@ -10,9 +10,11 @@ import Foundation
 
 struct User: Identifiable, Codable {
     let id: String
-    let fullname: String
+    var fullname: String
     let email: String
     let photoURL:URL?
+    var userIcon: String?
+    var about: String?
     
     var initials: String{
         let formatter = PersonNameComponentsFormatter()
@@ -25,5 +27,14 @@ struct User: Identifiable, Codable {
 }
 
 extension User{
-    static var MOCK_USER = User(id: NSUUID().uuidString, fullname: "Test user", email: "test@gmail.com",photoURL: URL(string: ""))
+    static var MOCK_USER = User(id: NSUUID().uuidString,
+                                fullname: "Test user",
+                                email: "test@gmail.com",
+                                photoURL: URL(string: ""),
+                                userIcon: "profileLight",
+                                about: """
+Enjoy your favorite dish and a lovely your friends and family and have a great time. Food from local food trucks will be available for purchase.
+Enjoy your favorite dish and a lovely your friends and family and have a great time. Food from local food trucks will be available for purchase.
+Enjoy your favorite dish and a lovely your friends and family and have a great time. Food from local food trucks will be available for purchase.
+""")
 }
