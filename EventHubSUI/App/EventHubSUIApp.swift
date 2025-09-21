@@ -42,7 +42,7 @@ struct EventHubSUIApp: App {
                         case .mapScreen:
                             MapView()
                         case .favoritesScreen:
-                            FavoritesView()
+                            FavoritesView(vm: FavoritesViewModel(router: router))
                         case .exploreScreen:
                             MainView(router: router, authManager: authManager)
                         case .signInScreen:

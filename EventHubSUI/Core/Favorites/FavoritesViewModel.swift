@@ -10,10 +10,15 @@ final class FavoritesViewModel: ObservableObject {
     @Published var favorites: [Event] = []
     @Published var query: String = ""
     
-    private let repo: EventRepositoryProtocol
-
-    init(repo: EventRepositoryProtocol = EventRepository()) {
+    @Published var tappedEvent: Event?
+    
+    let repo: EventRepositoryProtocol
+    let router: Router
+    
+    
+    init(repo: EventRepositoryProtocol = EventRepository(), router: Router) {
         self.repo = repo
+        self.router = router
         loadFavorites()
     }
     
@@ -40,6 +45,14 @@ final class FavoritesViewModel: ObservableObject {
     func toggleFavorite(_ event: Event) {
         repo.toggleFavorite(event: event)
         loadFavorites()
+    }
+    
+    func isFavorite(_ event: Event) -> Bool {
+        repo.isFavorite(event: event)
+    }
+    
+    @MainActor func goToDetailedView(event: Event) {
+        router.goTo(to: .eventDetailScreen(event: event))
     }
 
 }

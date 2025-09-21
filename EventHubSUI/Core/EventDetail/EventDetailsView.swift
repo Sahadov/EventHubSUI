@@ -26,10 +26,12 @@ struct EventDetailsView: View {
 
             Text(event.displayTitle.uppercased())
                 .font(.Airbnb.book(size: 30))
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding()
-                .lineLimit(2)
+                .lineLimit(5)
                 .minimumScaleFactor(0.7)
+                .multilineTextAlignment(.leading)
+                .frame(maxWidth: UIScreen.main.bounds.width - 32, alignment: .leading) // ограничиваем
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
 
             VStack(alignment: .leading) {
                 EventInfoView(firstText: event.formattedCalendarDate,

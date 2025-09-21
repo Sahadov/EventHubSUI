@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct FavoritesView: View {
-    @StateObject private var vm = FavoritesViewModel()
+    @StateObject var vm: FavoritesViewModel
     @State private var isSearching = false
     @FocusState private var searchFocused: Bool
     
@@ -22,13 +22,21 @@ struct FavoritesView: View {
                     ScrollView {
                         LazyVStack(spacing: 12) {
                             ForEach(vm.filteredFavorites) { event in
-                                NavigationLink(destination: EventDetailsView(event: event)) {
-                                    EventCard(type: .favourites, event: event) {
+                                EventCard(
+                                    type: .isFavourite,
+                                    event: event,
+                                    onBookmarkTapped: {
                                         withAnimation(.snappy) {
                                             vm.toggleFavorite(event)
                                         }
+                                    },
+                                    onCardTapped: {
+                                        withAnimation(.snappy) {
+                                            vm.goToDetailedView(event: event)
+                                        }
                                     }
-                                }
+                                )
+                                .shadow(color: Color.black.opacity(0.1), radius: 3, x: 0, y: 2)
                                 .padding(.horizontal, 16)
                             }
                         }
@@ -78,9 +86,5 @@ struct FavoritesView: View {
         }
         .onAppear{ vm.loadFavorites() }
     }
-}
-
-#Preview {
-    FavoritesView()
 }
 
