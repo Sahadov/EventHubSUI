@@ -208,6 +208,35 @@ extension Event {
         // 3. Если ничего нет
         return ""
     }
+    
+    /// Возвращает дату в формате "14 December, 2021"
+      var formattedCalendarDate: String {
+          // 1. Берём timestamp если есть
+          if let ts = firstStartTimestamp {
+              let date = Date(timeIntervalSince1970: ts)
+              let formatter = DateFormatter()
+              formatter.dateFormat = "d MMMM, yyyy"
+              formatter.locale = Locale(identifier: "en_US")
+              return formatter.string(from: date)
+          }
+          
+          // 2. Если есть строка "yyyy-MM-dd"
+          if let rawDate = date {
+              let inFormatter = DateFormatter()
+              inFormatter.dateFormat = "yyyy-MM-dd"
+              inFormatter.locale = Locale(identifier: "en_US_POSIX")
+              
+              if let parsed = inFormatter.date(from: rawDate) {
+                  let outFormatter = DateFormatter()
+                  outFormatter.dateFormat = "d MMMM, yyyy"
+                  outFormatter.locale = Locale(identifier: "en_US")
+                  return outFormatter.string(from: parsed)
+              }
+          }
+          
+          // 3. Если данных нет
+          return ""
+      }
 }
 
 // MARK: - Event Extensions
