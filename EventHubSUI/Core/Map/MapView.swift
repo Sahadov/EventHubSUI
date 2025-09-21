@@ -10,7 +10,7 @@ import MapKit
 import CoreLocation
 
 struct MapView: View {
-    @ObservedObject var viewModel = MapViewModel()
+    @ObservedObject var viewModel: MapViewModel
     
     var body: some View {
         ZStack {
@@ -156,10 +156,18 @@ struct MapView: View {
             if let tappedEvent = viewModel.tappedEvent {
                 EventCard(type: .favourites,
                           event: tappedEvent,
-                          isFavourite: viewModel.isFavorite(tappedEvent)
-                    ){
-                        viewModel.toggleFavorite(tappedEvent)
-                    }
+                          isFavourite: viewModel.isFavorite(tappedEvent),
+                          onBookmarkTapped: {
+                              withAnimation(.snappy) {
+                                  viewModel.toggleFavorite(tappedEvent)
+                              }
+                          },
+                          onCardTapped: {
+                              withAnimation(.snappy) {
+                                  viewModel.goToDetailedView(event: tappedEvent)
+                              }
+                          }
+                    )
                     .shadow(radius: 5)
                     .padding(.horizontal, 30)
                     .padding(.bottom, 40)
@@ -169,6 +177,4 @@ struct MapView: View {
     
 }
 
-#Preview {
-    MapView()
-}
+

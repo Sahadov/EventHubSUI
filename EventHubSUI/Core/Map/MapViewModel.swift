@@ -13,6 +13,8 @@ import CoreLocation
 class MapViewModel: ObservableObject {
     private var networkService = NetworkService()
     private var repo = EventRepository()
+    let router: Router
+    
     
     @Published var searchText: String = ""
     @Published var currentLocation: CLLocationCoordinate2D?
@@ -24,7 +26,8 @@ class MapViewModel: ObservableObject {
     
     @Published var upcomingEvents: [Event] = []
     
-    init() {
+    init(router: Router) {
+        self.router = router
         Task {
             await fetchUpcomingEvents()
         }
@@ -32,7 +35,7 @@ class MapViewModel: ObservableObject {
     
     func fetchUpcomingEvents() async {
         do {
-            let result = try await networkService.fetch(from: .getUpcomingEvents())
+            let result = try await networkService.fetch(from: .getUpcomingEvents(.msk))
             self.upcomingEvents = result.results.removingDuplicates()
         } catch {
             print("Ошибка при загрузке предстоящих событий: \(error)")
@@ -46,5 +49,10 @@ class MapViewModel: ObservableObject {
     func toggleFavorite(_ event: Event) {
         repo.toggleFavorite(event: event)
         objectWillChange.send()
+    }
+    
+    @MainActor func goToDetailedView(event: Event) {
+        print("fff")
+        router.goTo(to: .eventDetailScreen(event: event))
     }
 }
