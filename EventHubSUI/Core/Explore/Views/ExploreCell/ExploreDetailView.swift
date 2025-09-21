@@ -42,8 +42,7 @@ struct ExploreDetailView: View {
     var adressView: some View {
         HStack(spacing: screenWidth * 0.02) {
             Image(.mapPin)
-//            Text(event.place?.address?.capitalized ?? "unknown")
-            Text("36 Guild street London, UK")
+            Text(event.place?.address?.capitalized ?? "unknown")
                 .foregroundColor(Color(hex: "#9593a4"))
 //                .font(.system(size: screenWidth * 0.035, weight: .regular))
                 .truncationMode(.tail)
