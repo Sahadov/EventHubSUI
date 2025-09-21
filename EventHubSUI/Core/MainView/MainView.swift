@@ -23,7 +23,7 @@ struct MainView: View {
                     .tag(TabBookmarksEnum.exploreView)
                     .toolbar(.hidden, for: .tabBar)
                 
-                EventsView()
+                EventsView(viewModel: EventsViewModel(router: router))
                     .tag(TabBookmarksEnum.eventsView)
                     .toolbar(.hidden, for: .tabBar)
                 FavoritesView()
