@@ -92,6 +92,8 @@ struct SignInView: View {
 //                .disabled(signInVM.isWrong)
                 Text("OR")
                 
+//                GoogleSignInButton(scheme: .light, style: .wide, action: handleSignInButton)
+                    
                 Button(action: {
                     self.signInVM.signInWithGoogleTapped()
                 }) {
@@ -122,6 +124,10 @@ struct SignInView: View {
                 
             }
     }
+    
+//    func handleSignInButton() {
+//        signInVM.signInWithGoogleTapped()
+//    }
 }
 
 #Preview {
