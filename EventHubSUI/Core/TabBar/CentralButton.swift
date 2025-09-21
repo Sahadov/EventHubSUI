@@ -17,7 +17,7 @@ struct CentralButton: View {
         } label: {
             ZStack {
                 Circle()
-                    .fill(Color(hex: "#5669ff"))
+                    .fill(selected == .favoritesView ? .red : Color(hex: "#5669ff"))
                     .frame(width: 46, height: 46)
                     .shadow(color: .black.opacity(0.25), radius: 6, x: 0, y: 4)
                   

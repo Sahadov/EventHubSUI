@@ -22,17 +22,21 @@ struct FavoritesView: View {
                     ScrollView {
                         LazyVStack(spacing: 12) {
                             ForEach(vm.filteredFavorites) { event in
-                                Button {
-                                    vm.goToDetailedView(event: event)
-                                } label: {
-                                    EventCard(type: .isFavourite, event: event, onCardTapped:  {
+                                EventCard(
+                                    type: .isFavourite,
+                                    event: event,
+                                    onBookmarkTapped: {
                                         withAnimation(.snappy) {
                                             vm.toggleFavorite(event)
                                         }
-                                    })
-                                        .shadow(color: Color.black.opacity(0.1), radius: 3, x: 0, y: 2)
-                                }
-                                .buttonStyle(.plain)
+                                    },
+                                    onCardTapped: {
+                                        withAnimation(.snappy) {
+                                            vm.goToDetailedView(event: event)
+                                        }
+                                    }
+                                )
+                                .shadow(color: Color.black.opacity(0.1), radius: 3, x: 0, y: 2)
                                 .padding(.horizontal, 16)
                             }
                         }
