@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct OnboardingView: View {
+    
+    @Binding var shouldShowOnboarding: Bool
     @State private var currentPage = 0
     
     let onboardingData = [
@@ -59,6 +61,9 @@ struct OnboardingView: View {
                                     Button(action: {
                                         // Skip action
                                         print("Skip tapped")
+                                        OnboardingManager.completeOnboarding()
+                                        shouldShowOnboarding = false
+                                        
                                     }) {
                                         Text("Skip")
                                             .foregroundColor(.white.opacity(0.7))
@@ -71,7 +76,11 @@ struct OnboardingView: View {
                                             currentPage += 1
                                         } else {
                                             // Finish action
+                                            
                                             print("Finish Onboarding")
+                                            
+                                            OnboardingManager.completeOnboarding()
+                                            shouldShowOnboarding = false
                                         }
                                     }) {
                                         Text("Next")
@@ -123,5 +132,5 @@ struct RoundedCorner: Shape {
 }
 
 #Preview {
-    OnboardingView()
+    OnboardingView(shouldShowOnboarding: .constant(true))
 }
