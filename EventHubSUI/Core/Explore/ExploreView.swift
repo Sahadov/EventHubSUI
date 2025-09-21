@@ -100,6 +100,7 @@ private struct ExploreToolBar: View {
                         selectedCity = city
                         Task {
                             // Обновляем события при смене города
+                            viewModel.updateCurrentLocation(location: city)
                             viewModel.isCategoryMode = false
                             viewModel.categoryEvents = []
                             await viewModel.fetchInitialEvents(city)

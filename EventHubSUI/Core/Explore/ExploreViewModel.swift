@@ -33,12 +33,15 @@ final class ExploreViewModel: ObservableObject {
      @Published var isCategoryMode = false
      @Published var tappedEvent: Event?
     
+    @Published var currentLocatoin: LocationsList = .msk
+    
     
     init(router: Router) {
         self.router = router
         Task {
             await fetchInitialEvents()
         }
+        getCurrentLocation()
     }
     //MARK: - Network
     
@@ -149,5 +152,17 @@ final class ExploreViewModel: ObservableObject {
         objectWillChange.send() // обновляем UI
     }
 
+    
+//MAEK: Location Logic
+    
+    func getCurrentLocation() {
+        print("GOT LOCATION")
+        //self.currentLocatoin = SearchDataManager.shared.loadUserLocation()
+    }
+    
+    func updateCurrentLocation(location: LocationsList) {
+        print("UPDATED LOCATION")
+    }
+    
 }
 
