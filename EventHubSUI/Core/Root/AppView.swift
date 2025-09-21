@@ -10,6 +10,7 @@ import SwiftUI
 struct AppView: View {
 
     @State var appState: Bool = true // change later
+    @State private var shouldOnboardingFinal = !OnboardingManager.onboardingFlag
     @State var router: Router
     @State var validator: ValidationManager
     @State var authManager: AuthManager
@@ -20,13 +21,17 @@ struct AppView: View {
         AppViewBuilder(
             showTabBar: appState,
             tabbarView: {
-//                TabBarView()
-//                MainView()
-                if authManager.userSession != nil {
-                    MainView(router: router, authManager: authManager)
+
+                if shouldOnboardingFinal {
+                    OnboardingView(shouldShowOnboarding: $shouldOnboardingFinal)
+                        .transition(.opacity)
                 } else {
-//                    MainView(router: router, authManager: authManager)
-                    SignInView(signInVM: SignInViewModel(authManager: authManager, validator: validator, router: router))
+                    if authManager.userSession != nil {
+                        MainView(router: router, authManager: authManager)
+                    } else {
+
+                        SignInView(signInVM: SignInViewModel(authManager: authManager, validator: validator, router: router))
+                    }
                 }
             },
             onboardingView: {
