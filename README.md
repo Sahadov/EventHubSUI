@@ -1,12 +1,12 @@
 <div align="center">
 
-# 🔎 EventHub
+<img width="242" height="58" alt="Image" src="https://github.com/user-attachments/assets/b39c8b8d-292d-4979-b646-b0bce6248364" />
 
 **Твой гид по событиям города**
 
 Найди концерты, выставки, мастер-классы, спортивные матчи и любые другие мероприятия рядом с тобой.
 
-<img width="242" height="58" alt="Image" src="https://github.com/user-attachments/assets/b39c8b8d-292d-4979-b646-b0bce6248364" />
+
 
 </div>
 
