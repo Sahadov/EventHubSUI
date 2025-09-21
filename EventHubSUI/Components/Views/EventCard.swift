@@ -18,6 +18,7 @@ struct EventCard: View {
     var event: Event
     var isFavourite: Bool = false
     var onBookmarkTapped: (() -> Void)? = nil
+    var onCardTapped: (() -> Void)? = nil
     
     var body: some View {
         HStack(alignment: .top, spacing: 15) {
@@ -65,6 +66,10 @@ struct EventCard: View {
         .frame(maxWidth: .infinity, minHeight: 106, maxHeight: 106, alignment: .leading)
         .background(Color.white)
         .clipShape(RoundedRectangle(cornerRadius: 10))
+        .onTapGesture {
+            
+                   onCardTapped?()
+               }
     }
 }
 
