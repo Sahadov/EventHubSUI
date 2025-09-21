@@ -55,9 +55,20 @@ struct ShimmerAnimationModifier: ViewModifier {
 //MARK: - NavbarStyle
 // Вместе с  .navigationBarBackButtonHidden(true)
 
+enum ItemColor {
+    case white, black
+    
+    var color: Color {
+        switch self {
+        case.white: .white
+        case .black: .black
+        }
+    }
+}
 
 struct SearchNavigationStyle: ViewModifier {
     let title: String
+    let itemColor: ItemColor 
     let dismissAction: () -> Void
 
     func body(content: Content) -> some View {
@@ -69,12 +80,13 @@ struct SearchNavigationStyle: ViewModifier {
                     Button { dismissAction() } label: {
                         Image(systemName: "arrow.left")
                             .font(.system(size: 17, weight: .semibold))
-                            .foregroundColor(.black)
+                            .foregroundColor(itemColor.color)
                     }
                 }
                 ToolbarItem(placement: .principal) {
                     Text(title)
                         .font(.system(size: 20, weight: .semibold))
+                        .foregroundColor(itemColor.color)
                 }
             }
             .navigationBarBackButtonHidden(true)
@@ -82,7 +94,7 @@ struct SearchNavigationStyle: ViewModifier {
 }
 
 extension View {
-    func searchNavigationStyle(title: String, dismissAction: @escaping () -> Void) -> some View {
-        self.modifier(SearchNavigationStyle(title: title, dismissAction: dismissAction))
+    func searchNavigationStyle(title: String, itemColor: ItemColor = .black, dismissAction: @escaping () -> Void) -> some View {
+        self.modifier(SearchNavigationStyle(title: title, itemColor: itemColor, dismissAction: dismissAction))
     }
 }
