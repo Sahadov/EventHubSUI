@@ -42,6 +42,16 @@ class MapViewModel: ObservableObject {
         }
     }
     
+    func fetchByCategory(category: EventCategory) async {
+        print("TTTTTTTAAAAAPPPPPP")
+        do {
+            let result = try await networkService.fetch(from: .getEventsBy(category))
+            self.upcomingEvents = result.results.removingDuplicates()
+        } catch {
+            print("Ошибка при загрузке событий по категориям: \(error)")
+        }
+    }
+    
     func isFavorite(_ event: Event) -> Bool {
         repo.isFavorite(event: event)
     }

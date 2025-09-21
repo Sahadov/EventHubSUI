@@ -129,7 +129,15 @@ struct MapView: View {
             .padding(.horizontal)
             .padding(.top, 30)
             
-            CategoryScrollView(screenType: .map)
+            CategoryScrollView(screenType: .map) { category in
+                Task {
+                    if category == .all {
+                        await viewModel.fetchUpcomingEvents()
+                    } else {
+                        await viewModel.fetchByCategory(category: category)
+                    }
+                }
+            }
             
             Spacer()
         }
