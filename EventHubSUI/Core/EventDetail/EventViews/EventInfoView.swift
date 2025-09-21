@@ -5,12 +5,6 @@ struct EventInfoView: View {
     let secondText: String
     let iconName: String
     
-    init(firstText: String, secondText: String, iconName: String) {
-        self.firstText = firstText
-        self.secondText = secondText
-        self.iconName = iconName
-    }
-
     var body: some View {
         HStack(spacing: 14) {
             ZStack {
@@ -29,5 +23,21 @@ struct EventInfoView: View {
                     .font(.Airbnb.book(size: 12))
             }
         }
+    }
+}
+
+#Preview {
+    VStack {
+        EventInfoView(firstText: "14 December, 2021",
+                      secondText: "Tuesday, 4:00PM - 9:00PM",
+                      iconName: "blueCalendar")
+        
+        EventInfoView(firstText: "Gala Convention Center",
+                      secondText: "39 Guild Street London, UK",
+                      iconName: "bluePin")
+        
+        EventInfoView(firstText: "14 December, 2021",
+                      secondText: "Tuesday, 4:00PM - 9:00PM",
+                      iconName: "Organizer")
     }
 }
