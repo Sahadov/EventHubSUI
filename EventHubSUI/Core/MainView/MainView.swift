@@ -26,7 +26,7 @@ struct MainView: View {
                 EventsView(viewModel: EventsViewModel(router: router))
                     .tag(TabBookmarksEnum.eventsView)
                     .toolbar(.hidden, for: .tabBar)
-                FavoritesView()
+                FavoritesView(vm: FavoritesViewModel(router: router))
                     .tag(TabBookmarksEnum.favoritesView)
                     .toolbar(.hidden, for: .tabBar)
                 MapView()
