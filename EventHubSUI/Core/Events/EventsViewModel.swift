@@ -15,7 +15,10 @@ class EventsViewModel: ObservableObject {
     @Published var pastEvents: [Event] = []
     @Published var isLoading = false
     
-    init() {
+    let router: Router
+    
+    init(router: Router) {
+        self.router = router
         Task {
             await fetchUpcomingEvents()
             await fetchPastEvents()
@@ -43,5 +46,13 @@ class EventsViewModel: ObservableObject {
         } catch {
             print("Ошибка при загрузке прошлых событий: \(error)")
         }
+    }
+    
+    func goToDetailedView(event: Event) {
+        router.goTo(to: .eventDetailScreen(event: event))
+    }
+    
+    func goToSeeAll() {
+        router.goTo(to: .seeAllScreen(events: self.upcomingEvents, isLoading: isLoading))
     }
 }
