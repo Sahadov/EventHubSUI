@@ -92,6 +92,23 @@ final class ExploreViewModel: ObservableObject {
           }
       }
 
+    ///По параметрам фильтра
+    func fetchEvents(by preferences: SearchPreferences) async {
+        isLoading = true
+        defer { isLoading = false }
+        
+        do {
+            let events = try await networkService.fetch(from: .getEventsWith(preferences))
+            // используем и для "upcoming", и для "nearby", чтобы UI не ломался
+            self.upcomingEvents = events.results.removingDuplicates()
+            self.nearEvents = events.results.removingDuplicates()
+            self.isCategoryMode = false
+        } catch {
+            print("Ошибка при загрузке событий по abkmnhe \(preferences): \(error)")
+        }
+    }
+    
+    
     /// Сбрасываем фильтр
     func resetToDefault(_ location: LocationsList) {
           Task {
