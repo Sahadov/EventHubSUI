@@ -112,8 +112,15 @@ private struct ExploreToolBar: View {
             
             Spacer()
             
-            Image(.bell)
-            
+            Button() {
+//TODO: Переход на Notification
+        
+                viewModel.goToNotification()
+        
+    } label: {
+        Image(.bell)
+    }
+ 
         }
         .padding()
         .foregroundColor(.white)

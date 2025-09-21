@@ -15,7 +15,7 @@ enum Routes: Hashable {
     case seeAllScreen(events: [Event], isLoading: Bool)
     case listScreen(events: [Event])
     case searchScreen(events: [Event])
-//    case notificationScreen
+    case notificationScreen
 //    case webViewScreen
     case profileScreen
     case mapScreen

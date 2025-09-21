@@ -134,7 +134,10 @@ final class ExploreViewModel: ObservableObject {
     func goToSeach(_ events: [Event]) {
         router.goTo(to: .searchScreen(events: events))
     }
-    
+//TODO: Переход на NotificationView
+    func goToNotification() {
+        router.goTo(to: .notificationScreen)
+    }
     
     //MARK: - Favorites
     func isFavorite(_ event: Event) -> Bool {
