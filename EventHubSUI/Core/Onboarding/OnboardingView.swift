@@ -35,32 +35,38 @@ struct OnboardingView: View {
             TabView(selection: $currentPage) {
                 ForEach(0..<onboardingData.count, id: \.self) { index in
                     VStack(spacing: 0) {
-                        Image(onboardingData[index].image)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(height: UIScreen.main.bounds.height / 2)
-                            .clipped()
+                        VStack {
+                            Spacer()
+                            Image(onboardingData[index].image)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: UIScreen.main.bounds.height / 2.0)
+                                .clipped()
+                        }
+                        .padding(.top, 50)
                         
-                        ZStack {
-                            Color.blue
+                        ZStack(alignment: .top) {
+                            Color.accentBlue
                                 .cornerRadius(30, corners: [.topLeft, .topRight])
-                                .edgesIgnoringSafeArea(.bottom)
+                                .ignoresSafeArea()
                             
-                            VStack(spacing: 20) {
+                            VStack(alignment: .center, spacing: 20) {
                                 Text(onboardingData[index].title)
-                                    .font(.largeTitle)
+                                    .multilineTextAlignment(.center)
+                                    .font(.Airbnb.extraBold(size: 30))
                                     .fontWeight(.bold)
                                     .foregroundColor(.white)
+                                    .padding(.horizontal)
                                 
                                 Text(onboardingData[index].subtitle)
                                     .multilineTextAlignment(.center)
+                                    .font(.Airbnb.light(size: 16))
                                     .foregroundColor(.white)
                                     .padding(.horizontal, 30)
                                 
                                 HStack {
                                     Button(action: {
                                         // Skip action
-                                        print("Skip tapped")
                                         OnboardingManager.completeOnboarding()
                                         shouldShowOnboarding = false
                                         
@@ -72,15 +78,13 @@ struct OnboardingView: View {
                                     Spacer()
                                     
                                     Button(action: {
-                                        if currentPage < onboardingData.count - 1 {
-                                            currentPage += 1
-                                        } else {
-                                            // Finish action
-                                            
-                                            print("Finish Onboarding")
-                                            
-                                            OnboardingManager.completeOnboarding()
-                                            shouldShowOnboarding = false
+                                        withAnimation(.easeInOut(duration: 1)) {
+                                            if currentPage < onboardingData.count - 1 {
+                                                currentPage += 1
+                                            } else {
+                                                OnboardingManager.completeOnboarding()
+                                                shouldShowOnboarding = false
+                                            }
                                         }
                                     }) {
                                         Text("Next")
@@ -89,16 +93,18 @@ struct OnboardingView: View {
                                     }
                                 }
                                 .padding(.horizontal, 40)
-                                .padding(.top, 30)
+                                .padding(.top, 40)
                             }
-                            .padding(.top, 40)
+                            .padding(.top, 80)
+    
                         }
-                        .frame(height: UIScreen.main.bounds.height / 2)
                     }
                     .tag(index)
+                    .ignoresSafeArea()
                 }
             }
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+            .ignoresSafeArea()
         }
     }
 }
@@ -130,6 +136,7 @@ struct RoundedCorner: Shape {
         return Path(path.cgPath)
     }
 }
+
 
 #Preview {
     OnboardingView(shouldShowOnboarding: .constant(true))
