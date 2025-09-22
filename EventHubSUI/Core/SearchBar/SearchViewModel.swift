@@ -17,10 +17,13 @@ final class SearchViewModel: ObservableObject {
     @Published var showFilterSheet = false
 
     private let networkService = NetworkService()
+    private var router: Router
 
-    init(events: [Event]) {
+    init(events: [Event], router: Router) {
+        self.router = router
         self.all = events.uniqueSortedByDate()
         self.results = self.all
+        
     }
 
     func fetchEvents() async {
@@ -51,5 +54,9 @@ final class SearchViewModel: ObservableObject {
         }
 
         results = filtered.uniqueSortedByDate()
+    }
+    
+    func goToEventDetails(event: Event) {
+        router.goTo(to: .eventDetailScreen(event: event))
     }
 }

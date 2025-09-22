@@ -60,7 +60,7 @@ struct EventHubSUIApp: App {
                         case .listScreen(events: let events):
                             ListContentView(events: events)
                         case .searchScreen(events: let events):
-                            SearchScreen(events: events)
+                            SearchScreen(events: events, router: router)
                         case .notificationScreen:
                             
 //TODO: GO to notification
