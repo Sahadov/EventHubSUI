@@ -33,7 +33,7 @@ final class ExploreViewModel: ObservableObject {
      @Published var isCategoryMode = false
      @Published var tappedEvent: Event?
     
-    @Published var currentLocatoin: LocationsList = .msk
+    @Published var currentLocation: LocationsList = .msk
     
     
     init(router: Router) {
@@ -156,12 +156,13 @@ final class ExploreViewModel: ObservableObject {
 //MAEK: Location Logic
     
     func getCurrentLocation() {
-        print("GOT LOCATION")
-        //self.currentLocatoin = SearchDataManager.shared.loadUserLocation()
+        if let savedLocation = SearchDataManager.shared.loadUserLocation() {
+            self.currentLocation = savedLocation
+        }
     }
     
     func updateCurrentLocation(location: LocationsList) {
-        print("UPDATED LOCATION")
+        SearchDataManager.shared.saveUserLocation(location)
     }
     
 }

@@ -34,15 +34,15 @@ final class SearchDataManager {
     }
     
     // MARK: - User Location
-    func saveUserLocation(_ location: UserLocation) {
+    func saveUserLocation(_ location: LocationsList) {
         if let data = try? JSONEncoder().encode(location) {
             defaults.set(data, forKey: Keys.userLocation)
         }
     }
     
-    func loadUserLocation() -> UserLocation? {
+    func loadUserLocation() -> LocationsList? {
         guard let data = defaults.data(forKey: Keys.userLocation) else { return nil }
-        return try? JSONDecoder().decode(UserLocation.self, from: data)
+        return try? JSONDecoder().decode(LocationsList.self, from: data)
     }
     
     func clearUserLocation() {
