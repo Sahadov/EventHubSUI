@@ -107,6 +107,11 @@ private struct ExploreToolBar: View {
                             viewModel.updateCurrentLocation(location: city)
                             viewModel.isCategoryMode = false
                             viewModel.categoryEvents = []
+                            print(city)
+                            print(city)
+                            print(city)
+                            print(city)
+                            print(city)
                             await viewModel.fetchInitialEvents(city)
                         }
                     }

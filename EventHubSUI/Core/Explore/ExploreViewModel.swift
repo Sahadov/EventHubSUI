@@ -33,20 +33,21 @@ final class ExploreViewModel: ObservableObject {
      @Published var isCategoryMode = false
      @Published var tappedEvent: Event?
     
-    @Published var currentLocation: LocationsList = .msk
+    @Published var currentLocation: LocationsList
     
     
     init(router: Router) {
         self.router = router
+        self.currentLocation = ExploreViewModel.loadCurrentLocation() ?? .msk
         Task {
-            await fetchInitialEvents()
+            await fetchInitialEvents(currentLocation)
         }
-        getCurrentLocation()
+
     }
     //MARK: - Network
     
     /// Загружаем дефолтные данные
-    func fetchInitialEvents(_ location: LocationsList = .msk) async {
+    func fetchInitialEvents(_ location: LocationsList) async {
         isLoading = true
         defer { isLoading = false }
         
@@ -161,8 +162,13 @@ final class ExploreViewModel: ObservableObject {
         }
     }
     
+    static func loadCurrentLocation() -> LocationsList? {
+        SearchDataManager.shared.loadUserLocation()
+    }
+    
     func updateCurrentLocation(location: LocationsList) {
         SearchDataManager.shared.saveUserLocation(location)
+        self.currentLocation = location
     }
     
 }
