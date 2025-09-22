@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SeeAllContentView: View {
     @Environment(\.dismiss) private var dismiss
+    @ObservedObject var router: Router
     var events: [Event] = []
     var isLoading: Bool 
     
@@ -18,7 +19,9 @@ struct SeeAllContentView: View {
                 ScrollView {
                     VStack(spacing: 16) {
                         ForEach(events) { event in
-                            EventCard(event: event)
+                            EventCard(event: event, onCardTapped:  {
+                                router.goTo(to: .eventDetailScreen(event: event))
+                            })
                         }
                     }
                     .padding()
@@ -68,15 +71,4 @@ private struct EmptyStateView: View {
     }
 }
 
-// MARK: - Preview
 
-#Preview {
-    Group {
-        SeeAllContentView(events: [], isLoading: true)
-            .previewDisplayName("Loading")
-        SeeAllContentView(events: [], isLoading: false)
-            .previewDisplayName("Empty")
-        SeeAllContentView(events: Event.events, isLoading: false)
-            .previewDisplayName("With Data")
-    }
-}
