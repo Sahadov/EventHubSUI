@@ -167,12 +167,31 @@ extension DateInfo {
 }
 
 extension Event {
+//    var firstStartTimestamp: Double? {
+//        if let start = dates?.first?.start { return start }
+//        if let start = object?.dates?.first?.start { return start }
+//        if let start = datetime { return start }
+//        return nil
+//    }
     var firstStartTimestamp: Double? {
-        if let start = dates?.first?.start { return start }
-        if let start = object?.dates?.first?.start { return start }
-        if let start = datetime { return start }
-        return nil
-    }
+         let now = Date().timeIntervalSince1970
+         
+         // пробуем найти ближайшую будущую
+         if let dates = dates, let nearest = dates
+             .compactMap({ $0.start })
+             .filter({ $0 >= now })
+             .sorted()
+             .first {
+             return nearest
+         }
+         
+         // если future нет — берём первую
+         if let start = dates?.first?.start { return start }
+         if let start = object?.dates?.first?.start { return start }
+         if let start = datetime { return start }
+         return nil
+     }
+    
     
     var formattedStartDate: String {
         // 1. Если есть timestamp → используем его
@@ -208,35 +227,27 @@ extension Event {
         // 3. Если ничего нет
         return ""
     }
-    
-    /// Возвращает дату в формате "14 December, 2021"
-      var formattedCalendarDate: String {
-          // 1. Берём timestamp если есть
-          if let ts = firstStartTimestamp {
-              let date = Date(timeIntervalSince1970: ts)
-              let formatter = DateFormatter()
-              formatter.dateFormat = "d MMMM, yyyy"
-              formatter.locale = Locale(identifier: "en_US")
-              return formatter.string(from: date)
-          }
-          
-          // 2. Если есть строка "yyyy-MM-dd"
-          if let rawDate = date {
-              let inFormatter = DateFormatter()
-              inFormatter.dateFormat = "yyyy-MM-dd"
-              inFormatter.locale = Locale(identifier: "en_US_POSIX")
-              
-              if let parsed = inFormatter.date(from: rawDate) {
-                  let outFormatter = DateFormatter()
-                  outFormatter.dateFormat = "d MMMM, yyyy"
-                  outFormatter.locale = Locale(identifier: "en_US")
-                  return outFormatter.string(from: parsed)
-              }
-          }
-          
-          // 3. Если данных нет
-          return ""
-      }
+  
+    var formattedCalendarDate: String {
+        guard let ts = firstStartTimestamp else {
+            return "∞ no exact date"
+        }
+        
+        let date = Date(timeIntervalSince1970: ts)
+        
+        // если дата явно в прошлом (например, до 2020 года) — считаем её некорректной
+        let calendar = Calendar.current
+        if calendar.component(.year, from: date) < 2020 {
+            return "∞ no exact date"
+        }
+        
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "ru_RU")
+        formatter.dateFormat = "d MMMM yyyy" // пример: 27 сентября 2025
+        
+        return formatter.string(from: date)
+    }
+
 }
 
 // MARK: - Event Extensions
