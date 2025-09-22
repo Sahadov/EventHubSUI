@@ -71,13 +71,10 @@ struct EventsView: View {
     var upcomingView: some View {
         VStack {
             ForEach(viewModel.upcomingEvents, id: \.id) { event in
-                Button {
+                EventCard(event: event, isPast: false, onCardTapped:  {
                     viewModel.goToDetailedView(event: event)
-                } label: {
-                    EventCard(event: event, isPast: false) 
-                        .shadow(color: Color.black.opacity(0.1), radius: 3, x: 0, y: 2)
-                }
-                .buttonStyle(.plain)
+                })
+                .shadow(color: Color.black.opacity(0.1), radius: 3, x: 0, y: 2)
             }
         }
         .padding(.horizontal, 25)
@@ -91,13 +88,10 @@ struct EventsView: View {
     var pastEventsView: some View {
         VStack {
             ForEach(viewModel.pastEvents, id: \.id) { event in
-                Button {
+                EventCard(event: event, isPast: false, onCardTapped:  {
                     viewModel.goToDetailedView(event: event)
-                } label: {
-                    EventCard(event: event, isPast: true) 
-                        .shadow(color: Color.black.opacity(0.1), radius: 3, x: 0, y: 2)
-                }
-                .buttonStyle(.plain)
+                })
+                .shadow(color: Color.black.opacity(0.1), radius: 3, x: 0, y: 2)
             }
         }
         .padding(.horizontal, 25)
