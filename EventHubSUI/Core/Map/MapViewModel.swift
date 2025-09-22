@@ -15,9 +15,20 @@ class MapViewModel: ObservableObject {
     private var repo = EventRepository()
     let router: Router
     
-    
     @Published var searchText: String = ""
-    @Published var currentLocation: CLLocationCoordinate2D?
+    
+    @Published var currentLocation: LocationsList = .msk {
+        didSet {
+            mapRegion = MKCoordinateRegion(
+                center: CLLocationCoordinate2D(
+                    latitude: currentLocation.latitude,
+                    longitude: currentLocation.longitude
+                ),
+                span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
+            )
+        }
+    }
+    
     @Published var mapRegion = MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: 55.7569, longitude: 37.6151),
         span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
@@ -28,24 +39,24 @@ class MapViewModel: ObservableObject {
     
     init(router: Router) {
         self.router = router
+        self.currentLocation = SearchDataManager.shared.loadUserLocation() ?? .msk
         Task {
-            await fetchUpcomingEvents()
+            await fetchUpcomingEvents(location: currentLocation)
         }
     }
     
-    func fetchUpcomingEvents() async {
+    func fetchUpcomingEvents(location: LocationsList) async {
         do {
-            let result = try await networkService.fetch(from: .getUpcomingEvents(.msk))
+            let result = try await networkService.fetch(from: .getUpcomingEvents(location))
             self.upcomingEvents = result.results.removingDuplicates()
         } catch {
             print("Ошибка при загрузке предстоящих событий: \(error)")
         }
     }
     
-    func fetchByCategory(category: EventCategory) async {
-        print("TTTTTTTAAAAAPPPPPP")
+    func fetchByCategory(category: EventCategory, location: LocationsList) async {
         do {
-            let result = try await networkService.fetch(from: .getEventsBy(category))
+            let result = try await networkService.fetch(from: .getEventsBy(category, location))
             self.upcomingEvents = result.results.removingDuplicates()
         } catch {
             print("Ошибка при загрузке событий по категориям: \(error)")
@@ -62,7 +73,14 @@ class MapViewModel: ObservableObject {
     }
     
     @MainActor func goToDetailedView(event: Event) {
-        print("fff")
         router.goTo(to: .eventDetailScreen(event: event))
+    }
+    
+    @MainActor
+    func updateLocation(_ location: LocationsList) {
+        currentLocation = location
+        Task {
+            await fetchUpcomingEvents(location: location)
+        }
     }
 }

@@ -44,14 +44,14 @@ struct CategoryButton: View {
                 Text(category.title)
                     .foregroundColor(screenType == .map ? .gray : .white)
                     .bold()
-//                    .font(.system(size: 13, weight: .bold))
                     .font(.Airbnb.medium(size: 13))
             }
             .frame(width: 107, height: 42)
             .minimumScaleFactor(0.2)
             .background(screenType == .map ? Color.white : category.color)
             .cornerRadius(21)
-//            .shadow(radius: 2, y: 1)
+            .shadow(color: Color.black.opacity(0.25), radius: 4, x: 0, y: 2)
+            .padding(.vertical, 4)
         }
     }
 }
