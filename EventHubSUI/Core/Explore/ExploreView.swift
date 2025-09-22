@@ -14,7 +14,6 @@ struct ExploreView: View {
     @State private var isFiltersAppear: Bool = false
     @State private var selectedCity: LocationsList = .msk
     
-    
     var events = Event.events
     
     var body: some View {
@@ -72,8 +71,13 @@ struct ExploreView: View {
                 }
             }
         }
+        .onAppear {
+            selectedCity = viewModel.currentLocation
+        }
+        .onChange(of: viewModel.currentLocation) { newValue in
+            selectedCity = newValue
+        }
     }
-    
 }
 
 // MARK: - Subviews
@@ -100,6 +104,7 @@ private struct ExploreToolBar: View {
                         selectedCity = city
                         Task {
                             // Обновляем события при смене города
+                            viewModel.updateCurrentLocation(location: city)
                             viewModel.isCategoryMode = false
                             viewModel.categoryEvents = []
                             await viewModel.fetchInitialEvents(city)
