@@ -22,7 +22,7 @@ struct EventsView: View {
                 if viewModel.isLoading {
                     ProgressView()
                         .progressViewStyle(CircularProgressViewStyle(tint: .accentBlue))
-                    .scaleEffect(1.5)
+                        .scaleEffect(1.5)
                 }
                 
                 ScrollView(.vertical, showsIndicators: false) {
@@ -39,11 +39,10 @@ struct EventsView: View {
             CustomSIButton(buttonLableText: "EXPLORE EVENTS") {
                 viewModel.goToSeeAll()
             }
-                .padding(.bottom, 90)
-                .padding(.top, 10)
+            .padding(.bottom, 90)
+            .padding(.top, 10)
             
             Spacer()
-                
         }
         .navigationBarHidden(true)
         .safeAreaInset(edge: .top) {
@@ -55,12 +54,12 @@ struct EventsView: View {
     var controls: some View {
         HStack(spacing: 0) {
             CustomSegment(title: "UPCOMING", tag: 0,
-                selection: $selectedTab,
-                animation: animation)
+                          selection: $selectedTab,
+                          animation: animation)
                         
             CustomSegment(title: "PAST EVENTS", tag: 1,
-                selection: $selectedTab,
-                animation: animation)
+                          selection: $selectedTab,
+                          animation: animation)
         }
         .padding(4)
         .background(Color.gray.opacity(0.1))
@@ -75,7 +74,7 @@ struct EventsView: View {
                 Button {
                     viewModel.goToDetailedView(event: event)
                 } label: {
-                    EventCard(event: event)
+                    EventCard(event: event, isPast: false) 
                         .shadow(color: Color.black.opacity(0.1), radius: 3, x: 0, y: 2)
                 }
                 .buttonStyle(.plain)
@@ -91,11 +90,11 @@ struct EventsView: View {
     
     var pastEventsView: some View {
         VStack {
-            ForEach(viewModel.upcomingEvents, id: \.id) { event in
+            ForEach(viewModel.pastEvents, id: \.id) { event in
                 Button {
                     viewModel.goToDetailedView(event: event)
                 } label: {
-                    EventCard(event: event)
+                    EventCard(event: event, isPast: true) 
                         .shadow(color: Color.black.opacity(0.1), radius: 3, x: 0, y: 2)
                 }
                 .buttonStyle(.plain)
@@ -111,4 +110,5 @@ struct EventsView: View {
         .toolbar(.hidden, for: .navigationBar)
     }
 }
+
 

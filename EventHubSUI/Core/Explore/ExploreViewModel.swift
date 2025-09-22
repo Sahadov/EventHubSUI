@@ -56,12 +56,14 @@ final class ExploreViewModel: ObservableObject {
             async let nearby = networkService.fetch(from: .getNearbyEvents(location))
             async let movie = networkService.fetch(from: .getMovies(location))
             async let today = networkService.fetch(from: .getTodayEvents(location))
+
             
             let (upcomingResult, nearbyResult, movieResult, todayResult) = try await (upcoming, nearby, movie, today)
             self.upcomingEvents = upcomingResult.results.removingDuplicates()
             self.nearEvents = nearbyResult.results.removingDuplicates()
             self.movieEvents = movieResult.results.removingDuplicates()
             self.todayEvents = todayResult.results
+            self.categoryEvents = upcomingResult.results.removingDuplicates()
             self.isCategoryMode = false
         } catch {
             print("Ошибка при загрузке дефолтных событий: \(error)")
@@ -125,7 +127,11 @@ final class ExploreViewModel: ObservableObject {
         router.goTo(to: .eventDetailScreen(event: event))
     }
     
-    /// TODAY, FILMS, See All
+    /// TODAY, FILMS,
+    func goToSeeFilter(_ events: [Event], _ isLoading: Bool) {
+        router.goTo(to: .seeAllScreen(events: events, isLoading: isLoading))
+    }
+    
     func goToSeeAll(_ events: [Event], _ isLoading: Bool) {
         router.goTo(to: .seeAllScreen(events: events, isLoading: isLoading))
     }

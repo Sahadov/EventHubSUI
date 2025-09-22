@@ -67,7 +67,7 @@ enum Endpoint {
                 URLQueryItem(name: "lat", value: String(location.latitude)),
                 URLQueryItem(name: "lon", value: String(location.longitude)),
                 URLQueryItem(name: "radius", value: "5000"),
-                URLQueryItem(name: "order_by", value: "dates"),
+                URLQueryItem(name: "order_by", value: "id"),
                 URLQueryItem(name: "actual_since", value: "\(now)")
             ])
             
@@ -109,7 +109,9 @@ enum Endpoint {
             items.append(contentsOf: [
                 URLQueryItem(name: "fields", value: "id,place,datetime,movie"),
                 URLQueryItem(name: "expand", value: "movie,place,datetime"),
-                URLQueryItem(name: "location", value: location.rawValue)
+                URLQueryItem(name: "location", value: location.rawValue),
+                URLQueryItem(name: "actual_since", value: "\(now)"),
+                URLQueryItem(name: "order_by", value: "id")
             ])
             
         case .getEventsWith(let preferences):

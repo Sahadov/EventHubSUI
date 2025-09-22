@@ -65,7 +65,7 @@ struct EventHubSUIApp: App {
                             
 //TODO: GO to notification
                             
-                            Text("Hey")
+                            NotificationContentView()
                         }
                         
                     }

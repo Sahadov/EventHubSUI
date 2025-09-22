@@ -24,12 +24,14 @@ struct EventDetailsView: View {
                 }
             )
 
+            
             Text(event.displayTitle.uppercased())
                 .font(.Airbnb.book(size: 30))
-                .lineLimit(5)
-                .minimumScaleFactor(0.7)
-                .multilineTextAlignment(.leading)
-                .frame(maxWidth: UIScreen.main.bounds.width - 32, alignment: .leading) // ограничиваем
+                .lineLimit(4)
+                .minimumScaleFactor(0.5)
+                .allowsTightening(true)
+                .multilineTextAlignment(.center)
+                .frame(maxWidth: UIScreen.main.bounds.width - 32, alignment: .leading) 
                 .padding(.horizontal, 16)
                 .padding(.vertical, 8)
 
@@ -39,12 +41,12 @@ struct EventDetailsView: View {
                               iconName: "blueCalendar")
                 
                 EventInfoView(firstText: event.place?.title ?? "Unknown place",
-                              secondText: event.formattedStartDate,
+                              secondText: event.locationAddress,
                               iconName: "bluePin")
                 
                 EventInfoView(firstText: "Unknown",
                               secondText: "Organizer",
-                              iconName: "Organizer")
+                              iconName: "Profile")
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal)

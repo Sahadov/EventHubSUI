@@ -9,6 +9,7 @@ import Foundation
 import MapKit
 
 // MARK: - API Models
+
 struct EventResponse: Codable {
     let results: [Event]
 }
@@ -34,6 +35,15 @@ struct Event: Codable, Hashable {
     let object: TodayEventObject?
     let date: String?
     
+    var todayDateString: String {
+        let date = Date()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "E, dd MMM • h:mm a"
+        dateFormatter.locale = Locale(identifier: "en_US")
+        return dateFormatter.string(from: date)
+    }
+
+    
     var coordinates: CLLocationCoordinate2D? {
         if let lat = place?.coords?.lat, let lon = place?.coords?.lon {
             return CLLocationCoordinate2D(latitude: lat, longitude: lon)
@@ -54,6 +64,7 @@ struct Event: Codable, Hashable {
 }
 
 // MARK: - Movie structure
+
 struct Movie: Codable, Hashable {
     let id: Int?
     let title: String?
@@ -68,7 +79,6 @@ struct Movie: Codable, Hashable {
 }
 
 struct DateInfo: Codable, Hashable {
-    
     let startDate: String?
     let endDate: String?
     let startTime: String?
@@ -97,6 +107,7 @@ struct TodayEventObject: Codable, Hashable {
 }
 
 // MARK: - Place
+
 struct Place: Codable, Hashable {
     let id: Int?
     let title: String?
@@ -136,6 +147,7 @@ struct Coordinates: Codable, Hashable {
 }
 
 // MARK: - Identifiable
+
 extension Event: Identifiable {
     var id: String {
         let t = title ?? object?.title ?? movie?.title ?? ""
@@ -147,6 +159,70 @@ extension Event: Identifiable {
 }
 
 // MARK: - Date Formatting
+
+extension Event {
+    
+    private var now: Double {
+        Date().timeIntervalSince1970
+    }
+    
+    /// Все возможные даты события
+    private var allDates: [DateInfo] {
+        var result = [DateInfo]()
+        if let dates = dates { result.append(contentsOf: dates) }
+        if let objectDates = object?.dates { result.append(contentsOf: objectDates) }
+        if let dt = datetime {
+            result.append(DateInfo(startDate: nil, endDate: nil,
+                                   startTime: nil, endTime: nil,
+                                   start: dt, end: nil))
+        }
+        return result
+    }
+    
+    /// ближайшая будущая или сегодняшняя
+    var nextDate: DateInfo? {
+        let valid = allDates.filter { ($0.start ?? 0) >= now }
+        return valid.sorted(by: { ($0.start ?? 0) < ($1.start ?? 0) }).first
+    }
+    
+    /// последняя прошедшая
+    var lastPastDate: DateInfo? {
+        let past = allDates.filter { ($0.start ?? 0) < now }
+        return past.sorted(by: { ($0.start ?? 0) > ($1.start ?? 0) }).first
+    }
+    
+    /// Для вкладки "UPCOMING"
+    var formattedStartDate: String {
+        guard let next = nextDate, let start = next.start else {
+            return "∞ no exact date"
+        }
+        let date = Date(timeIntervalSince1970: start)
+        return Self.format(date: date)
+    }
+    
+    /// Для вкладки "PAST EVENTS"
+    var formattedPastDate: String {
+        guard let past = lastPastDate, let start = past.start else {
+            return "∞ no exact date"
+        }
+        let date = Date(timeIntervalSince1970: start)
+        return Self.format(date: date)
+    }
+    
+    /// Общий форматтер
+    private static func format(date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "E, dd MMM"
+        dateFormatter.locale = Locale(identifier: "en_US")
+        
+        let timeFormatter = DateFormatter()
+        timeFormatter.dateFormat = "h:mm a"
+        timeFormatter.locale = Locale(identifier: "en_US")
+        
+        return "\(dateFormatter.string(from: date)) • \(timeFormatter.string(from: date))"
+    }
+}
+
 extension DateInfo {
     var day: String {
         guard let start = start else { return "" }
@@ -167,92 +243,50 @@ extension DateInfo {
 }
 
 extension Event {
+    
     var firstStartTimestamp: Double? {
+        let now = Date().timeIntervalSince1970
+        
+        // пробуем найти ближайшую будущую
+        if let dates = dates,
+           let nearest = dates
+            .compactMap({ $0.start })
+            .filter({ $0 >= now })
+            .sorted()
+            .first {
+            return nearest
+        }
+        
+        // если future нет — берём первую
         if let start = dates?.first?.start { return start }
         if let start = object?.dates?.first?.start { return start }
         if let start = datetime { return start }
         return nil
     }
     
-    var formattedStartDate: String {
-        // 1. Если есть timestamp → используем его
-        if let ts = firstStartTimestamp {
-            let date = Date(timeIntervalSince1970: ts)
-            
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "E, dd MMM"
-            dateFormatter.locale = Locale(identifier: "en_US")
-            
-            let timeFormatter = DateFormatter()
-            timeFormatter.dateFormat = "h:mm a"
-            timeFormatter.locale = Locale(identifier: "en_US")
-            
-            return "\(dateFormatter.string(from: date)) • \(timeFormatter.string(from: date))"
-        }
-
+    var formattedCalendarDate: String {
+        let now = Date().timeIntervalSince1970
         
-        // 2. Если есть просто "date": "2025-09-17"
-        if let rawDate = date {
-            let inFormatter = DateFormatter()
-            inFormatter.dateFormat = "yyyy-MM-dd"
-            inFormatter.locale = Locale(identifier: "en_US_POSIX")
-            
-            if let parsed = inFormatter.date(from: rawDate) {
-                let outFormatter = DateFormatter()
-                outFormatter.dateFormat = "E, dd MMM"
-                outFormatter.locale = Locale(identifier: "en_US")
-                return outFormatter.string(from: parsed)
+        if let next = nextDate, let start = next.start {
+            if start < now {
+                return "∞ no exact date"
             }
+            
+            let date = Date(timeIntervalSince1970: start)
+            let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: "en_US")
+            formatter.dateFormat = "d MMMM yyyy"
+            
+            return formatter.string(from: date)
         }
         
-        // 3. Если ничего нет
-        return ""
+        return "∞ no exact date"
     }
-    
-    /// Возвращает дату в формате "14 December, 2021"
-      var formattedCalendarDate: String {
-          // 1. Берём timestamp если есть
-          if let ts = firstStartTimestamp {
-              let date = Date(timeIntervalSince1970: ts)
-              let formatter = DateFormatter()
-              formatter.dateFormat = "d MMMM, yyyy"
-              formatter.locale = Locale(identifier: "en_US")
-              return formatter.string(from: date)
-          }
-          
-          // 2. Если есть строка "yyyy-MM-dd"
-          if let rawDate = date {
-              let inFormatter = DateFormatter()
-              inFormatter.dateFormat = "yyyy-MM-dd"
-              inFormatter.locale = Locale(identifier: "en_US_POSIX")
-              
-              if let parsed = inFormatter.date(from: rawDate) {
-                  let outFormatter = DateFormatter()
-                  outFormatter.dateFormat = "d MMMM, yyyy"
-                  outFormatter.locale = Locale(identifier: "en_US")
-                  return outFormatter.string(from: parsed)
-              }
-          }
-          
-          // 3. Если данных нет
-          return ""
-      }
 }
 
 // MARK: - Event Extensions
+
 extension Event {
-    
-    var nextDate: DateInfo? {
-        guard let dates = dates else { return nil }
-        let now = Date().timeIntervalSince1970
-        let validDates = dates.filter { date in
-            if let start = date.start, let end = date.end {
-                return start > 0 && end > 0 && start >= now
-            }
-            return false
-        }
-        return validDates.sorted { ($0.start ?? 0) < ($1.start ?? 0) }.first
-    }
     
     var displayTitle: String {
         object?.title ?? movie?.title ?? title ?? "Unknown"
@@ -290,6 +324,7 @@ extension Event {
 }
 
 // MARK: - Mock Data
+
 extension EventResponse {
     static let mock = EventResponse(
         results: [
@@ -403,6 +438,7 @@ extension Event {
         date: nil
     )
 }
+
 extension Event {
     static let events: [Event] = [
         mockExhibition,
@@ -412,3 +448,4 @@ extension Event {
         mockMovie
     ]
 }
+

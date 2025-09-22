@@ -20,17 +20,16 @@ struct EventDetailTopView: View {
             .overlay(
                 ZStack {
                     bookmarkView
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
                         .padding(.top, screenWidth * 0.25)
                         .padding(.trailing, screenWidth * 0.05)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
                     
                     shareView
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
                         .padding(.bottom, screenWidth * 0.05)
                         .padding(.trailing, screenWidth * 0.05)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
                 }
             )
-
     }
     
     // MARK: - Bookmark View
@@ -48,9 +47,8 @@ struct EventDetailTopView: View {
                 RealmManager.shared.save(realmEvent)
             }
             isBookmarked.toggle()
-            
-        }
-        label: {
+            onBookmarkTapped?()
+        } label: {
             Image(isBookmarked ? "bookmark2" : "bookmark")
                 .resizable()
                 .scaledToFit()
@@ -67,9 +65,7 @@ struct EventDetailTopView: View {
     // MARK: - Share View
     var shareView: some View {
         Button {
-            
-            print("TaPed2")
-           onShareTapped?()
+            onShareTapped?()
         } label: {
             Image(systemName: "square.and.arrow.up")
                 .resizable()
@@ -86,44 +82,41 @@ struct EventDetailTopView: View {
 }
 
 
+// MARK: - ImageView
 private struct ImageView: View {
     let event: Event
     
     var body: some View {
         AsyncImage(url: URL(string: event.displayImageURL ??
                                   "https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?w=144")) { phase in
-                  switch phase {
-                  case .empty:
-                      ProgressView()
-                          .frame(height: 244)
-                          .frame(maxWidth: .infinity)
-                          .background(Color.gray)
-                  case .success(let image):
-                      image
-                          .resizable()
-                          .scaledToFill()
-                          .frame(height: 244)
-                          .frame(maxWidth: .infinity)
-                          .clipped()
-                  case .failure:
-                      Image(systemName: "photo")
-                          .resizable()
-                          .scaledToFit()
-                          .frame(height: 244)
-                          .frame(maxWidth: .infinity)
-                          .background(Color.gray)
-                          .foregroundColor(.white)
-                  @unknown default:
-                      EmptyView()
-                  }
-              }
-              .ignoresSafeArea(edges: .top)
-          }
-    
-    
+            switch phase {
+            case .empty:
+                ProgressView()
+                    .frame(width: UIScreen.main.bounds.width, height: 244)
+                    .background(Color.gray)
+            case .success(let image):
+                image
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: UIScreen.main.bounds.width, height: 244)
+                    .clipped()
+            case .failure:
+                Image(systemName: "photo")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: UIScreen.main.bounds.width, height: 244)
+                    .background(Color.gray)
+                    .foregroundColor(.white)
+            @unknown default:
+                EmptyView()
+            }
+        }
+        .ignoresSafeArea(edges: .top)
+    }
 }
 
 
+// MARK: - Stateful Preview Wrapper
 struct StatefulPreviewWrapper<Value, Content: View>: View {
     @State var value: Value
     var content: (Binding<Value>) -> Content
@@ -143,3 +136,5 @@ struct StatefulPreviewWrapper<Value, Content: View>: View {
         EventDetailTopView(event: Event.mockToday, isBookmarked: isBookmarked)
     }
 }
+
+

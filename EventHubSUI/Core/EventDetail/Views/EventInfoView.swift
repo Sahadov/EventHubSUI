@@ -6,7 +6,7 @@ struct EventInfoView: View {
     let iconName: String
     
     var body: some View {
-        HStack(spacing: 14) {
+        HStack( spacing: 14) {
             ZStack {
                 Rectangle()
                     .frame(width: 48, height: 48)
@@ -17,6 +17,8 @@ struct EventInfoView: View {
             VStack(alignment: .leading, spacing: 1) {
                 Text(firstText)
                     .font(.system(size: 16))
+                    .lineLimit(3)                 // одна строка
+                    .minimumScaleFactor(0.5)
                     .frame(height: 34)
                 Text(secondText)
                     .foregroundStyle(.gray)
