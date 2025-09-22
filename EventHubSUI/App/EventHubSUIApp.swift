@@ -65,7 +65,7 @@ struct EventHubSUIApp: App {
                             
 //TODO: GO to notification
                             
-                            MapView() // заглушка пока нет notif view
+                           NotificationContentView() // заглушка пока нет notif view
                         }
                         
                     }

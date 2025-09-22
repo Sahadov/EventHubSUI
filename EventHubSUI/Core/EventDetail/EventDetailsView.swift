@@ -24,6 +24,7 @@ struct EventDetailsView: View {
                 }
             )
 
+            
             Text(event.displayTitle.uppercased())
                 .font(.Airbnb.book(size: 30))
                 .lineLimit(3)
