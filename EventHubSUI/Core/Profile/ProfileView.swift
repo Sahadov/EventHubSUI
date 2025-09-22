@@ -1,6 +1,8 @@
 
 
 import SwiftUI
+import PhotosUI
+
 
 
 struct UserProfile {
@@ -14,6 +16,10 @@ struct ProfileView: View {
     
     @ObservedObject var profileVM: ProfileViewModel
     
+    @State private var selectedItem: PhotosPickerItem?
+    @State private var selectedUIImage: UIImage?
+    
+    
     @State var isEditingProfile: Bool = false
     @State var isLargeText: Bool = false
     @State var startEditAbout: Bool = false
@@ -26,23 +32,76 @@ struct ProfileView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: UI.spacingXL) {
-                
-                if let imageName = profileVM.user?.userIcon ?? User.MOCK_USER.userIcon {
-//                    let _ = print(profileVM.user)
-                    Image(imageName)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 96, height: 96)
-                        .clipShape(Circle())
-                } else {
-                    Image(systemName: "person.fill.questionmark")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 96, height: 96)
-                        .foregroundStyle(.gray)
+                ZStack {
+                    
+//                    if let imageName = profileVM.user?.userIcon ?? User.MOCK_USER.userIcon {
+                    
+                        //                    let _ = print(profileVM.user)
+                    if let imageName = UserDefaults.standard.data(forKey: "userIcon") {
+                        
+                    
+                        if let image = UIImage(data: imageName) {
+                            Image(uiImage: image)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 96, height: 96)
+                                .clipShape(Circle())
+                        } else if let img = selectedUIImage {
+                            Image(uiImage: img)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 96, height: 96)
+                                .foregroundStyle(.gray)
+                        } else {
+                            Image(systemName: "person.fill.questionmark")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 96, height: 96)
+                                .foregroundStyle(.gray)
+                        }
+                    } else {
+                        Image(systemName: "person.fill.questionmark")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 96, height: 96)
+                            .foregroundStyle(.gray)
+                    }
+                    
+                    if isEditingProfile {
+                    PhotosPicker(
+                        selection: $selectedItem,
+                        matching: .images,
+                        photoLibrary: .shared()
+                    ) {
+                        Circle()
+                            .fill(Color(.systemBackground))
+                            .frame(width: 40, height: 40)
+                            .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
+                            .overlay(
+                                Image(systemName: "pencil")
+                                    .font(.system(size: 16, weight: .medium))
+                                    .foregroundColor(.primary)
+                            )
+                    }
+                    .offset(x: 60, y: -60)
+                    .padding(.trailing, 16)
+                    .padding(.top, 16)
+                    .onChange(of: selectedItem) { newItem in
+                        Task {
+                            if let data = try? await newItem?.loadTransferable(type: Data.self),
+                               let image = UIImage(data: data) {
+                                await MainActor.run {
+                                    self.selectedUIImage = image
+//                                    handleImageSelection(image)
+                                }
+                            }
+                        }
+                    }
+                }
                 }
                 HStack(spacing: 8) {
                     if startEditName {
+                        
                         TextEditor(text: $userName)
                             .font(.Airbnb.book(size: 24))
                             .frame(height: 25)
@@ -183,6 +242,12 @@ struct ProfileView: View {
                 isEditingProfile.toggle()
                 
             }
+            
+            if let img = selectedUIImage {
+                let _ = print("!!!!go to save image!!!!")
+                profileVM.saveUserImage(image: img)
+            }
+            
         }
         
         .alert(profileVM.errorTitle, isPresented: $profileVM.isShowingError) {} message: {
