@@ -33,6 +33,8 @@ final class ProfileViewModel: ObservableObject {
     }
     
     func logout() {
+        
+        UserDefaults.standard.removeObject(forKey: "userIcon")
     
         authManager.signOut()
         if self.authManager.showError {
@@ -45,6 +47,30 @@ final class ProfileViewModel: ObservableObject {
         } else {
             self.router.goTo(to: .signInScreen)
         }
+    }
+    
+    func encodeImage(image: UIImage) -> Data {
+        
+        let imgData = image.jpegData(compressionQuality: 0.5)!
+//        let imgString = imgData.base64EncodedString(options: NSData.Base64EncodingOptions(rawValue: 0))
+        return imgData
+        
+    }
+    
+    func decodeImage(data: Data) -> UIImage? {
+        
+        let decodedImg = NSData(base64Encoded: data, options: NSData.Base64DecodingOptions(rawValue: 0))
+                
+        return UIImage(data: decodedImg! as Data)
+        
+    }
+    
+    func saveUserImage(image: UIImage) {
+        let imgData = encodeImage(image: image)
+        print(imgData)
+        self.user?.userIcon = imgData
+        
+        UserDefaults.standard.set(imgData, forKey: "userIcon")
     }
     
     func updateUser() {

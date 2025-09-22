@@ -13,7 +13,7 @@ struct User: Identifiable, Codable {
     var fullname: String
     let email: String
     let photoURL:URL?
-    var userIcon: String?
+    var userIcon: Data?
     var about: String?
     
     var initials: String{
@@ -31,7 +31,7 @@ extension User{
                                 fullname: "Test user",
                                 email: "test@gmail.com",
                                 photoURL: URL(string: ""),
-                                userIcon: "profileLight",
+                                userIcon: nil,
                                 about: """
 Enjoy your favorite dish and a lovely your friends and family and have a great time. Food from local food trucks will be available for purchase.
 Enjoy your favorite dish and a lovely your friends and family and have a great time. Food from local food trucks will be available for purchase.
