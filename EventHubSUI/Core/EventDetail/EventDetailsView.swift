@@ -26,10 +26,11 @@ struct EventDetailsView: View {
 
             Text(event.displayTitle.uppercased())
                 .font(.Airbnb.book(size: 30))
-                .lineLimit(5)
-                .minimumScaleFactor(0.7)
+                .lineLimit(3)
+                .minimumScaleFactor(0.5)
+                .allowsTightening(true)
                 .multilineTextAlignment(.leading)
-                .frame(maxWidth: UIScreen.main.bounds.width - 32, alignment: .leading) // ограничиваем
+                .frame(maxWidth: UIScreen.main.bounds.width - 32, alignment: .leading) 
                 .padding(.horizontal, 16)
                 .padding(.vertical, 8)
 
