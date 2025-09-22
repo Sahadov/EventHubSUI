@@ -21,10 +21,8 @@ struct MapView: View {
         }
         .padding(.bottom, 30)
         .onAppear {
-            let manager = CLLocationManager()
-            manager.requestWhenInUseAuthorization()
-            if let coord = manager.location?.coordinate {
-                viewModel.currentLocation = coord
+            if let savedLocation = SearchDataManager.shared.loadUserLocation() {
+                viewModel.updateLocation(savedLocation)
             }
         }
     }
@@ -105,16 +103,14 @@ struct MapView: View {
                 .cornerRadius(12)
                 .shadow(radius: 3)
                 
-                Button(action: {
-                    if let coord = viewModel.currentLocation {
-                        withAnimation(.easeInOut) {
-                            MKCoordinateRegion(
-                                center: CLLocationCoordinate2D(latitude: coord.latitude, longitude: coord.longitude),
-                                span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
-                            )
+                Menu {
+                    ForEach(LocationsList.allCases, id: \.self) { location in
+                        Button(location.title) {
+                            viewModel.updateLocation(location)
+                            viewModel.tappedEvent = nil
                         }
                     }
-                }) {
+                } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 10)
                             .fill(Color.white)
@@ -132,9 +128,9 @@ struct MapView: View {
             CategoryScrollView(screenType: .map) { category in
                 Task {
                     if category == .all {
-                        await viewModel.fetchUpcomingEvents()
+                        await viewModel.fetchUpcomingEvents(location: viewModel.currentLocation)
                     } else {
-                        await viewModel.fetchByCategory(category: category)
+                        await viewModel.fetchByCategory(category: category, location: viewModel.currentLocation)
                     }
                 }
             }
