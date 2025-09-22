@@ -40,7 +40,7 @@ struct EventHubSUIApp: App {
                         case .profileScreen:
                             ProfileView(profileVM: ProfileViewModel(authManager: authManager, router: router))
                         case .mapScreen:
-                            MapView()
+                            MapView(viewModel: MapViewModel(router: router))
                         case .favoritesScreen:
                             FavoritesView(vm: FavoritesViewModel(router: router))
                         case .exploreScreen:
@@ -65,7 +65,7 @@ struct EventHubSUIApp: App {
                             
 //TODO: GO to notification
                             
-                           NotificationContentView() // заглушка пока нет notif view
+                            Text("Hey")
                         }
                         
                     }

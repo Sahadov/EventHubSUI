@@ -29,7 +29,7 @@ struct MainView: View {
                 FavoritesView(vm: FavoritesViewModel(router: router))
                     .tag(TabBookmarksEnum.favoritesView)
                     .toolbar(.hidden, for: .tabBar)
-                MapView()
+                MapView(viewModel: MapViewModel(router: router))
                     .tag(TabBookmarksEnum.mapView)
                     .toolbar(.hidden, for: .tabBar)
                 ProfileView(profileVM: ProfileViewModel(authManager: authManager, router: router))

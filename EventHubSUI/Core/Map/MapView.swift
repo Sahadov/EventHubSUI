@@ -10,7 +10,7 @@ import MapKit
 import CoreLocation
 
 struct MapView: View {
-    @ObservedObject var viewModel = MapViewModel()
+    @ObservedObject var viewModel: MapViewModel
     
     var body: some View {
         ZStack {
@@ -21,10 +21,8 @@ struct MapView: View {
         }
         .padding(.bottom, 30)
         .onAppear {
-            let manager = CLLocationManager()
-            manager.requestWhenInUseAuthorization()
-            if let coord = manager.location?.coordinate {
-                viewModel.currentLocation = coord
+            if let savedLocation = SearchDataManager.shared.loadUserLocation() {
+                viewModel.updateLocation(savedLocation)
             }
         }
     }
@@ -105,16 +103,14 @@ struct MapView: View {
                 .cornerRadius(12)
                 .shadow(radius: 3)
                 
-                Button(action: {
-                    if let coord = viewModel.currentLocation {
-                        withAnimation(.easeInOut) {
-                            MKCoordinateRegion(
-                                center: CLLocationCoordinate2D(latitude: coord.latitude, longitude: coord.longitude),
-                                span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
-                            )
+                Menu {
+                    ForEach(LocationsList.allCases, id: \.self) { location in
+                        Button(location.title) {
+                            viewModel.updateLocation(location)
+                            viewModel.tappedEvent = nil
                         }
                     }
-                }) {
+                } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 10)
                             .fill(Color.white)
@@ -129,7 +125,15 @@ struct MapView: View {
             .padding(.horizontal)
             .padding(.top, 30)
             
-            CategoryScrollView(screenType: .map)
+            CategoryScrollView(screenType: .map) { category in
+                Task {
+                    if category == .all {
+                        await viewModel.fetchUpcomingEvents(location: viewModel.currentLocation)
+                    } else {
+                        await viewModel.fetchByCategory(category: category, location: viewModel.currentLocation)
+                    }
+                }
+            }
             
             Spacer()
         }
@@ -156,10 +160,18 @@ struct MapView: View {
             if let tappedEvent = viewModel.tappedEvent {
                 EventCard(type: .favourites,
                           event: tappedEvent,
-                          isFavourite: viewModel.isFavorite(tappedEvent)
-                    ){
-                        viewModel.toggleFavorite(tappedEvent)
-                    }
+                          isFavourite: viewModel.isFavorite(tappedEvent),
+                          onBookmarkTapped: {
+                              withAnimation(.snappy) {
+                                  viewModel.toggleFavorite(tappedEvent)
+                              }
+                          },
+                          onCardTapped: {
+                              withAnimation(.snappy) {
+                                  viewModel.goToDetailedView(event: tappedEvent)
+                              }
+                          }
+                    )
                     .shadow(radius: 5)
                     .padding(.horizontal, 30)
                     .padding(.bottom, 40)
@@ -169,6 +181,4 @@ struct MapView: View {
     
 }
 
-#Preview {
-    MapView()
-}
+

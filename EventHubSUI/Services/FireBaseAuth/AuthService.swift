@@ -81,6 +81,21 @@ final class AuthManager: ObservableObject {
         }
     }
     
+    func updateUserData(user: User) async throws {
+        self.isLoading = true
+        do {
+            let encodeUser = try Firestore.Encoder().encode(user)
+            try await Firestore.firestore().collection("users").document(user.id).updateData(encodeUser)
+            self.isLoading = false
+            await fetchUser()
+        } catch {
+            
+            self.error = error.localizedDescription
+            self.isLoading = false
+            
+        }
+    }
+    
     func resetPassword(email: String) async throws{
         self.isLoading = true
         do {
@@ -111,6 +126,7 @@ final class AuthManager: ObservableObject {
             guard let uid  = Auth.auth().currentUser?.uid else { return }
             guard let snapshot = try? await Firestore.firestore().collection("users").document(uid).getDocument() else { return }
             self.currentUser = try? snapshot.data(as: User.self)
+            
         }
 }
 
