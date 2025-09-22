@@ -78,11 +78,13 @@ struct OnboardingView: View {
                                     Spacer()
                                     
                                     Button(action: {
-                                        if currentPage < onboardingData.count - 1 {
-                                            currentPage += 1
-                                        } else {
-                                            OnboardingManager.completeOnboarding()
-                                            shouldShowOnboarding = false
+                                        withAnimation(.easeInOut(duration: 1)) {
+                                            if currentPage < onboardingData.count - 1 {
+                                                currentPage += 1
+                                            } else {
+                                                OnboardingManager.completeOnboarding()
+                                                shouldShowOnboarding = false
+                                            }
                                         }
                                     }) {
                                         Text("Next")
