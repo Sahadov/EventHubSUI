@@ -155,7 +155,8 @@ private struct EventTitle: View {
                 .foregroundStyle(Color(hex: "#383449"))
             Spacer()
             Button("See All") {
-                viewModel.goToSeeAll(events, viewModel.isLoading)
+                viewModel.goToSeeAll(viewModel.categoryEvents, viewModel.isLoading)
+
             }
             .foregroundStyle(Color(hex: "#747688"))
         }
@@ -190,9 +191,9 @@ private struct ExploreFilterView: View {
         FilterScrollView { filter in
             switch filter {
             case .today:
-                viewModel.goToSeeAll(viewModel.todayEvents, viewModel.isLoading)
+                viewModel.goToSeeFilter(viewModel.todayEvents, viewModel.isLoading)
             case .films:
-                viewModel.goToSeeAll(viewModel.movieEvents, viewModel.isLoading)
+                viewModel.goToSeeFilter(viewModel.movieEvents, viewModel.isLoading)
             case .list:
                 viewModel.goToList(viewModel.upcomingEvents)
             }
