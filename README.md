@@ -49,7 +49,6 @@ EventHub помогает держать руку на пульсе города
   <a href="https://github.com/Demogorgonius"><img src="https://img.shields.io/badge/Demogorgonius-FF4081?style=for-the-badge&logo=github&logoColor=white"/></a>
   <a href="https://github.com/Fokusnik909"><img src="https://img.shields.io/badge/Fokusnik909-4CAF50?style=for-the-badge&logo=github&logoColor=white"/></a>
   <a href="https://github.com/ssgushyonka"><img src="https://img.shields.io/badge/ssgushyonka-FF9800?style=for-the-badge&logo=github&logoColor=white"/></a>
-  <a href="https://github.com/NadeKoles"><img src="https://img.shields.io/badge/NadeKoles-9C27B0?style=for-the-badge&logo=github&logoColor=white"/></a>
 </p>
 
 ---
